@@ -1,0 +1,64 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mapa de Clientes</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <link rel="stylesheet" href="home/styles.css" />
+</head>
+<body>
+
+  <!-- ✅ Botón flotante (se muestra en móvil por CSS) -->
+  <button id="togglePanel" class="togglePanel" type="button" aria-expanded="true">
+    Controles
+  </button>
+
+  <div class="panel" id="panel">
+    <!-- BÚSQUEDA INDIVIDUAL -->
+    <div class="fila">
+      <select id="cd" title="Selecciona CD">
+        <option value="">Selecciona CD...</option>
+      </select>
+
+      <input type="text" id="codigo" placeholder="Cliente (código)" />
+      <button id="buscar">Buscar</button>
+
+      <span id="estado"></span>
+    </div>
+
+    <hr />
+
+    <!-- ARCHIVO -->
+    <div class="fila">
+      <input type="file" id="archivoCodigos" accept=".txt,.csv" />
+      <button id="btnCargarArchivo">Cargar archivo y mostrar</button>
+    </div>
+
+    <small class="ayuda">
+      Archivo .txt o .csv con clientes separados por salto de línea, coma o punto y coma.
+      Ej: <b>14383952</b> o <b>14383952,14380000</b>
+    </small>
+
+    <!-- PEGAR CLIENTES -->
+    <div class="fila">
+      <textarea id="codigosManual" rows="3" placeholder="(Opcional) Pega clientes aquí, uno por línea o separados por coma"></textarea>
+      <button id="btnMostrarManual">Mostrar pegados</button>
+    </div>
+
+    <div class="fila">
+      <button id="btnLimpiar">Limpiar marcadores</button>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <!-- Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="home/app.js"></script>
+</body>
+</html>

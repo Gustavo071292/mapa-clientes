@@ -1,0 +1,23 @@
+{
+  "version": "v1",
+  "required": ["cliente", "nombre cliente", "latitud", "longitud"],
+  "mapping": {
+    "codigo": "Cliente",
+    "nombre": "Nombre cliente",
+    "lat": "Latitud",
+    "lng": "Longitud",
+    "telefono": "Telefono",
+    "barrio": "Barrio"
+  },
+  "extras": [
+    "ZT",
+    "COM",
+    "Zona Venta",
+    "Distrito",
+    "Cerveza",
+    "NABS",
+    "MKP"
+  ]
+}
+
+

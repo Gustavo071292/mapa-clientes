@@ -1,0 +1,26 @@
+{
+  "version": "v2",
+  "required": ["Cliente", "Nombre cliente", "Latitud", "Longitud"],
+  "mapping": {
+    "codigo": "Cliente",
+    "nombre": "Nombre cliente",
+    "lat": "Latitud",
+    "lng": "Longitud",
+    "telefono": "Telefono",
+    "barrio": "Barrio"
+  },
+  "extras": [
+    "CD",
+    "Poblacion",
+    "COM",
+    "Zona Venta",
+    "Distrito",
+    "Dia de entrega",
+    "Dia Flex",
+    "ValorMinimoFlex",
+    "ValorFlex",
+    "Cerveza",
+    "NABS",
+    "MKP"
+  ]
+}
