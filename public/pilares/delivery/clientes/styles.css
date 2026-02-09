@@ -199,7 +199,7 @@ hr{
 #map{
   width: min(1400px, calc(100% - 20px));
   margin: 10px auto 16px;
-  height: calc(100vh - 250px);
+  height: calc(100vh - 180px);
   border-radius: 18px;
   overflow: hidden;
   box-shadow: var(--shadow);
@@ -298,4 +298,18 @@ hr{
 .hl-green{
   background: rgba(34, 197, 94, 0.16);
   border-bottom-color: rgba(22, 163, 74, 0.55);
+}
+
+.leaflet-popup-content-wrapper{
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+}
+
+.leaflet-popup-tip{
+  box-shadow: 0 6px 12px rgba(0,0,0,0.18);
+}
+
+.leaflet-popup-content{
+  font-size: 13px;
+  line-height: 1.45;
 }
