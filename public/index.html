@@ -12,19 +12,28 @@
 
     <!-- HERO / BIENVENIDA -->
     <section class="hero card">
-      <h1>Bienvenido</h1>
-      <p>
-        Este portal concentra los módulos del pilar <b>Delivery</b> dentro del modelo DPO.
-        Diseñado para crecer a futuro con más módulos y pilares sin perder orden.
-      </p>
+      <h1>Gerencia Valle</h1>
+       <p>
+          Portal del pilar <b>Delivery</b>, donde impulsamos la excelencia en la
+          ejecución, la mejora continua y el desarrollo de equipos de alto
+          desempeño. Nuestra prioridad es garantizar la satisfacción del cliente
+          en cada entrega.
+       </p>
     </section>
+
 
     <!-- =========================
          BANNER PREMIUM (LOGÍSTICA / DELIVERY)
-         Imagen local: ./public/img/home_delivery/Logistica.avif
          ========================= -->
     <section class="banner card">
       <div class="banner__bg" aria-hidden="true"></div>
+
+      <!-- LOGO GERENCIA VALLE -->
+      <img 
+        class="brand-badge"
+        src="/img/home_delivery/Zonavalle.png"
+        alt="Gerencia Valle AB InBev"
+      >
 
       <div class="banner__content">
         <div class="banner__badge">
@@ -36,10 +45,11 @@
           <span>Logística</span>
         </div>
 
-        <h2 class="banner__title">Delivery &amp; Logística</h2>
-        <p class="banner__subtitle">
-          Ejecución disciplinada, eficiencia operativa y mejora continua en ruta.
-        </p>
+        <h2 class="banner__title">Delivery</h2>
+          <p class="banner__subtitle">
+             Comprometidos con la excelencia en la ejecución, la mejora continua y la satisfacción del cliente en cada entrega.
+          </p>
+
 
         <div class="banner__chips">
           <span class="chip">Ejecución</span>
@@ -53,7 +63,7 @@
     </section>
 
     <!-- =========================
-         SECCIÓN PRINCIPAL (5 MÓDULOS DELIVERY)
+         SECCIÓN PRINCIPAL
          ========================= -->
     <section class="section">
       <header class="section__head">
@@ -62,41 +72,36 @@
       </header>
 
       <div class="grid grid--main">
-        <!-- 1 -->
         <article class="card module">
-          <div class="module__icon" aria-hidden="true">🚚</div>
+          <div class="module__icon">🚚</div>
           <h3>Ejecución de la entrega</h3>
           <p>Estándares, control y evidencia del proceso en ruta.</p>
           <button class="btn btn--ghost" disabled>Próximamente</button>
         </article>
 
-        <!-- 2 -->
         <article class="card module">
-          <div class="module__icon" aria-hidden="true">🤝</div>
+          <div class="module__icon">🤝</div>
           <h3>Equipos empoderados</h3>
           <p>Roles, disciplina operativa y cultura de ejecución.</p>
           <button class="btn btn--ghost" disabled>Próximamente</button>
         </article>
 
-        <!-- 3 -->
         <article class="card module">
-          <div class="module__icon" aria-hidden="true">📈</div>
+          <div class="module__icon">📈</div>
           <h3>Eficiencia del proceso</h3>
           <p>Productividad, tiempos, cumplimiento y mejoras rápidas.</p>
           <button class="btn btn--ghost" disabled>Próximamente</button>
         </article>
 
-        <!-- 4 -->
         <article class="card module">
-          <div class="module__icon" aria-hidden="true">🙂</div>
+          <div class="module__icon">🙂</div>
           <h3>La satisfacción del cliente</h3>
           <p>Experiencia, reclamos, hallazgos y retroalimentación.</p>
           <button class="btn btn--ghost" disabled>Próximamente</button>
         </article>
 
-        <!-- 5 -->
         <article class="card module">
-          <div class="module__icon" aria-hidden="true">🛠️</div>
+          <div class="module__icon">🛠️</div>
           <h3>Mejora de la entrega</h3>
           <p>Planes, acciones correctivas y estandarización.</p>
           <button class="btn btn--ghost" disabled>Próximamente</button>
@@ -104,91 +109,30 @@
       </div>
     </section>
 
-    <!-- =========================
-         ACCESOS DE APOYO (3 TARJETAS)
-         ========================= -->
+    <!-- ACCESOS -->
     <section class="section">
       <header class="section__head">
         <h2>Accesos de apoyo</h2>
-        <span class="section__meta">Accesos rápidos • Abren en nueva pestaña</span>
+        <span class="section__meta">Accesos rápidos</span>
       </header>
 
       <div class="grid grid--support">
-        <!-- BÚSQUEDA CLIENTES -->
         <article class="card support">
           <div class="support__top">
-            <div class="support__icon" aria-hidden="true">📌</div>
+            <div class="support__icon">📌</div>
             <div>
               <h3>Búsqueda de clientes</h3>
-              <p>Mapa de clientes (Leaflet). Búsqueda individual y masiva.</p>
+              <p>Mapa de clientes (Leaflet).</p>
             </div>
           </div>
 
           <div class="support__bottom">
-            <a class="btn btn--primary" href="/pilares/delivery/clientes/" target="_blank" rel="noopener">
+            <a class="btn btn--primary" href="/pilares/delivery/clientes/" target="_blank">
               Abrir
             </a>
-            <span class="support__hint">Ruta: /pilares/delivery/clientes/</span>
-          </div>
-        </article>
-
-        <!-- INDICADORES -->
-        <article class="card support is-disabled">
-          <div class="support__top">
-            <div class="support__icon" aria-hidden="true">📊</div>
-            <div>
-              <h3>Indicadores</h3>
-              <p>Panel de métricas del pilar Delivery (próximamente).</p>
-            </div>
-          </div>
-
-          <div class="support__bottom">
-            <button class="btn btn--ghost" disabled>Próximamente</button>
-            <span class="support__hint">Acceso a tablero / carpeta</span>
-          </div>
-        </article>
-
-        <!-- SOP / DOCUMENTOS -->
-        <article class="card support is-disabled">
-          <div class="support__top">
-            <div class="support__icon" aria-hidden="true">📄</div>
-            <div>
-              <h3>SOP / Documentos</h3>
-              <p>Procedimientos, guías, plantillas y material de apoyo.</p>
-            </div>
-          </div>
-
-          <div class="support__bottom">
-            <button class="btn btn--ghost" disabled>Próximamente</button>
-            <span class="support__hint">Acceso a carpeta SOP</span>
           </div>
         </article>
       </div>
-    </section>
-
-    <!-- =========================
-         PILARES FUTUROS (SIN DELIVERY)
-         ========================= -->
-    <section class="section section--footer">
-      <header class="section__head section__head--compact">
-        <h2>Pilares DPO (futuro)</h2>
-        <span class="section__meta">Escalable a los 7 pilares sin cambiar la base</span>
-      </header>
-
-      <div class="pills">
-        <span class="pill">Safety</span>
-        <span class="pill">Warehouse</span>
-        <span class="pill">Planning</span>
-        <span class="pill">Fleet</span>
-        <span class="pill">People</span>
-        <span class="pill">Management</span>
-      </div>
-
-      <footer class="footer">
-        <span>© 2026 Portal DPO</span>
-        <span class="footer__dot">•</span>
-        <a class="footer__link" href="/pilares/delivery/clientes/" target="_blank" rel="noopener">Abrir Clientes</a>
-      </footer>
     </section>
 
   </main>

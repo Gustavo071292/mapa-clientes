@@ -2,3 +2,8 @@ node_modules/
 .env
 maps.xlsx
 ~$maps.xlsx
+# Data (no se sube al repo)
+data/*.xlsx
+data/*.csv
+data/*.tsv
+data/*.txt
