@@ -121,40 +121,40 @@ function money(x) {
 // ======================
 function buildPopup(d) {
   const line = `<div style="border-top:1px dashed #999;margin:8px 0;"></div>`;
-
   let html = `<div style="min-width:260px">`;
 
-  // ---- Bloque 1: Identidad
+  // ---- Bloque 1: Identidad e Indicadores Clave
   html += `<b>Cliente:</b> ${val(d.Cliente)}<br/>`;
-  html += `<b>Nombre:</b> ${val(d.Nombre)}<br/><br/>`;
+  html += `<b>Nombre:</b> ${val(d.Nombre)}<br/>`;
+  html += `<b>Propietario:</b> ${val(d.Propietario)}<br/>`;
   html += `<b>Teléfono:</b> ${val(d.Telefono)}<br/>`;
-
-  // ✅ Cobro con resaltado cuando sea CASHLESS
   html += `<b>Cobro:</b> ${decorateCobro(d.Cobro)}<br/>`;
-
-  // ✅ NPS con resaltado por estado (y "Sin encuesta <MES>" normal)
   html += `<b>NPS:</b> ${decorateNPS(d.NPS)}<br/>`;
 
   html += line;
 
-  // ---- Bloque 2: Operación
-  html += `<b>Día entrega:</b> ${val(d.EntregaFREE)}<br/>`;
+  // ---- Bloque 2: Logística, Flex y ETA
+  html += `<b>Día de entrega:</b> ${val(d.EntregaFREE)}<br/>`;
   html += `<b>Día Flex:</b> ${val(d.DiaFlex)}<br/>`;
   html += `<b>Pedido mínimo:</b> ${money(d.ValorMinimoFlex)}<br/>`;
   html += `<b>Valor Flex:</b> ${money(d.ValorFlex)}<br/>`;
+  html += `<b>ETA:</b> ${val(d.ETA)}<br/>`; // ✅ Agregado aquí
 
   html += line;
 
-  // ---- Bloque 3: Ubicación
+  // ---- Bloque 3: Ubicación y Comercial
   html += `<b>Zona Venta:</b> ${val(d.ZonaVenta)}<br/>`;
   html += `<b>COM:</b> ${val(d.COM)}<br/>`;
   html += `<b>Distrito:</b> ${val(d.Distrito)}<br/>`;
-  html += `<b>Barrio:</b> ${val(d.Barrio)}<br/><br/>`;
+  html += `<b>Barrio:</b> ${val(d.Barrio)}<br/>`;
+  html += `<b>Calle:</b> ${val(d.Direccion)}<br/>`; 
 
-  // ---- Bloque 4: Comercial / Portafolio
+  html += `<br/>`; // El espacio solicitado
+
   html += `<b>Cerveza:</b> ${val(d.Cerveza)}<br/>`;
   html += `<b>NABS:</b> ${val(d.NABS)}<br/>`;
   html += `<b>MKP:</b> ${val(d.MKP)}<br/>`;
+
   html += `</div>`;
   return html;
 }
@@ -165,36 +165,33 @@ function normalizarCliente(d) {
 
   const lat = typeof d.lat === "number" ? d.lat : null;
   const lng = typeof d.lng === "number" ? d.lng : null;
-
-  // Si viniera "extras" (por compatibilidad vieja), lo mezclamos
   const extras = d.extras && typeof d.extras === "object" ? d.extras : {};
 
   return {
-    // NO lo mostraremos, pero lo conservamos si te sirve luego
     CD: d.CD ?? d.cd ?? extras.CD ?? "-",
-
     Cliente: d.Cliente ?? d.codigo ?? d.cliente ?? extras.Cliente ?? "-",
     Nombre: d.Nombre ?? d.nombre ?? extras.Nombre ?? "Sin nombre",
+    
+    // ✅ AGREGA ESTAS LÍNEAS PARA QUE EL POPUP LAS VEA:
+    Propietario: d.Propietario ?? extras.Propietario ?? "-",
+    Direccion: d.Direccion ?? extras.Direccion ?? "-",
+    ETA: d.ETA ?? extras.ETA ?? "-",
+    
     Barrio: d.Barrio ?? d.barrio ?? extras.Barrio ?? "-",
     Poblacion: d.Poblacion ?? d.poblacion ?? extras.Poblacion,
     Telefono: d.Telefono ?? d.telefono ?? extras.Telefono ?? "-",
-
     EntregaFREE: d.EntregaFREE ?? extras.EntregaFREE,
     DiaFlex: d.DiaFlex ?? extras.DiaFlex,
     ValorMinimoFlex: d.ValorMinimoFlex ?? extras.ValorMinimoFlex,
     ValorFlex: d.ValorFlex ?? extras.ValorFlex,
-
     ZonaVenta: d.ZonaVenta ?? extras.ZonaVenta,
     Distrito: d.Distrito ?? extras.Distrito,
     COM: d.COM ?? extras.COM,
     Cerveza: d.Cerveza ?? extras.Cerveza,
     NABS: d.NABS ?? extras.NABS,
     MKP: d.MKP ?? extras.MKP,
-
-    // ✅ AQUI ESTABA EL PROBLEMA: ahora sí los pasamos al popup
     Cobro: d.Cobro ?? extras.Cobro,
     NPS: d.NPS ?? extras.NPS,
-
     lat,
     lng,
   };

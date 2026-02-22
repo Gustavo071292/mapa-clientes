@@ -10,31 +10,22 @@
 <body>
   <main class="wrap">
 
-    <!-- HERO / BIENVENIDA -->
-    <section class="hero card">
-      <h1>Gerencia Valle</h1>
-       <p>
-          Portal del pilar <b>Delivery</b>, donde impulsamos la excelencia en la
-          ejecución, la mejora continua y el desarrollo de equipos de alto
-          desempeño. Nuestra prioridad es garantizar la satisfacción del cliente
-          en cada entrega.
-       </p>
-    </section>
+    <header class="main-header">
+      <div class="main-header__content">
+        <div class="welcome-text">
+          <span class="welcome-text__label">PORTAL DPO</span>
+          <h1>Gerencia Valle <span class="sep">/</span> <span class="highlight">Delivery</span></h1>
+        </div>
+        <div class="system-status">
+          <span class="status-dot"></span>
+          <span id="current-date">Sincronizado</span>
+        </div>
+      </div>
+    </header>
 
-
-    <!-- =========================
-         BANNER PREMIUM (LOGÍSTICA / DELIVERY)
-         ========================= -->
     <section class="banner card">
       <div class="banner__bg" aria-hidden="true"></div>
-
-      <!-- LOGO GERENCIA VALLE -->
-      <img 
-        class="brand-badge"
-        src="/img/home_delivery/Zonavalle.png"
-        alt="Gerencia Valle AB InBev"
-      >
-
+      <img class="brand-badge" src="/img/home_delivery/Zonavalle.png" alt="Gerencia Valle AB InBev">
       <div class="banner__content">
         <div class="banner__badge">
           <span class="dot"></span>
@@ -44,13 +35,10 @@
           <span class="sep">/</span>
           <span>Logística</span>
         </div>
-
         <h2 class="banner__title">Delivery</h2>
-          <p class="banner__subtitle">
-             Comprometidos con la excelencia en la ejecución, la mejora continua y la satisfacción del cliente en cada entrega.
-          </p>
-
-
+        <p class="banner__subtitle">
+          Comprometidos con la excelencia en la ejecución y la satisfacción del cliente en cada entrega.
+        </p>
         <div class="banner__chips">
           <span class="chip">Ejecución</span>
           <span class="chip">Eficiencia</span>
@@ -58,17 +46,38 @@
           <span class="chip">Mejora</span>
         </div>
       </div>
-
-      <div class="banner__shine" aria-hidden="true"></div>
     </section>
 
-    <!-- =========================
-         SECCIÓN PRINCIPAL
-         ========================= -->
+    <section class="section">
+      <header class="section__head">
+        <h2>Herramienta Estratégica</h2>
+        <span class="section__meta">Mapa Interactivo Activo</span>
+      </header>
+      
+      <div class="card search-hero">
+        <div class="search-hero__body">
+          <div class="search-hero__info">
+            <div class="icon-main">📌</div>
+            <div>
+              <h3>Búsqueda de Clientes</h3>
+              <p>Localización en tiempo real, <b>ETA</b> logístico, <b>NPS</b> y estado de cobro.</p>
+            </div>
+          </div>
+          <div class="search-hero__action">
+            <a class="btn-cta" href="/pilares/delivery/clientes/" target="_blank">
+              <span>EXPLORAR MAPA</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="search-hero__glow"></div>
+      </div>
+    </section>
+
     <section class="section">
       <header class="section__head">
         <h2>Módulos del Pilar Delivery</h2>
-        <span class="section__meta">Próximamente • Abrirán en nueva pestaña</span>
+        <span class="section__meta">Próximamente</span>
       </header>
 
       <div class="grid grid--main">
@@ -109,32 +118,12 @@
       </div>
     </section>
 
-    <!-- ACCESOS -->
-    <section class="section">
-      <header class="section__head">
-        <h2>Accesos de apoyo</h2>
-        <span class="section__meta">Accesos rápidos</span>
-      </header>
-
-      <div class="grid grid--support">
-        <article class="card support">
-          <div class="support__top">
-            <div class="support__icon">📌</div>
-            <div>
-              <h3>Búsqueda de clientes</h3>
-              <p>Mapa de clientes (Leaflet).</p>
-            </div>
-          </div>
-
-          <div class="support__bottom">
-            <a class="btn btn--primary" href="/pilares/delivery/clientes/" target="_blank">
-              Abrir
-            </a>
-          </div>
-        </article>
-      </div>
-    </section>
-
   </main>
+
+  <script>
+    // Script simple para mostrar la fecha actual
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('es-ES', options);
+  </script>
 </body>
 </html>
