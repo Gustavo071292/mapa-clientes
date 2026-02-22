@@ -1,0 +1,15 @@
+{
+  "short_name": "Portal Valle",
+  "name": "Portal DPO - Gerencia Valle",
+  "icons": [
+    {
+      "src": "/img/Zonavalle.ico",
+      "sizes": "256x256",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#c8102e",
+  "background_color": "#05070c"
+}
