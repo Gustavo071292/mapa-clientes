@@ -3,9 +3,9 @@
 // ======================
 const map = L.map("map").setView([3.4516, -76.5320], 12); // Cali por defecto
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution: "&copy; OpenStreetMap",
+// Estilo de mapa oscuro
+L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+  attribution: '&copy; OpenStreetMap &copy; CARTO'
 }).addTo(map);
 
 // Marcadores actuales en el mapa (para poder limpiar)
@@ -28,7 +28,6 @@ function limpiarMarcadores() {
   markers = [];
 }
 
-// Parsea "clientes" desde texto: soporta líneas, comas, punto y coma, espacios
 function parseClientes(texto) {
   return String(texto || "")
     .split(/[\n,; \t\r]+/)
@@ -48,15 +47,14 @@ function val(x) {
 }
 
 // ======================
-// RESALTADO (Cobro / NPS)
+// RESALTADO DINÁMICO (Colores)
 // ======================
+
+// Resalta el método de pago (Cashless en Amarillo)
 function decorateCobro(raw) {
   const s = val(raw);
   if (s === "—") return s;
 
-  const up = s.toUpperCase();
-
-  // Resalta SOLO si es CASHLESS (y NO si dice "NO ES CASHLESS")
   const isNo = /NO\s*ES\s*CASHLESS/i.test(s);
   const isCashless = /CASHLESS/i.test(s);
 
@@ -66,11 +64,11 @@ function decorateCobro(raw) {
   return s;
 }
 
+// Resalta el estado del NPS
 function decorateNPS(raw) {
   const s = val(raw);
   if (s === "—") return s;
 
-  // Si dice "Sin encuesta <MES>" (cambia mes), queda normal.
   if (/^SIN\s+ENCUESTA\b/i.test(s)) return s;
 
   const low = s.toLowerCase();
@@ -81,7 +79,24 @@ function decorateNPS(raw) {
   return s;
 }
 
-// ====== MONEDA (COP) ======
+// Resalta Cerveza, NABS y MKP por volumen
+function decorateVolumen(raw) {
+  const s = val(raw);
+  if (s === "—") return s;
+
+  const low = s.toLowerCase();
+  // Azul para volúmenes grandes
+  if (low.includes("grande") || low.includes("120 o mas")) {
+    return `<span class="hl hl-blue">${s}</span>`;
+  }
+  // Naranja para volúmenes pequeños
+  if (low.includes("pequeño")) {
+    return `<span class="hl hl-orange">${s}</span>`;
+  }
+  return s;
+}
+
+// ====== FORMATEO MONEDA (COP) ======
 function toNumberSmart(x) {
   if (x === null || x === undefined) return null;
   if (typeof x === "number") return Number.isFinite(x) ? x : null;
@@ -89,14 +104,10 @@ function toNumberSmart(x) {
   const s = String(x).trim();
   if (!s) return null;
 
-  // deja dígitos, coma, punto y signo
   let cleaned = s.replace(/[^\d.,-]/g, "");
-
-  // Caso 1: trae coma y punto -> asumimos 1.234.567,89
   if (cleaned.includes(",") && cleaned.includes(".")) {
     cleaned = cleaned.replace(/\./g, "").replace(",", ".");
   } else {
-    // Caso 2: solo comas -> normalmente miles en datos de negocio
     cleaned = cleaned.replace(/,/g, "");
   }
 
@@ -116,14 +127,13 @@ function money(x) {
 }
 
 // ======================
-// POPUP (ORDEN EXACTO COMO LO PEDISTE)
-// (NO muestra CD / Latitud / Longitud)
+// CONSTRUCCIÓN DEL POPUP
 // ======================
 function buildPopup(d) {
-  const line = `<div style="border-top:1px dashed #999;margin:8px 0;"></div>`;
-  let html = `<div style="min-width:260px">`;
+  const line = `<div style="border-top:1px dashed rgba(255,255,255,0.2); margin:8px 0;"></div>`;
+  let html = `<div style="min-width:260px; color:white; font-family:sans-serif; line-height:1.4;">`;
 
-  // ---- Bloque 1: Identidad e Indicadores Clave
+  // Encabezado
   html += `<b>Cliente:</b> ${val(d.Cliente)}<br/>`;
   html += `<b>Nombre:</b> ${val(d.Nombre)}<br/>`;
   html += `<b>Propietario:</b> ${val(d.Propietario)}<br/>`;
@@ -133,77 +143,53 @@ function buildPopup(d) {
 
   html += line;
 
-  // ---- Bloque 2: Logística, Flex y ETA
+  // Logística
   html += `<b>Día de entrega:</b> ${val(d.EntregaFREE)}<br/>`;
   html += `<b>Día Flex:</b> ${val(d.DiaFlex)}<br/>`;
   html += `<b>Pedido mínimo:</b> ${money(d.ValorMinimoFlex)}<br/>`;
   html += `<b>Valor Flex:</b> ${money(d.ValorFlex)}<br/>`;
-  html += `<b>ETA:</b> ${val(d.ETA)}<br/>`; // ✅ Agregado aquí
+  html += `<b>ETA:</b> ${val(d.ETA)}<br/>`; 
 
   html += line;
 
-  // ---- Bloque 3: Ubicación y Comercial
+  // Ubicación
   html += `<b>Zona Venta:</b> ${val(d.ZonaVenta)}<br/>`;
   html += `<b>COM:</b> ${val(d.COM)}<br/>`;
   html += `<b>Distrito:</b> ${val(d.Distrito)}<br/>`;
   html += `<b>Barrio:</b> ${val(d.Barrio)}<br/>`;
   html += `<b>Calle:</b> ${val(d.Direccion)}<br/>`; 
 
-  html += `<br/>`; // El espacio solicitado
+  html += `<br/>`; 
 
-  html += `<b>Cerveza:</b> ${val(d.Cerveza)}<br/>`;
-  html += `<b>NABS:</b> ${val(d.NABS)}<br/>`;
-  html += `<b>MKP:</b> ${val(d.MKP)}<br/>`;
+  // Portafolio y Volúmenes (Resaltados)
+  html += `<b>Cerveza:</b> ${decorateVolumen(d.Cerveza)}<br/>`;
+  html += `<b>NABS:</b> ${decorateVolumen(d.NABS)}<br/>`;
+  html += `<b>MKP:</b> ${decorateVolumen(d.MKP)}<br/>`;
 
   html += `</div>`;
   return html;
 }
 
-// Normaliza para pintar (acepta respuesta vieja o nueva)
+// ======================
+// FUNCIONES DE MAPA
+// ======================
 function normalizarCliente(d) {
   if (!d || typeof d !== "object") return null;
-
   const lat = typeof d.lat === "number" ? d.lat : null;
   const lng = typeof d.lng === "number" ? d.lng : null;
-  const extras = d.extras && typeof d.extras === "object" ? d.extras : {};
-
   return {
-    CD: d.CD ?? d.cd ?? extras.CD ?? "-",
-    Cliente: d.Cliente ?? d.codigo ?? d.cliente ?? extras.Cliente ?? "-",
-    Nombre: d.Nombre ?? d.nombre ?? extras.Nombre ?? "Sin nombre",
-    
-    // ✅ AGREGA ESTAS LÍNEAS PARA QUE EL POPUP LAS VEA:
-    Propietario: d.Propietario ?? extras.Propietario ?? "-",
-    Direccion: d.Direccion ?? extras.Direccion ?? "-",
-    ETA: d.ETA ?? extras.ETA ?? "-",
-    
-    Barrio: d.Barrio ?? d.barrio ?? extras.Barrio ?? "-",
-    Poblacion: d.Poblacion ?? d.poblacion ?? extras.Poblacion,
-    Telefono: d.Telefono ?? d.telefono ?? extras.Telefono ?? "-",
-    EntregaFREE: d.EntregaFREE ?? extras.EntregaFREE,
-    DiaFlex: d.DiaFlex ?? extras.DiaFlex,
-    ValorMinimoFlex: d.ValorMinimoFlex ?? extras.ValorMinimoFlex,
-    ValorFlex: d.ValorFlex ?? extras.ValorFlex,
-    ZonaVenta: d.ZonaVenta ?? extras.ZonaVenta,
-    Distrito: d.Distrito ?? extras.Distrito,
-    COM: d.COM ?? extras.COM,
-    Cerveza: d.Cerveza ?? extras.Cerveza,
-    NABS: d.NABS ?? extras.NABS,
-    MKP: d.MKP ?? extras.MKP,
-    Cobro: d.Cobro ?? extras.Cobro,
-    NPS: d.NPS ?? extras.NPS,
-    lat,
-    lng,
+    ...d,
+    Cliente: d.Cliente ?? d.cliente ?? "-",
+    Nombre: d.Nombre ?? d.nombre ?? "Sin nombre",
+    lat, lng,
   };
 }
 
-// Dibuja una lista de clientes en el mapa
 function pintarClientes(lista) {
   const clientes = (lista || []).map(normalizarCliente).filter(Boolean);
 
   clientes.forEach((c) => {
     if (typeof c.lat !== "number" || typeof c.lng !== "number") return;
-
     const marker = L.marker([c.lat, c.lng]).addTo(map).bindPopup(buildPopup(c));
     markers.push(marker);
   });
@@ -215,7 +201,7 @@ function pintarClientes(lista) {
 }
 
 // ======================
-// Cargar CDs al iniciar (si existe /api/cds)
+// CARGA DE DATOS Y EVENTOS
 // ======================
 async function cargarCDs() {
   const sel = document.getElementById("cd");
@@ -229,42 +215,34 @@ async function cargarCDs() {
     sel.innerHTML = `<option value="">Selecciona CD...</option>`;
     cds.forEach(({ code, name }) => {
       const opt = document.createElement("option");
-      opt.value = code; // AV28/AV46/AV57
+      opt.value = code;
       opt.textContent = `${name} (${code})`;
       sel.appendChild(opt);
     });
 
-    // Default: Cali (AV46) si está
     const preferido = "AV46";
     if (cds.some((x) => x.code === preferido)) sel.value = preferido;
   } catch (e) {
-    console.warn("No se pudo cargar /api/cds (no crítico).", e);
+    console.warn("No se pudo cargar /api/cds", e);
   }
 }
 
 cargarCDs();
 
-// ======================
-// 1) BÚSQUEDA INDIVIDUAL (CD + Cliente)
-// GET /clientes/buscar?cd=...&cliente=...
-// ======================
+// Búsqueda Individual
 document.getElementById("buscar")?.addEventListener("click", async () => {
   const cd = getCD();
   const cliente = document.getElementById("codigo")?.value.trim();
 
-  if (!cd) {
-    setEstado("Selecciona un CD", false);
-    return;
-  }
-  if (!cliente) {
-    setEstado("Cliente requerido", false);
+  if (!cd || !cliente) {
+    setEstado("CD y Cliente requeridos", false);
     return;
   }
 
   setEstado("Buscando...", null);
 
   try {
-    const url = `/clientes/buscar?cd=${encodeURIComponent(cd)}&cliente=${encodeURIComponent(cliente)}`;
+    const url = `/api/delivery/buscar?cd=${encodeURIComponent(cd)}&cliente=${encodeURIComponent(cliente)}`;
     const res = await fetch(url);
     const data = await res.json();
 
@@ -275,156 +253,81 @@ document.getElementById("buscar")?.addEventListener("click", async () => {
 
     limpiarMarcadores();
     pintarClientes([data]);
-
     setEstado("Cliente encontrado", true);
-
-    // En móvil: cerrar panel para ver el mapa
     colapsarPanelEnMovil();
   } catch (e) {
-    console.error(e);
     setEstado("Error consultando el servidor", false);
   }
 });
 
-// ======================
-// 2) BÚSQUEDA MASIVA (CD + lista de clientes)
-// POST /clientes/por-clientes
-// Body: { cd: "AV46", clientes: [...] }
-// ======================
+// Búsqueda Masiva
 async function buscarMasivo(clientes) {
   const cd = getCD();
-
   if (!cd) {
     setEstado("Selecciona un CD", false);
     return;
   }
 
-  const unicos = Array.from(
-    new Set((clientes || []).map((x) => String(x).trim()).filter(Boolean))
-  );
+  const unicos = Array.from(new Set((clientes || []).map((x) => String(x).trim()).filter(Boolean)));
+  if (unicos.length === 0) return;
 
-  if (unicos.length === 0) {
-    setEstado("No hay clientes válidos", false);
-    return;
-  }
-
-  const LIMITE = 2000;
-  if (unicos.length > LIMITE) {
-    setEstado(`Demasiados clientes (máximo ${LIMITE})`, false);
-    return;
-  }
-
-  setEstado(`Buscando ${unicos.length} clientes en ${cd}...`, null);
+  setEstado(`Buscando ${unicos.length} clientes...`, null);
 
   try {
-    const res = await fetch(`/clientes/por-clientes`, {
+    const res = await fetch(`/api/delivery/por-clientes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cd, clientes: unicos }),
     });
 
     const data = await res.json();
-
-    if (!res.ok) {
-      setEstado(data?.error ?? "Error en búsqueda masiva", false);
-      return;
-    }
-
-    const lista = data.clientes || [];
+    if (!res.ok) throw new Error(data.error);
 
     limpiarMarcadores();
-    pintarClientes(lista);
-
-    const noEncontrados = (data.noEncontrados || []).length;
-    const sinCoordenadas = (data.sinCoordenadas || []).length;
-
-    let msg = `Mostrados: ${lista.length}`;
-    if (noEncontrados > 0) msg += ` | No encontrados: ${noEncontrados}`;
-    if (sinCoordenadas > 0) msg += ` | Sin coordenadas: ${sinCoordenadas}`;
-
-    setEstado(msg, true);
-
-    // En móvil: cerrar panel para ver el mapa
+    pintarClientes(data.clientes || []);
+    setEstado(`Mostrados: ${(data.clientes || []).length}`, true);
     colapsarPanelEnMovil();
   } catch (e) {
-    console.error(e);
-    setEstado("Error consultando el servidor", false);
+    setEstado("Error en búsqueda masiva", false);
   }
 }
 
-// ======================
-// 2A) CARGAR ARCHIVO (.txt / .csv)
-// ======================
+// Eventos de botones de carga
 document.getElementById("btnCargarArchivo")?.addEventListener("click", async () => {
   const input = document.getElementById("archivoCodigos");
   const file = input?.files?.[0];
-
-  if (!file) {
-    setEstado("Selecciona un archivo .txt o .csv", false);
-    return;
-  }
-
-  try {
-    const texto = await file.text();
-    const clientes = parseClientes(texto);
-    await buscarMasivo(clientes);
-  } catch (e) {
-    console.error(e);
-    setEstado("Error leyendo el archivo", false);
-  }
+  if (!file) return;
+  const texto = await file.text();
+  await buscarMasivo(parseClientes(texto));
 });
 
-// ======================
-// 2B) PEGAR CLIENTES (manual)
-// ======================
 document.getElementById("btnMostrarManual")?.addEventListener("click", async () => {
   const texto = document.getElementById("codigosManual")?.value || "";
-  const clientes = parseClientes(texto);
-  await buscarMasivo(clientes);
+  await buscarMasivo(parseClientes(texto));
 });
 
-// ======================
-// LIMPIAR MAPA
-// ======================
 document.getElementById("btnLimpiar")?.addEventListener("click", () => {
   limpiarMarcadores();
   setEstado("Marcadores limpiados", null);
 });
 
-// ======================
-// PANEL COLAPSABLE (móvil)
-// ======================
+// Panel Móvil
 function colapsarPanelEnMovil() {
   const panel = document.getElementById("panel");
   const btn = document.getElementById("togglePanel");
-  if (!panel || !btn) return;
-
-  const isMobile = window.matchMedia("(max-width: 720px)").matches;
-  if (!isMobile) return;
-
-  panel.classList.add("is-collapsed");
-  btn.setAttribute("aria-expanded", "false");
-  btn.textContent = "Controles";
+  if (window.innerWidth <= 720 && panel && btn) {
+    panel.classList.add("is-collapsed");
+    btn.textContent = "Controles";
+  }
 }
 
 (function initPanelMobile() {
   const panel = document.getElementById("panel");
   const btn = document.getElementById("togglePanel");
-  if (!panel || !btn) return;
-
-  // En móvil arrancamos colapsado para dar espacio al mapa
-  const isMobile = window.matchMedia("(max-width: 720px)").matches;
-  if (isMobile) {
-    panel.classList.add("is-collapsed");
-    btn.setAttribute("aria-expanded", "false");
-    btn.textContent = "Controles";
-  } else {
-    btn.textContent = "Controles";
+  if (panel && btn) {
+    btn.addEventListener("click", () => {
+      const collapsed = panel.classList.toggle("is-collapsed");
+      btn.textContent = collapsed ? "Controles" : "Ocultar";
+    });
   }
-
-  btn.addEventListener("click", () => {
-    const collapsed = panel.classList.toggle("is-collapsed");
-    btn.setAttribute("aria-expanded", String(!collapsed));
-    btn.textContent = collapsed ? "Controles" : "Ocultar";
-  });
 })();

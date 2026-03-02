@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Privado - Rendimiento Variable</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 2px solid #c8102e;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+        }
+        .btn-access {
+            background: #c8102e;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <img src="/img/lock-icon.png" alt="Seguridad" width="50">
+        <h2>Área Confidencial</h2>
+        <p>Ingrese la contraseña de Gerencia para ver el rendimiento de variable.</p>
+        
+        <form id="loginVariable">
+            <input type="password" id="passwordField" placeholder="Contraseña" required>
+            <button type="submit" class="btn-access">Ver Resultados</button>
+        </form>
+        
+        <p id="errorMessage" style="color: #ff4d4d; margin-top: 15px; display: none;">Contraseña incorrecta. Intente de nuevo.</p>
+    </div>
+
+    <script>
+        document.getElementById('loginVariable').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const password = document.getElementById('passwordField').value;
+            
+            // Enviamos la clave al servidor para que el authController la valide
+            const response = await fetch('/equipos-empoderados/visibilidad/variable/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            const data = await response.json();
+
+            if (data.acceso) {
+                // Si la clave es correcta (Valle2026*), lo dejamos pasar
+                window.location.href = '/equipos-empoderados/visibilidad/rendimiento-final';
+            } else {
+                // Si falla, mostramos el error
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

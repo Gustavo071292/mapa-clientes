@@ -1,315 +1,160 @@
-/* styles.css
-   UI Pro + Responsive (PC/Móvil)
-   Panel colapsable en móvil (sin cambiar estructura)
-*/
+/* ==========================================================================
+   MAPA PREMIUM DARK - GERENCIA VALLE (FINAL OPTIMIZADO)
+   ========================================================================== */
 
-:root{
-  --bg: #0b1220;
-  --panel-bg: rgba(255,255,255,0.94);
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: rgba(2,6,23,0.10);
-  --shadow: 0 12px 34px rgba(2,6,23,0.12);
-  --radius: 16px;
+:root {
+  --bg-dark: #05070c;
+  /* Efecto Vidrio: Fondo oscuro translúcido */
+  --panel-glass: rgba(15, 23, 42, 0.9); 
+  --text-light: rgba(255, 255, 255, 0.95);
+  --muted: rgba(255, 255, 255, 0.6);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --radius-lg: 20px;
 
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-
-  --input-bg: #ffffff;
-  --focus: 0 0 0 4px rgba(37,99,235,0.16);
+  /* Identidad Corporativa */
+  --primary: #c8102e; 
+  --primary-hover: #a00d25;
+  --accent: #f2c200; /* Amarillo Cashless */
+  
+  --input-bg: rgba(255, 255, 255, 0.07);
 }
 
-/* Reset */
-*{
-  box-sizing: border-box;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
+/* Reset y Base */
+* { box-sizing: border-box; }
 
-html, body{
-  height: 100%;
-}
-
-body{
+body {
   margin: 0;
-  color: var(--text);
-  background:
-    radial-gradient(1200px 600px at 20% 0%, rgba(37,99,235,0.18), transparent 60%),
-    radial-gradient(900px 500px at 90% 20%, rgba(14,165,233,0.14), transparent 55%),
-    var(--bg);
+  font-family: 'SF Pro Display', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  height: 100vh;
+  overflow: hidden; 
 }
 
-/* Botón flotante (solo móvil) */
-.togglePanel{
-  position: fixed;
-  left: 12px;
-  top: 12px;
-  z-index: 2000;
-
-  height: 42px;
-  padding: 0 14px;
-
-  border: 1px solid rgba(2,6,23,0.12);
-  border-radius: 999px;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(10px);
-
-  color: var(--text);
-  font-weight: 700;
-  cursor: pointer;
-
-  box-shadow: var(--shadow);
-  display: none; /* se muestra solo en móvil */
-}
-
-/* Panel */
-.panel{
-  position: sticky;
-  top: 0;
+/* PANEL DE CONTROL */
+.panel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 380px;
   z-index: 1000;
-
-  padding: 14px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(10px);
-
+  padding: 25px;
+  background: var(--panel-glass);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 }
 
-/* Tarjeta interna */
-.panel::before{
-  content: "";
-  display: block;
-  position: absolute;
-  inset: 10px;
-  border-radius: var(--radius);
-  background: var(--panel-bg);
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(2,6,23,0.08);
-  z-index: -1;
+/* Filas y Controles */
+.fila { display: flex; flex-direction: column; gap: 8px; }
+
+/* FIX SELECTORES */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px !important;
 }
 
-/* Filas */
-.fila{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Controles */
-input[type="text"],
-select,
-textarea,
-input[type="file"]{
-  border: 1px solid var(--border);
+input[type="text"], select, textarea, input[type="file"] {
   background: var(--input-bg);
-  color: var(--text);
+  border: 1px solid var(--border-glass);
+  color: white;
+  padding: 12px;
   border-radius: 12px;
-  padding: 10px 12px;
+  font-size: 14px;
   outline: none;
-  transition: box-shadow .15s ease, border-color .15s ease;
+  transition: all 0.3s ease;
 }
 
-input[type="text"],
-select,
-button{
-  height: 42px;
+select option {
+  background-color: #1a202c;
+  color: white;
+  padding: 10px;
 }
 
-select{
-  min-width: 190px;
+input:focus, select:focus {
+  border-color: var(--primary);
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.2);
 }
 
-input[type="text"]{
-  width: min(340px, 100%);
-}
-
-textarea{
-  width: min(860px, 100%);
-  min-height: 84px;
-  resize: vertical;
-  line-height: 1.35;
-}
-
-input[type="text"]:focus,
-select:focus,
-textarea:focus,
-input[type="file"]:focus{
-  border-color: rgba(37,99,235,0.55);
-  box-shadow: var(--focus);
-}
-
-/* Botones */
-button{
-  padding: 0 14px;
-  border: 1px solid rgba(37,99,235,0.25);
-  border-radius: 12px;
+/* BOTONES */
+button {
+  height: 46px;
   background: var(--primary);
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: .2px;
-  cursor: pointer;
-  transition: background .15s ease, transform .05s ease, box-shadow .15s ease;
-  box-shadow: 0 10px 22px rgba(37,99,235,0.22);
-}
-
-button:hover{ background: var(--primary-hover); }
-button:active{ transform: translateY(1px); }
-
-/* Botón limpiar neutro */
-#btnLimpiar{
-  background: transparent;
-  color: var(--text);
-  border-color: rgba(2,6,23,0.14);
-  box-shadow: none;
-}
-#btnLimpiar:hover{ background: rgba(2,6,23,0.05); }
-
-/* Estado */
-#estado{
-  font-size: 13px;
-  color: var(--muted);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(2,6,23,0.04);
-  border: 1px solid rgba(2,6,23,0.06);
-}
-
-/* Ayuda */
-.ayuda{
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.35;
-}
-
-/* Separador */
-hr{
-  width: 100%;
+  color: white;
   border: none;
-  border-top: 1px solid rgba(2,6,23,0.10);
-  margin: 6px 0;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Mapa */
-#map{
-  width: min(1400px, calc(100% - 20px));
-  margin: 10px auto 16px;
-  height: calc(100vh - 180px);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(255,255,255,0.08);
+button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.2);
+  box-shadow: 0 8px 20px rgba(200, 16, 46, 0.3);
 }
 
-.leaflet-container{
-  background: #0b1220;
+#btnLimpiar {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-glass);
+  color: var(--muted);
 }
 
-/* ===== MÓVIL: panel colapsable ===== */
-@media (max-width: 720px){
-  .togglePanel{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
+/* MAPA */
+#map { width: 100%; height: 100vh; z-index: 1; }
 
-  /* Panel como overlay */
-  .panel{
-    position: fixed;
-    left: 8px;
-    right: 8px;
-    top: 62px; /* espacio para botón */
-    z-index: 1800;
-
-    border-bottom: none;
-    border-radius: var(--radius);
-  }
-
-  .panel::before{
-    inset: 0;
-    border-radius: var(--radius);
-  }
-
-  /* Colapsado */
-  .panel.is-collapsed{
-    transform: translateY(-140%);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform .22s ease, opacity .18s ease;
-  }
-  .panel{
-    transition: transform .22s ease, opacity .18s ease;
-  }
-
-  /* Todo a ancho completo */
-  select,
-  input[type="text"],
-  input[type="file"],
-  textarea,
-  button{
-    width: 100%;
-  }
-
-  #estado{
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* Mapa casi full screen */
-  #map{
-    width: calc(100% - 16px);
-    margin: 62px auto 12px;
-    height: calc(100vh - 82px);
-    border-radius: 16px;
-  }
+/* POPUPS DE LEAFLET */
+.leaflet-popup-content-wrapper {
+  background: var(--panel-glass) !important;
+  color: white !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-glass);
+  border-radius: 15px;
 }
 
-/* =========================
-   RESALTADOS POPUP (Cobro / NPS)
-   Elegante: subrayado + fondo suave
-   ========================= */
+.leaflet-popup-tip { background: var(--panel-glass) !important; }
 
-.hl{
+/* ==========================================================================
+   RESALTADOS (NPS / COBRO / VOLUMEN) 
+   ========================================================================== */
+.hl { 
   display: inline-block;
-  padding: 1px 6px;
-  border-radius: 6px;
-  font-weight: 800;
-  line-height: 1.35;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  border-bottom: 2px solid rgba(0,0,0,0.18);
+  padding: 2px 8px; 
+  border-radius: 4px; 
+  font-weight: 900; 
+  font-size: 11px;
+  text-transform: uppercase;
+  margin: 2px 0;
 }
 
-.hl-yellow{
-  background: rgba(250, 204, 21, 0.22);
-  border-bottom-color: rgba(202, 138, 4, 0.55);
+/* Colores Dinámicos */
+.hl-yellow { background: rgba(242, 194, 0, 0.2); color: #f2c200; border: 1px solid #f2c200; }
+.hl-green  { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+.hl-red    { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+.hl-blue   { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #38bdf8; }
+.hl-orange { background: rgba(251, 146, 60, 0.2); color: #fb923c; border: 1px solid #fb923c; }
+
+/* ===== MÓVIL ===== */
+.togglePanel {
+  position: fixed; left: 15px; top: 15px; z-index: 2000; height: 48px;
+  padding: 0 20px; border-radius: 99px; background: var(--primary);
+  color: white; font-weight: 800; display: none; cursor: pointer;
 }
 
-.hl-red{
-  background: rgba(239, 68, 68, 0.16);
-  border-bottom-color: rgba(220, 38, 38, 0.55);
-}
-
-.hl-green{
-  background: rgba(34, 197, 94, 0.16);
-  border-bottom-color: rgba(22, 163, 74, 0.55);
-}
-
-.leaflet-popup-content-wrapper{
-  border-radius: 14px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-}
-
-.leaflet-popup-tip{
-  box-shadow: 0 6px 12px rgba(0,0,0,0.18);
-}
-
-.leaflet-popup-content{
-  font-size: 13px;
-  line-height: 1.45;
+@media (max-width: 768px) {
+  .togglePanel { display: block; }
+  .panel { width: calc(100% - 40px); top: 80px; left: 20px; transition: 0.4s ease; }
+  .panel.is-collapsed { transform: translateY(-150%); opacity: 0; pointer-events: none; }
 }

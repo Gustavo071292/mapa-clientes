@@ -1,0 +1,181 @@
+/* VARIABLES DE COLOR - Estilo Gerencia Valle */
+:root {
+    --bg-principal: #121212;
+    --bg-tarjeta: #1e1e1e;
+    --rojo-primario: #c8102e;
+    --texto-blanco: #ffffff;
+    --texto-gris: #aaaaaa;
+    --borde: #333333;
+    --verde-exito: #28a745;
+    --amarillo-alerta: #ffc107;
+}
+
+body {
+    background-color: var(--bg-principal);
+    color: var(--texto-blanco);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* HEADER Y FILTROS */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--rojo-primario);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.filters-bar {
+    display: flex;
+    gap: 15px;
+}
+
+.filters-bar select, .filters-bar input {
+    background: var(--bg-tarjeta);
+    color: white;
+    border: 1px solid var(--borde);
+    padding: 10px;
+    border-radius: 5px;
+    outline: none;
+}
+
+/* CUADRÍCULA DE KPIs */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    background: var(--bg-tarjeta);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--borde);
+}
+
+.kpi-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.stat-box {
+    background: var(--bg-tarjeta);
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    border-bottom: 4px solid transparent;
+    transition: transform 0.3s;
+}
+
+.stat-box:hover { transform: translateY(-5px); }
+.stat-box span { font-size: 2.5em; font-weight: bold; display: block; }
+.stat-box p { margin: 10px 0 0; color: var(--texto-gris); text-transform: uppercase; font-size: 0.9em; }
+
+.blue { border-color: #007bff; }
+.yellow { border-color: var(--amarillo-alerta); }
+.red { border-color: var(--rojo-primario); }
+
+/* SECCIÓN DE GRÁFICOS */
+.charts-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    background: var(--bg-tarjeta);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+}
+
+/* TABLA DE AUDITORÍA */
+.auditoria-section {
+    background: var(--bg-tarjeta);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--borde);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th {
+    text-align: left;
+    color: var(--texto-gris);
+    border-bottom: 1px solid var(--borde);
+    padding: 12px;
+}
+
+td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+/* ESTADOS (BADGES) */
+.badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+.badge.pendiente { background: rgba(200, 16, 46, 0.2); color: #ff4d4d; border: 1px solid var(--rojo-primario); }
+.badge.realizado { background: rgba(40, 167, 69, 0.2); color: #2ecc71; border: 1px solid var(--verde-exito); }
+/* Ajustado para que coincida con la lógica de JS */
+.badge.no-ejecutado { background: rgba(255, 193, 7, 0.2); color: #f1c40f; border: 1px solid var(--amarillo-alerta); }
+
+/* MODAL DE GESTIÓN (REVISADO) */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.modal-content {
+    background-color: #1a1a1a;
+    margin: 10% auto;
+    padding: 25px;
+    border: 1px solid var(--rojo-primario);
+    width: 90%;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(200, 16, 46, 0.3);
+}
+
+.modal-content textarea, .modal-content select {
+    width: 100%;
+    background: #252525;
+    color: white;
+    border: 1px solid #444;
+    padding: 12px;
+    margin: 10px 0 20px 0;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.modal-content button {
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}

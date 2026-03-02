@@ -1,0 +1,60 @@
+/* Estilos para el Menú de Equipos Empoderados */
+.modulo-container {
+    padding: 40px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.grid-menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.section-group h2 {
+    color: #333;
+    border-bottom: 3px solid #c8102e; /* Rojo Bavaria */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    text-decoration: none;
+    color: #333;
+    display: block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #eee;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(200, 16, 46, 0.2);
+    border-color: #c8102e;
+}
+
+.card h3 {
+    margin: 0 0 10px 0;
+    color: #c8102e;
+    font-size: 1.4rem;
+}
+
+.card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.btn-secure {
+    background: #fdf2f2;
+    color: #c8102e;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 1px solid #c8102e;
+}

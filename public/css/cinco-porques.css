@@ -1,0 +1,112 @@
+/* Estilos para Herramienta 5 Porqués - Gerencia Valle */
+:root { 
+    --bavaria-red: #c8102e; 
+    --dpo-gold: #f2c200; 
+}
+
+body { 
+    background-color: #0f0f0f; 
+    color: white; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+.container { 
+    max-width: 800px; 
+    margin: 20px auto; 
+    padding: 20px; 
+    background: #1a1a1a; 
+    border-radius: 15px; 
+    border-top: 5px solid var(--bavaria-red); 
+}
+
+.paso-box { 
+    margin-bottom: 25px; 
+    padding: 15px; 
+    border-bottom: 1px solid #333; 
+}
+
+label { 
+    display: block; 
+    font-weight: bold; 
+    color: var(--dpo-gold); 
+    margin-bottom: 10px; 
+}
+
+input[type="text"], select, textarea, input[type="date"] { 
+    width: 100%; 
+    padding: 12px; 
+    background: #2a2a2a; 
+    border: 1px solid #444; 
+    color: white; 
+    border-radius: 8px; 
+    margin-bottom: 10px; 
+}
+
+.ia-assistant { 
+    background: #252525; 
+    border-left: 4px solid var(--dpo-gold); 
+    padding: 15px; 
+    margin-top: 10px; 
+    border-radius: 0 8px 8px 0; 
+    display: none; 
+}
+
+.sugerencia-item { 
+    background: #333; 
+    padding: 10px; 
+    margin: 5px 0; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    font-size: 0.9em; 
+}
+
+.sugerencia-item:hover { 
+    background: #444; 
+    border: 1px solid var(--dpo-gold); 
+}
+
+.btn-ia { 
+    background: transparent; 
+    color: var(--dpo-gold); 
+    border: 1px solid var(--dpo-gold); 
+    padding: 5px 15px; 
+    border-radius: 20px; 
+    cursor: pointer; 
+    font-size: 0.8em; 
+}
+
+.btn-ia:hover { 
+    background: var(--dpo-gold); 
+    color: black; 
+}
+
+.btn-save { 
+    background: var(--bavaria-red); 
+    color: white; 
+    border: none; 
+    padding: 15px 30px; 
+    border-radius: 10px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    width: 100%; 
+    font-size: 1.1em; 
+    margin-top: 20px; 
+}
+
+.plan-accion-section { 
+    background: #2a2a2a; 
+    padding: 20px; 
+    border-radius: 10px; 
+    border: 1px dashed var(--dpo-gold); 
+}
+/* Ocultamos los niveles superiores inicialmente */
+#nivel-2, #nivel-3, #nivel-4, #nivel-5 {
+    display: none;
+    animation: fadeIn 0.5s ease-in; /* Un efecto suave al aparecer */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

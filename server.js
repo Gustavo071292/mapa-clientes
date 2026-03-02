@@ -2,34 +2,51 @@ require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+
+// Importación de rutas de lógica (API)
 const deliveryRoutes = require("./routes/deliveryRoutes");
+const retroRoutes = require("./src/routes/retro"); 
 
 const app = express();
-
-// ====== CONFIG ======
 const PORT = process.env.PORT || 3000;
+
+// Configuración de la base de datos (Atlas o Local)
 const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mapa_clientes";
 
 // ====== MIDDLEWARES ======
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
 
-// ====== CONNECT MONGODB ======
-mongoose
-  .connect(MONGO_URI)
+// Servir archivos estáticos desde la carpeta raíz 'public'
+app.use(express.static(path.join(__dirname, "public"))); 
+
+// ====== CONEXIÓN A MONGODB ======
+mongoose.connect(MONGO_URI)
   .then(() => {
-    console.log("✅ Conectado a MongoDB");
-    console.log("   URI:", MONGO_URI);
-    console.log("   DB :", mongoose.connection?.name || "(sin nombre)");
+    const esAtlas = MONGO_URI.includes("cluster") || MONGO_URI.includes("+srv");
+    console.log(`✅ Conectado a MongoDB ${esAtlas ? "ATLAS (Nube)" : "LOCAL"}`);
   })
-  .catch((err) => {
-    console.error("❌ Error MongoDB:", err.message);
-    process.exit(1);
-  });
+  .catch(err => console.error("❌ Error MongoDB:", err.message));
 
-// ====== ENDPOINTS DE APOYO (API) ======
+// ====== RUTAS DE NAVEGACIÓN (VISTAS HTML) ======
 
-// Este es el que llena tu selector de Popayán, Tuluá y Cali
+// 1. Home / Portal DPO
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html")); 
+});
+
+// 2. MAPA DE CLIENTES (Ruta blindada según tu estructura de carpetas)
+app.get("/clientes", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pilares", "delivery", "clientes", "index.html"));
+});
+
+// 3. DASHBOARD EQUIPOS (Ubicado en src/views)
+app.get("/equipos-empoderados", (req, res) => {
+  res.sendFile(path.join(__dirname, "src", "views", "equipos-empoderados", "index.html"));
+});
+
+// ====== RUTAS DE API (LÓGICA DE DATOS) ======
+
+// Endpoint para cargar los CDs en el selector del mapa
 app.get("/api/cds", (req, res) => {
   res.json({
     ok: true,
@@ -37,35 +54,16 @@ app.get("/api/cds", (req, res) => {
       { code: "AV28", name: "Popayán" },
       { code: "AV57", name: "Tuluá" },
       { code: "AV46", name: "Cali" },
+      { code: "AV99", name: "Yumbo" },
     ],
   });
 });
 
-// Health check para saber si el servidor responde
-app.get("/health", (req, res) => {
-  res.json({
-    ok: true,
-    service: "mapa-clientes",
-    time: new Date().toISOString(),
-  });
-});
+// Conexión con las rutas de búsqueda de clientes y retroalimentación
+app.use("/api/delivery", deliveryRoutes);
+app.use("/api/retro", retroRoutes);
 
-// ====== RUTAS MODULARES ======
-
-// Aquí conectamos todas las rutas de búsqueda de clientes
-// IMPORTANTE: Ahora todas empezarán por /clientes (ej: /clientes/buscar)
-app.use("/clientes", deliveryRoutes);
-
-// ====== SERVIR EL FRONTEND ======
-
-// Home principal
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
-
-// ====== START ======
+// ====== INICIO DEL SERVIDOR ======
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor listo en: http://localhost:${PORT}`);
-  console.log(`🩺 Health check:    http://localhost:${PORT}/health`);
-  console.log(`📍 API CDs:        http://localhost:${PORT}/api/cds`);
+  console.log(`🚀 Portal DPO Gerencia Valle listo: http://localhost:${PORT}`);
 });

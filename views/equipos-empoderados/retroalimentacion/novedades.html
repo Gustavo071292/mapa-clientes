@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Novedades - Gerencia Valle</title>
+    <link rel="stylesheet" href="/css/novedades.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>Reporte de Novedades / Ruta</h2>
+            <p style="color: #aaa;">Registro de incidencias operativas - DPO</p>
+        </header>
+
+        <form id="formNovedades">
+            <div class="paso-box">
+                <label>📅 Fecha del Reporte</label>
+                <input type="date" id="fecha" required>
+            </div>
+
+            <div class="paso-box">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label>🆔 Cédula</label>
+                        <input type="text" id="cedula" placeholder="Cédula" required>
+                    </div>
+                    <div class="input-group">
+          <label for="cd">📍 CD</label>
+             <select id="cd" name="cd" required onchange="actualizarPlacas()">
+                <option value="">Seleccione CD...</option>
+                <option value="Cali">Cali</option>
+                <option value="Popayan">Popayán</option>
+                <option value="Tulua">Tuluá</option>
+                <option value="Yumbo">Yumbo</option>
+             </select>
+        </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label>🚛 Placa del Vehículo</label>
+                    <select id="placa" required>
+                        <option value="">Primero seleccione un CD...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="paso-box">
+                <label>🔢 Código de Cliente (8 dígitos)</label>
+                <input type="text" id="codigo_cliente" placeholder="Ej: 12345678" 
+                       pattern="\d{8}" title="Debe contener exactamente 8 números" required>
+            </div>
+
+            <div class="paso-box">
+                <label>🔄 Tipo de Retroalimentación</label>
+                <select id="tipo_retro" required>
+                    <option value="">Seleccione tipo...</option>
+                    <option value="Pre ruta">Pre ruta</option>
+                    <option value="En ruta">En ruta</option>
+                    <option value="Post ruta">Post ruta</option>
+                </select>
+            </div>
+
+            <div class="paso-box">
+                <label>📝 Observación (Máx. 255 caracteres)</label>
+                <textarea id="observacion" rows="4" maxlength="255" 
+                          placeholder="Describa la novedad aquí..." required oninput="contarCaracteres()"></textarea>
+                <small id="charCount" style="color: #aaa;">0 / 255 caracteres</small>
+            </div>
+
+            <button type="submit" class="btn-save">💾 Guardar Reporte en Atlas</button>
+        </form>
+    </div>
+    <script src="/js/novedades.js"></script>
+</body>
+</html>
