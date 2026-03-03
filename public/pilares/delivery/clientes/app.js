@@ -3,9 +3,9 @@
 // ======================
 const map = L.map("map").setView([3.4516, -76.5320], 12); // Cali por defecto
 
-// Estilo de mapa oscuro
-L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-  attribution: '&copy; OpenStreetMap &copy; CARTO'
+// Estilo de mapa claro (más rápido y legible)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
 }).addTo(map);
 
 // Marcadores actuales en el mapa (para poder limpiar)
