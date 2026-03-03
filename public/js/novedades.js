@@ -75,7 +75,7 @@ document.getElementById('formNovedades').onsubmit = async (e) => {
     };
 
     try {
-        const response = await fetch('/equipos-empoderados/retro/guardar-novedad', {
+        const response = await fetch('/api/retro/guardar-novedad', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)

@@ -3,67 +3,45 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 
-// Importación de rutas de lógica (API)
-const deliveryRoutes = require("./routes/deliveryRoutes");
-const retroRoutes = require("./src/routes/retro"); 
+// IMPORTANTE: Recuperamos ambos pilares para que nada quede por fuera
+const deliveryRoutes = require("./routes/deliveryRoutes"); 
+const retroRoutes = require("./routes/retroRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Configuración de la base de datos (Atlas o Local)
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/mapa_clientes";
-
-// ====== MIDDLEWARES ======
 app.use(express.json());
 
-// Servir archivos estáticos desde la carpeta raíz 'public'
+// Servir archivos estáticos (Para que el Dashboard tenga color y el mapa cargue)
 app.use(express.static(path.join(__dirname, "public"))); 
+app.use(express.static(path.join(__dirname, "views"))); 
 
-// ====== CONEXIÓN A MONGODB ======
-mongoose.connect(MONGO_URI)
-  .then(() => {
-    const esAtlas = MONGO_URI.includes("cluster") || MONGO_URI.includes("+srv");
-    console.log(`✅ Conectado a MongoDB ${esAtlas ? "ATLAS (Nube)" : "LOCAL"}`);
-  })
-  .catch(err => console.error("❌ Error MongoDB:", err.message));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ CONECTADO A ATLAS"))
+  .catch(err => console.log("❌ Error:", err.message));
 
-// ====== RUTAS DE NAVEGACIÓN (VISTAS HTML) ======
+// ====== VISTAS DE NAVEGACIÓN (Corrigiendo el "Cannot GET") ======
 
-// 1. Home / Portal DPO
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html")); 
+// Pilar Delivery (Búsqueda de Clientes)
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public/portal/index.html")));
+app.get("/clientes", (req, res) => res.sendFile(path.join(__dirname, "public/pilares/delivery/clientes/index.html")));
+
+// Pilar Equipos Empoderados (Rutas exactas que fallaban)
+app.get("/equipos-empoderados/retro/novedades", (req, res) => {
+    res.sendFile(path.join(__dirname, "views/equipos-empoderados/retroalimentacion/novedades.html"));
+});
+app.get("/equipos-empoderados/retro/resumen", (req, res) => {
+    res.sendFile(path.join(__dirname, "views/equipos-empoderados/retroalimentacion/cinco-porques.html"));
+});
+app.get("/equipos-empoderados/retro/resumen-gerencial", (req, res) => {
+    res.sendFile(path.join(__dirname, "views/equipos-empoderados/dashboard-ejecutivo.html"));
 });
 
-// 2. MAPA DE CLIENTES (Ruta blindada según tu estructura de carpetas)
-app.get("/clientes", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "pilares", "delivery", "clientes", "index.html"));
-});
-
-// 3. DASHBOARD EQUIPOS (Ubicado en src/views)
-app.get("/equipos-empoderados", (req, res) => {
-  res.sendFile(path.join(__dirname, "src", "views", "equipos-empoderados", "index.html"));
-});
-
-// ====== RUTAS DE API (LÓGICA DE DATOS) ======
-
-// Endpoint para cargar los CDs en el selector del mapa
+// ====== APIs (Mapa + Novedades) ======
 app.get("/api/cds", (req, res) => {
-  res.json({
-    ok: true,
-    data: [
-      { code: "AV28", name: "Popayán" },
-      { code: "AV57", name: "Tuluá" },
-      { code: "AV46", name: "Cali" },
-      { code: "AV99", name: "Yumbo" },
-    ],
-  });
+    res.json({ ok: true, data: [{ code: "AV28", name: "Popayán" }, { code: "AV57", name: "Tuluá" }, { code: "AV46", name: "Cali" }, { code: "AV99", name: "Yumbo" }] });
 });
 
-// Conexión con las rutas de búsqueda de clientes y retroalimentación
-app.use("/api/delivery", deliveryRoutes);
+app.use("/api/delivery", deliveryRoutes); // RESTAURADO: Búsqueda de clientes activa
 app.use("/api/retro", retroRoutes);
 
-// ====== INICIO DEL SERVIDOR ======
-app.listen(PORT, () => {
-  console.log(`🚀 Portal DPO Gerencia Valle listo: http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Portal DPO Funcionando en: http://localhost:${PORT}`));

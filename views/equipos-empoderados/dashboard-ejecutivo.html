@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitor de Cumplimiento Gerencial - Valle</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,8 +25,8 @@
 
         <section class="kpi-grid">
             <div class="kpi-card">
-                <h3>Efectividad de Gestión</h3>
-                <div class="gauge-container">
+                <h3 style="color: var(--texto-gris); margin-bottom: 15px;">Efectividad de Gestión</h3>
+                <div style="height: 200px; position: relative;">
                     <canvas id="chartEfectividad"></canvas>
                 </div>
             </div>
@@ -47,58 +48,61 @@
 
         <section class="charts-section">
             <div class="chart-container">
-                <h3>Tendencia de Reportes Diarios</h3>
+                <h3 style="color: var(--texto-gris); margin-bottom: 15px;">Tendencia de Reportes Diarios</h3>
                 <canvas id="chartLineaTiempo"></canvas>
             </div>
             <div class="chart-container">
-                <h3>Top 5 Placas con más Novedades</h3>
+                <h3 style="color: var(--texto-gris); margin-bottom: 15px;">Top 5 Placas con más Novedades</h3>
                 <canvas id="chartTopPlacas"></canvas>
             </div>
         </section>
 
         <section class="auditoria-section">
-            <h3>📑 Módulo de Auditoría y Gestión</h3>
-            <table id="tablaAuditoria">
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>CD</th>
-                        <th>Placa</th>
-                        <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="cuerpoTabla"></tbody>
-            </table>
+            <h3 style="color: var(--rojo-primario); margin-bottom: 15px;">📑 Módulo de Auditoría y Gestión</h3>
+            <div style="overflow-x: auto;">
+                <table id="tablaAuditoria">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>CD</th>
+                            <th>Placa</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        </tbody>
+                </table>
+            </div>
         </section>
     </div>
 
     <div id="modalGestion" class="modal">
         <div class="modal-content">
-            <header style="border-bottom: 2px solid #c8102e; margin-bottom: 15px; padding-bottom: 10px;">
+            <header style="border-bottom: 2px solid var(--rojo-primario); margin-bottom: 15px; padding-bottom: 10px;">
                 <h3 style="margin: 0; color: white;">⚙️ Gestionar Reporte</h3>
                 <p id="infoReporte" style="font-size: 0.8em; color: #888; margin: 5px 0 0;"></p>
             </header>
 
-            <div id="contenedorDetalleOriginal" style="background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f2c200;">
-                <label style="color: #f2c200; font-size: 0.75em; font-weight: bold; display: block; margin-bottom: 5px;">📋 DESCRIPCIÓN ORIGINAL:</label>
+            <div id="contenedorDetalleOriginal" style="background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid var(--amarillo-alerta);">
+                <label style="color: var(--amarillo-alerta); font-size: 0.75em; font-weight: bold; display: block; margin-bottom: 5px;">📋 DESCRIPCIÓN ORIGINAL:</label>
                 <p id="detalleTextoOriginal" style="color: #fff; margin: 0; font-size: 0.9em; font-style: italic; line-height: 1.4;"></p>
             </div>
 
-            <label style="color: #f2c200; font-size: 0.9em;">📝 Comentario de Gestión</label>
-            <textarea id="comentarioGestion" placeholder="Ej: Se realizó feedback con la tripulación..."></textarea>
+            <label style="color: var(--amarillo-alerta); font-size: 0.9em; display: block; margin-bottom: 5px;">📝 Comentario de Gestión</label>
+            <textarea id="comentarioGestion" placeholder="Ej: Se realizó feedback con la tripulación..." style="height: 100px;"></textarea>
 
-            <label style="color: #f2c200; font-size: 0.9em;">📌 Cambiar Estado</label>
+            <label style="color: var(--amarillo-alerta); font-size: 0.9em; display: block; margin-bottom: 5px; margin-top: 15px;">📌 Cambiar Estado</label>
             <select id="nuevoEstado">
                 <option value="Pendiente">🔴 Pendiente</option>
                 <option value="Realizado">🟢 Realizado</option>
                 <option value="No ejecutado">🟡 No ejecutado</option>
             </select>
 
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button onclick="guardarGestion()" style="background: #c8102e; flex: 2; cursor: pointer; border-radius: 5px; border: none; color: white; font-weight: bold; padding: 10px;">💾 Guardar Cambios</button>
-                <button onclick="cerrarModal()" style="background: #444; flex: 1; cursor: pointer; border-radius: 5px; border: none; color: white; padding: 10px;">Cancelar</button>
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button onclick="guardarGestion()" style="background: var(--rojo-primario); flex: 2; cursor: pointer; border-radius: 5px; border: none; color: white; font-weight: bold; padding: 12px;">💾 Guardar Cambios</button>
+                <button onclick="cerrarModal()" style="background: #444; flex: 1; cursor: pointer; border-radius: 5px; border: none; color: white; padding: 12px;">Cancelar</button>
             </div>
         </div>
     </div>

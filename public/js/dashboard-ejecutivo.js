@@ -5,20 +5,22 @@ let myBarChart = null;
 let reporteSeleccionado = null;
 
 /**
- * 1. CARGA INICIAL: Obtiene la data unificada de la 'licuadora'
+ * 1. CARGA INICIAL: Obtiene la data unificada del Backend
  */
 async function cargarDataDashboard() {
     try {
-        const response = await fetch('/equipos-empoderados/retro/consolidado-valle');
+        const response = await fetch('/api/retro/consolidado-valle');
         const result = await response.json();
         
         if (result.exito) {
             dataGlobal = result.data;
             renderizarTodo(); 
+        } else {
+            console.error("Error del servidor:", result.mensaje);
         }
     } catch (error) {
         console.error("Error al cargar dashboard:", error);
-        alert("❌ No se pudo conectar con la base de datos de Atlas.");
+        alert("❌ Error de comunicación: No se pudo conectar con el Servidor DPO.");
     }
 }
 
@@ -29,18 +31,15 @@ function renderizarTodo() {
     const cd = document.getElementById('filtroCD').value;
     const mesFiltro = document.getElementById('filtroMes').value; 
     
-    // FILTRADO DINÁMICO
     let filtrados = dataGlobal;
 
-    // Filtro por Centro de Distribución
     if (cd !== 'TODOS') {
         filtrados = filtrados.filter(d => d.cd === cd);
     }
 
-    // Filtro por Mes con Validación de Fecha
     if (mesFiltro) {
         filtrados = filtrados.filter(d => {
-            const fechaBruta = d.fecha || d.fecha_creacion;
+            const fechaBruta = d.fecha;
             if (!fechaBruta) return false; 
             const fechaItem = new Date(fechaBruta);
             const mesItem = `${fechaItem.getFullYear()}-${String(fechaItem.getMonth() + 1).padStart(2, '0')}`;
@@ -48,19 +47,18 @@ function renderizarTodo() {
         });
     }
 
-    // ACTUALIZAR CONTADORES SUPERIORES
+    // KPIs Superiores
     document.getElementById('totalNovedades').innerText = filtrados.filter(d => d.tipoDoc === 'Novedad').length;
     document.getElementById('totalPorques').innerText = filtrados.filter(d => d.tipoDoc === '5 Porqués').length;
-    document.getElementById('totalPendientes').innerText = filtrados.filter(d => d.estado === 'Pendiente').length;
+    document.getElementById('totalPendientes').innerText = filtrados.filter(d => d.estado !== 'Realizado').length;
 
-    // ACTUALIZAR COMPONENTES VISUALES
     actualizarGraficoEfectividad(filtrados);
     actualizarGraficoPlacas(filtrados);
     actualizarTablaAuditoria(filtrados);
 }
 
 /**
- * 3. GRÁFICO DE DONA: Nivel de Cierre con % en el centro
+ * 3. GRÁFICO DE DONA: Nivel de Gestión
  */
 function actualizarGraficoEfectividad(items) {
     const realizados = items.filter(d => d.estado === 'Realizado').length;
@@ -68,7 +66,10 @@ function actualizarGraficoEfectividad(items) {
     const total = items.length;
     const porcentaje = total > 0 ? Math.round((realizados / total) * 100) : 0;
 
-    const ctx = document.getElementById('chartEfectividad').getContext('2d');
+    const canvas = document.getElementById('chartEfectividad');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
     if (myDoughnutChart) myDoughnutChart.destroy();
 
     myDoughnutChart = new Chart(ctx, {
@@ -106,11 +107,14 @@ function actualizarGraficoEfectividad(items) {
 }
 
 /**
- * 4. GRÁFICO DE BARRAS: Top Placas Ofensoras
+ * 4. GRÁFICO DE BARRAS: Top Placas con más Reportes
  */
 function actualizarGraficoPlacas(items) {
     const conteo = {};
-    items.forEach(i => conteo[i.placa] = (conteo[i.placa] || 0) + 1);
+    items.forEach(i => {
+        const p = i.placa || "S/P";
+        conteo[p] = (conteo[p] || 0) + 1;
+    });
     
     const sortedPlacas = Object.entries(conteo)
         .sort(([,a], [,b]) => b - a)
@@ -119,7 +123,10 @@ function actualizarGraficoPlacas(items) {
     const labels = sortedPlacas.map(p => p[0]);
     const valores = sortedPlacas.map(p => p[1]);
 
-    const ctx = document.getElementById('chartTopPlacas').getContext('2d');
+    const canvas = document.getElementById('chartTopPlacas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
     if (myBarChart) myBarChart.destroy();
     
     myBarChart = new Chart(ctx, {
@@ -127,36 +134,42 @@ function actualizarGraficoPlacas(items) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Cantidad de Incidentes',
+                label: 'Incidentes',
                 data: valores,
                 backgroundColor: '#c8102e'
             }]
         },
         options: {
             responsive: true,
-            scales: { y: { beginAtZero: true, grid: { color: '#333' } } }
+            scales: { 
+                y: { beginAtZero: true, grid: { color: '#333' }, ticks: { color: 'white' } },
+                x: { ticks: { color: 'white' } }
+            },
+            plugins: { legend: { labels: { color: 'white' } } }
         }
     });
 }
 
 /**
- * 5. TABLA DE AUDITORÍA Y GESTIÓN
+ * 5. TABLA DE AUDITORÍA (CORREGIDA: Usa item.descripcion)
  */
 function actualizarTablaAuditoria(items) {
     const tbody = document.getElementById('cuerpoTabla');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     items.forEach(item => {
         const tr = document.createElement('tr');
-        const fecha = new Date(item.fecha || item.fecha_creacion).toLocaleDateString();
-        const estadoClase = item.estado.toLowerCase().replace(/\s+/g, '-');
+        const fecha = new Date(item.fecha).toLocaleDateString();
+        const estadoRaw = item.estado || 'Pendiente';
+        const estadoClase = estadoRaw.toLowerCase().replace(/\s+/g, '-');
         
         tr.innerHTML = `
-            <td>${item.icono} ${item.tipoDoc}</td>
+            <td>${item.icono || '📋'} ${item.tipoDoc}</td>
             <td>${item.cd}</td>
             <td><strong>${item.placa}</strong></td>
             <td>${fecha}</td>
-            <td><span class="badge ${estadoClase}">${item.estado}</span></td>
+            <td><span class="badge ${estadoClase}">${estadoRaw}</span></td>
             <td><button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipoDoc}')">⚙️ Gestionar</button></td>
         `;
         tbody.appendChild(tr);
@@ -164,20 +177,15 @@ function actualizarTablaAuditoria(items) {
 }
 
 /**
- * 6. LÓGICA DEL MODAL
+ * 6. GESTIÓN DE REPORTES (MODAL CORREGIDO)
  */
 function abrirModalGestion(id, tipoDoc) {
-    // Buscamos el reporte específico en nuestra 'licuadora'
     const reporte = dataGlobal.find(item => item._id === id);
     reporteSeleccionado = { id, tipoDoc };
 
     if (reporte) {
-        // Identificamos qué texto mostrar según el tipo de documento
-        const textoParaMostrar = (tipoDoc === 'Novedad') 
-            ? reporte.observacion 
-            : `Causa Raíz: ${reporte.causa_raiz} | Plan: ${reporte.plan_accion}`;
-
-        document.getElementById('detalleTextoOriginal').innerText = textoParaMostrar;
+        // CORRECCIÓN: Usamos 'descripcion' que viene unificada desde el controlador
+        document.getElementById('detalleTextoOriginal').innerText = reporte.descripcion || "Sin detalle disponible";
     }
 
     document.getElementById('infoReporte').innerText = `Gestionando: ${tipoDoc}`;
@@ -188,13 +196,10 @@ async function guardarGestion() {
     const comentario = document.getElementById('comentarioGestion').value;
     const nuevoEstado = document.getElementById('nuevoEstado').value;
 
-    if (!comentario) {
-        alert("Por favor escribe un comentario para la auditoría.");
-        return;
-    }
+    if (!comentario) return alert("Escribe un comentario para la auditoría.");
 
     try {
-        const response = await fetch('/equipos-empoderados/retro/gestionar-reporte', {
+        const response = await fetch('/api/retro/gestionar-reporte', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -210,6 +215,8 @@ async function guardarGestion() {
             alert("✅ Gestión guardada con éxito.");
             cerrarModal();
             cargarDataDashboard(); 
+        } else {
+            alert("❌ Error: " + result.mensaje);
         }
     } catch (error) {
         alert("❌ Error al conectar con el servidor.");
@@ -221,5 +228,5 @@ function cerrarModal() {
     document.getElementById('comentarioGestion').value = '';
 }
 
-// Inicialización al cargar la ventana
+// Inicialización
 window.onload = cargarDataDashboard;
