@@ -1,11 +1,12 @@
 // Variables globales para el estado del Dashboard
 let dataGlobal = [];
 let myDoughnutChart = null;
-let myBarChart = null;
+let myBarChartPlacas = null;
+let myBarChartCD = null; 
 let reporteSeleccionado = null;
 
 /**
- * 1. CARGA INICIAL: Obtiene la data unificada del Backend
+ * 1. CARGA INICIAL: Obtiene la data unificada del Backend (Atlas)
  */
 async function cargarDataDashboard() {
     try {
@@ -29,47 +30,85 @@ async function cargarDataDashboard() {
  */
 function renderizarTodo() {
     const cd = document.getElementById('filtroCD').value;
-    const mesFiltro = document.getElementById('filtroMes').value; 
+    const tipo = document.getElementById('filtroTipo').value;
+    const estado = document.getElementById('filtroEstado').value;
+    const fechaFiltro = document.getElementById('filtroFecha').value; // Captura YYYY-MM-DD
     
-    let filtrados = dataGlobal;
+    // APLICACIÓN DE FILTROS CRUZADOS (Incluye la nueva lógica de fecha exacta)
+    let filtrados = dataGlobal.filter(d => {
+        const cumpleCD = (cd === 'TODOS' || d.cd === cd);
+        const cumpleTipo = (tipo === 'TODOS' || d.tipoDoc === tipo);
+        const cumpleEstado = (estado === 'TODOS' || d.estado === estado);
+        
+        let cumpleFecha = true;
+        if (fechaFiltro && d.fecha) {
+            // Normalizamos la fecha de Atlas a YYYY-MM-DD para comparar con el input
+            const fechaItem = new Date(d.fecha).toISOString().split('T')[0];
+            cumpleFecha = (fechaItem === fechaFiltro);
+        }
 
-    if (cd !== 'TODOS') {
-        filtrados = filtrados.filter(d => d.cd === cd);
-    }
+        return cumpleCD && cumpleTipo && cumpleEstado && cumpleFecha;
+    });
 
-    if (mesFiltro) {
-        filtrados = filtrados.filter(d => {
-            const fechaBruta = d.fecha;
-            if (!fechaBruta) return false; 
-            const fechaItem = new Date(fechaBruta);
-            const mesItem = `${fechaItem.getFullYear()}-${String(fechaItem.getMonth() + 1).padStart(2, '0')}`;
-            return mesItem === mesFiltro;
-        });
-    }
-
-    // KPIs Superiores
+    // Actualización de KPIs Superiores
     document.getElementById('totalNovedades').innerText = filtrados.filter(d => d.tipoDoc === 'Novedad').length;
     document.getElementById('totalPorques').innerText = filtrados.filter(d => d.tipoDoc === '5 Porqués').length;
-    document.getElementById('totalPendientes').innerText = filtrados.filter(d => d.estado !== 'Realizado').length;
+    document.getElementById('totalPendientes').innerText = filtrados.filter(d => d.estado === 'Pendiente').length;
 
+    // Actualización de Visualizaciones
     actualizarGraficoEfectividad(filtrados);
+    actualizarGraficoPorCD(filtrados); 
     actualizarGraficoPlacas(filtrados);
     actualizarTablaAuditoria(filtrados);
 }
 
 /**
- * 3. GRÁFICO DE DONA: Nivel de Gestión
+ * 3. GRÁFICO DE BARRAS POR CD (Tendencia por CD)
+ */
+function actualizarGraficoPorCD(items) {
+    const cds = ['Cali', 'Popayan', 'Tulua', 'Yumbo'];
+    const conteo = { 'Cali': 0, 'Popayan': 0, 'Tulua': 0, 'Yumbo': 0 };
+
+    items.forEach(i => {
+        if (conteo.hasOwnProperty(i.cd)) conteo[i.cd]++;
+    });
+
+    const ctx = document.getElementById('chartPorCD').getContext('2d');
+    if (myBarChartCD) myBarChartCD.destroy();
+
+    myBarChartCD = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: cds,
+            datasets: [{
+                label: 'Reportes por CD',
+                data: cds.map(c => conteo[c]),
+                backgroundColor: ['#c8102e', '#f2c200', '#30363d', '#8b949e'],
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                x: { ticks: { color: '#f0f6fc' } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+}
+
+/**
+ * 4. GRÁFICO DE DONA: Nivel de Gestión General
  */
 function actualizarGraficoEfectividad(items) {
     const realizados = items.filter(d => d.estado === 'Realizado').length;
-    const pendientes = items.filter(d => d.estado !== 'Realizado').length;
+    const pendientes = items.filter(d => d.estado === 'Pendiente').length;
     const total = items.length;
     const porcentaje = total > 0 ? Math.round((realizados / total) * 100) : 0;
 
-    const canvas = document.getElementById('chartEfectividad');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    
+    const ctx = document.getElementById('chartEfectividad').getContext('2d');
     if (myDoughnutChart) myDoughnutChart.destroy();
 
     myDoughnutChart = new Chart(ctx, {
@@ -78,7 +117,7 @@ function actualizarGraficoEfectividad(items) {
             labels: ['Gestionado', 'Pendiente'],
             datasets: [{
                 data: [realizados, pendientes],
-                backgroundColor: ['#28a745', '#c8102e'],
+                backgroundColor: ['#238636', '#c8102e'],
                 borderWidth: 0
             }]
         },
@@ -93,9 +132,9 @@ function actualizarGraficoEfectividad(items) {
             beforeDraw: (chart) => {
                 const { width, height, ctx } = chart;
                 ctx.restore();
-                ctx.font = "bold 2em sans-serif";
+                ctx.font = "bold 2.5em sans-serif";
                 ctx.textBaseline = "middle";
-                ctx.fillStyle = "white";
+                ctx.fillStyle = "#f0f6fc";
                 const text = porcentaje + "%",
                       textX = Math.round((width - ctx.measureText(text).width) / 2),
                       textY = height / 2;
@@ -107,7 +146,7 @@ function actualizarGraficoEfectividad(items) {
 }
 
 /**
- * 4. GRÁFICO DE BARRAS: Top Placas con más Reportes
+ * 5. GRÁFICO DE BARRAS: Top 5 Placas Críticas (Horizontal)
  */
 function actualizarGraficoPlacas(items) {
     const conteo = {};
@@ -120,38 +159,34 @@ function actualizarGraficoPlacas(items) {
         .sort(([,a], [,b]) => b - a)
         .slice(0, 5);
 
-    const labels = sortedPlacas.map(p => p[0]);
-    const valores = sortedPlacas.map(p => p[1]);
-
-    const canvas = document.getElementById('chartTopPlacas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = document.getElementById('chartTopPlacas').getContext('2d');
+    if (myBarChartPlacas) myBarChartPlacas.destroy();
     
-    if (myBarChart) myBarChart.destroy();
-    
-    myBarChart = new Chart(ctx, {
+    myBarChartPlacas = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: labels,
+            labels: sortedPlacas.map(p => p[0]),
             datasets: [{
                 label: 'Incidentes',
-                data: valores,
-                backgroundColor: '#c8102e'
+                data: sortedPlacas.map(p => p[1]),
+                backgroundColor: '#d29922' 
             }]
         },
         options: {
+            indexAxis: 'y', 
             responsive: true,
+            maintainAspectRatio: false,
             scales: { 
-                y: { beginAtZero: true, grid: { color: '#333' }, ticks: { color: 'white' } },
-                x: { ticks: { color: 'white' } }
+                x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+                y: { ticks: { color: '#f0f6fc' } }
             },
-            plugins: { legend: { labels: { color: 'white' } } }
+            plugins: { legend: { display: false } }
         }
     });
 }
 
 /**
- * 5. TABLA DE AUDITORÍA (CORREGIDA: Usa item.descripcion)
+ * 6. TABLA DE AUDITORÍA Y GESTIÓN
  */
 function actualizarTablaAuditoria(items) {
     const tbody = document.getElementById('cuerpoTabla');
@@ -160,34 +195,28 @@ function actualizarTablaAuditoria(items) {
 
     items.forEach(item => {
         const tr = document.createElement('tr');
-        const fecha = new Date(item.fecha).toLocaleDateString();
-        const estadoRaw = item.estado || 'Pendiente';
-        const estadoClase = estadoRaw.toLowerCase().replace(/\s+/g, '-');
+        // Usamos toLocaleDateString para que la fecha sea legible (DD/MM/AAAA)
+        const fecha = new Date(item.fecha).toLocaleDateString('es-ES');
+        const estado = item.estado || 'Pendiente';
         
         tr.innerHTML = `
             <td>${item.icono || '📋'} ${item.tipoDoc}</td>
             <td>${item.cd}</td>
             <td><strong>${item.placa}</strong></td>
             <td>${fecha}</td>
-            <td><span class="badge ${estadoClase}">${estadoRaw}</span></td>
+            <td><span class="badge ${estado.toLowerCase().replace(/\s+/g, '-')}">${estado}</span></td>
             <td><button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipoDoc}')">⚙️ Gestionar</button></td>
         `;
         tbody.appendChild(tr);
     });
 }
 
-/**
- * 6. GESTIÓN DE REPORTES (MODAL CORREGIDO)
- */
 function abrirModalGestion(id, tipoDoc) {
     const reporte = dataGlobal.find(item => item._id === id);
     reporteSeleccionado = { id, tipoDoc };
-
     if (reporte) {
-        // CORRECCIÓN: Usamos 'descripcion' que viene unificada desde el controlador
-        document.getElementById('detalleTextoOriginal').innerText = reporte.descripcion || "Sin detalle disponible";
+        document.getElementById('detalleTextoOriginal').innerText = reporte.descripcion || "Sin detalle";
     }
-
     document.getElementById('infoReporte').innerText = `Gestionando: ${tipoDoc}`;
     document.getElementById('modalGestion').style.display = 'block';
 }
@@ -196,7 +225,7 @@ async function guardarGestion() {
     const comentario = document.getElementById('comentarioGestion').value;
     const nuevoEstado = document.getElementById('nuevoEstado').value;
 
-    if (!comentario) return alert("Escribe un comentario para la auditoría.");
+    if (!comentario) return alert("⚠️ Debes ingresar un comentario de gestión.");
 
     try {
         const response = await fetch('/api/retro/gestionar-reporte', {
@@ -212,14 +241,11 @@ async function guardarGestion() {
 
         const result = await response.json();
         if (result.exito) {
-            alert("✅ Gestión guardada con éxito.");
             cerrarModal();
             cargarDataDashboard(); 
-        } else {
-            alert("❌ Error: " + result.mensaje);
         }
     } catch (error) {
-        alert("❌ Error al conectar con el servidor.");
+        console.error("Error al guardar gestión:", error);
     }
 }
 
@@ -228,5 +254,5 @@ function cerrarModal() {
     document.getElementById('comentarioGestion').value = '';
 }
 
-// Inicialización
+// Inicialización automática al cargar la ventana
 window.onload = cargarDataDashboard;

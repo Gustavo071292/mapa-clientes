@@ -6,28 +6,28 @@
   --bg-0: #04060a;
   --bg-1: #0a0f18;
   
-  /* Glassmorphism avanzado: Fondos de tarjetas translúcidos */
-  --card-bg: rgba(20, 26, 38, 0.65); /* Fondo base de tarjeta */
-  --card-hover-bg: rgba(30, 38, 56, 0.85); /* Fondo al pasar el mouse */
+  /* Glassmorphism avanzado */
+  --card-bg: rgba(20, 26, 38, 0.65);
+  --card-hover-bg: rgba(30, 38, 56, 0.85);
   
-  /* Bordes sutiles y texto */
+  /* Bordes y Texto */
   --border: rgba(255, 255, 255, 0.06);
   --border-light: rgba(255, 255, 255, 0.12);
   --text-main: rgba(255, 255, 255, 0.96);
   --text-muted: rgba(255, 255, 255, 0.75);
   --text-muted-2: rgba(255, 255, 255, 0.55);
 
-  /* Paleta Bavaria Institutional */
-  --primary: #c8102e; /* Rojo Bavaria */
+  /* Identidad Bavaria / DPO */
+  --primary: #c8102e; 
   --primary-glow: rgba(200, 16, 46, 0.4);
-  --accent: #f2c200; /* Dorado DPO */
+  --accent: #f2c200; 
   --accent-glow: rgba(242, 194, 0, 0.3);
 
   /* Tokens de Diseño */
-  --r-lg: 20px; /* Radio de borde grande */
-  --r-md: 12px; /* Radio de borde mediano */
+  --r-lg: 20px;
+  --r-md: 12px;
   --shadow-premium: 0 20px 50px rgba(0, 0, 0, 0.5);
-  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Animación suave */
+  --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ==========================================================================
@@ -35,33 +35,37 @@
    ========================================================================== */
 * { 
   box-sizing: border-box; 
-  -webkit-font-smoothing: antialiased; /* Suaviza fuentes en Mac */
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body { height: 100%; margin: 0; padding: 0; }
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+  scroll-behavior: smooth;
+}
 
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, 'SF Pro Display', Segoe UI, Roboto, sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'SF Pro Display', sans-serif;
   color: var(--text-main);
   background-color: var(--bg-0);
-  /* Degradado de fondo para profundidad */
   background-image:
-    radial-gradient(1200px 500px at 20% 0%, rgba(200, 16, 46, 0.15), transparent 70%),
-    radial-gradient(1000px 600px at 80% 20%, rgba(242, 194, 0, 0.08), transparent 60%),
+    radial-gradient(1200px 500px at 20% 0%, rgba(200, 16, 46, 0.12), transparent 70%),
+    radial-gradient(1000px 600px at 80% 20%, rgba(242, 194, 0, 0.06), transparent 60%),
     linear-gradient(180deg, var(--bg-1), var(--bg-0));
-  background-attachment: fixed; /* Mantiene el fondo fijo al hacer scroll */
+  background-attachment: fixed;
   overflow-x: hidden;
 }
 
 /* ==========================================================================
-   LAYOUT Y CONTENEDORES
+   LAYOUT
    ========================================================================== */
 .wrap {
   width: min(1200px, 94vw);
   margin: 40px auto;
   display: grid;
-  gap: 24px;
+  gap: 32px; /* Aumentado para mejor respiro visual */
 }
 
 .section { display: grid; gap: 16px; }
@@ -70,380 +74,281 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 10px;
 }
 
 .section__head h2 { 
   margin: 0; 
-  font-size: 20px; 
+  font-size: 22px; 
   font-weight: 700; 
-  letter-spacing: -0.3px;
-  color: var(--text-main);
-}
-
-.section__meta { 
-  font-size: 13px; 
-  font-weight: 500;
-  color: var(--muted-2); 
+  letter-spacing: -0.5px;
 }
 
 /* ==========================================================================
-   HEADER MINIMALISTA PREMIUM
+   HEADER
    ========================================================================== */
 .main-header {
   padding: 10px 0 20px;
-  margin-bottom: 10px;
 }
 
 .main-header__content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
 .welcome-text__label {
   display: block;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 2.5px;
-  color: var(--primary); /* Título superior en rojo */
+  letter-spacing: 3px;
+  color: var(--primary);
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .main-header h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: clamp(20px, 5vw, 28px); /* Tamaño fluido */
   font-weight: 300;
   letter-spacing: -1px;
-  color: var(--text-main);
 }
 
-.main-header .highlight { font-weight: 800; color: var(--text-main); }
-.main-header .sep { color: rgba(255,255,255,0.1); margin: 0 8px; }
+.main-header .highlight { font-weight: 800; }
+.main-header .sep { color: rgba(255,255,255,0.1); margin: 0 4px; }
 
-/* Indicador de Estado Sincronizado */
 .system-status {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 12px;
+  gap: 8px;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--text-main);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px 14px;
   border-radius: 99px;
   border: 1px solid var(--border);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px; height: 7px;
   background: #00ffaa;
   border-radius: 50%;
-  box-shadow: 0 0 12px #00ffaa;
+  box-shadow: 0 0 10px #00ffaa;
   animation: pulse-status 2.5s infinite;
 }
 
 @keyframes pulse-status {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 0.4; transform: scale(0.85); }
 }
 
 /* ==========================================================================
-   GLASSMORPHISM CARDS BASE
+   CARDS & BANNER
    ========================================================================== */
 .card {
   border: 1px solid var(--border);
   background: var(--card-bg);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-premium);
-  backdrop-filter: blur(15px); /* Efecto de vidrio esmerilado */
+  backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   transition: var(--transition);
   overflow: hidden;
 }
 
-/* ==========================================================================
-   BANNER INTELIGENTE RESPONSIVO
-   ========================================================================== */
 .banner {
   position: relative;
-  min-height: 220px;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
   isolation: isolate;
 }
 
 .banner__bg {
   position: absolute;
   inset: 0;
-  background-image: url("../img/home_delivery/Logistica.avif");
-  background-size: cover;
-  background-position: center;
-  transform: scale(1.02); /* Pequeño zoom para efecto parallax */
-  filter: saturate(1.1) contrast(1.1) brightness(0.9);
+  background: url("../img/home_delivery/Logistica.avif") center/cover no-repeat;
+  filter: brightness(0.7) saturate(1.2);
+  z-index: -1;
 }
 
-/* Capa de degradado para oscurecer el fondo */
-.banner::before {
+.banner::after {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(900px 300px at 15% 0%, rgba(200, 16, 46, 0.3), transparent 70%),
-    linear-gradient(90deg, rgba(5, 7, 12, 0.9) 0%, rgba(5, 7, 12, 0.6) 40%, transparent 60%, rgba(5, 7, 12, 0.8) 100%);
-  z-index: 1;
+  background: linear-gradient(90deg, var(--bg-0) 20%, transparent 100%);
+  opacity: 0.8;
+  z-index: -1;
 }
 
 .banner__content {
-  position: relative;
-  z-index: 2;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  /* Ancho limitado en PC para NO tapar el logo central de Logística */
-  max-width: 520px; 
-  height: 100%;
-}
-
-/* Badge superior del banner */
-.banner__badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 5px;
-}
-
-.banner__badge .dot {
-  width: 6px; height: 6px; background: var(--accent); border-radius: 50%;
+  padding: 40px;
+  max-width: 600px;
 }
 
 .banner__title { 
-  margin: 0; 
-  font-size: 36px; 
+  font-size: clamp(28px, 6vw, 42px);
   font-weight: 900; 
-  letter-spacing: -1.5px; 
-  color: var(--text-main);
+  margin: 10px 0;
+  line-height: 1.1;
 }
 
-.banner__subtitle { 
-  margin: 0; 
-  color: rgba(255, 255, 255, 0.9); 
-  font-size: 1.15rem; 
-  line-height: 1.5;
-  font-weight: 500;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5); /* Mejora la lectura */
-}
-
-/* Logo de Zonavalle */
 .brand-badge {
   position: absolute;
-  top: 20px;
+  top: 25px;
   right: 25px;
-  z-index: 4;
-  width: 120px;
-  height: auto;
-  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.6));
+  width: 110px;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
 }
 
 /* ==========================================================================
-   BUSCADOR ESTRATÉGICO MODERNO (📌)
+   SEARCH HERO (📌)
    ========================================================================== */
 .search-hero {
-  position: relative;
   padding: 30px;
-  /* Borde dorado sutil para indicar herramienta clave */
-  border: 1px solid rgba(242, 194, 0, 0.25);
+  border: 1px solid rgba(242, 194, 0, 0.15);
   background: linear-gradient(135deg, rgba(20, 26, 38, 0.8), rgba(10, 15, 24, 0.9));
-  overflow: visible; /* Permite que el resplandor salga */
-}
-
-/* Resplandor externo (Glow) */
-.search-hero::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border-radius: var(--r-lg);
-  background: linear-gradient(135deg, var(--accent), transparent 50%);
-  z-index: -1;
-  filter: blur(15px);
-  opacity: 0.2;
 }
 
 .search-hero__body {
-  position: relative;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
+  gap: 24px;
 }
 
-.search-hero__info { display: flex; align-items: center; gap: 25px; }
+.search-hero__info { display: flex; align-items: center; gap: 20px; }
 
-/* Icono del Pin Flotante */
 .icon-main {
-  font-size: 36px;
+  font-size: 32px;
   background: rgba(255, 255, 255, 0.03);
-  width: 70px; height: 70px;
-  display: grid; place-items: center;
-  border-radius: 18px; 
+  width: 64px; height: 64px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 16px; 
   border: 1px solid var(--border-light);
-  box-shadow: inset 0 0 15px rgba(255,255,255,0.05);
 }
 
-.search-hero h3 { margin: 0 0 6px; font-size: 22px; font-weight: 800; color: var(--text-main); }
-.search-hero p { margin: 0; color: var(--text-muted); font-size: 15px; max-width: 450px; line-height: 1.5; }
-
-/* Botón EXPLORAR MAPA Premium */
 .btn-cta {
-  display: flex; align-items: center; gap: 14px;
   background: var(--primary); 
-  color: white;
+  color: #fff;
   text-decoration: none; 
-  padding: 18px 36px;
+  padding: 16px 32px;
   border-radius: 14px; 
   font-weight: 800; 
-  font-size: 15px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  font-size: 14px;
+  display: flex; align-items: center; gap: 12px;
   transition: var(--transition);
-  box-shadow: 0 10px 30px var(--primary-glow);
-  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 25px var(--primary-glow);
+  white-space: nowrap;
 }
 
 .btn-cta:hover { 
-  transform: translateY(-3px) scale(1.02); 
-  box-shadow: 0 15px 40px var(--primary-glow);
-  filter: brightness(1.1); 
-}
-
-.btn-cta svg { transition: transform 0.3s ease; }
-.btn-cta:hover svg { transform: translateX(5px); }
-
-/* ==========================================================================
-   GRID DE MÓDULOS (PREMIUM MODULES)
-   ========================================================================== */
-.grid { display: grid; gap: 20px; }
-.grid--main { grid-template-columns: repeat(3, 1fr); }
-
-/* Tarjeta de Módulo Estándar */
-.module { 
-  padding: 25px; 
-  min-height: 200px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 15px; 
-  border: 1px solid var(--border);
-  transition: var(--transition);
-  cursor: pointer;
-}
-
-/* Efecto hover suave en tarjetas activas */
-.module:hover:not(:has(button[disabled])) { 
-  transform: translateY(-6px); 
-  border-color: var(--border-light);
-  background-color: var(--card-hover-bg);
-  box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-}
-
-/* Icono del Módulo */
-.module__icon {
-  width: 48px; height: 48px;
-  display: grid; place-items: center;
-  border-radius: 14px; 
-  border: 1px solid var(--border-light);
-  background: rgba(255, 255, 255, 0.03);
-  font-size: 22px;
-  margin-bottom: 5px;
-}
-
-.module h3 { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-main); }
-.module p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.6; flex-grow: 1; }
-
-/* Botones dentro de módulos */
-.btn { 
-  border-radius: 99px; 
-  padding: 12px 18px; 
-  font-weight: 700; 
-  font-size: 13px; 
-  cursor: pointer; 
-  border: none; 
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transition: var(--transition);
-}
-
-/* Botón 'Próximamente' (Bloqueado) */
-.btn--ghost { 
-  background: rgba(255, 255, 255, 0.03); 
-  border: 1px solid var(--border); 
-  color: var(--muted-2); 
-  cursor: not-allowed;
-}
-
-/* Botón 'Explorar' (Activo - Rojo Bavaria) */
-.btn--primary { 
-  background: var(--primary); 
-  color: white; 
-  box-shadow: 0 4px 15px var(--primary-glow);
-}
-.btn--primary:hover { 
-  box-shadow: 0 8px 25px var(--primary-glow);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px var(--primary-glow);
   filter: brightness(1.1);
 }
 
 /* ==========================================================================
-   RESPONSIVE (AJUSTES PARA MÓVIL)
+   MODULES GRID
    ========================================================================== */
-@media (max-width: 1024px) { .grid--main { grid-template-columns: repeat(2, 1fr); } }
-
-@media (max-width: 768px) {
-  .wrap { margin: 20px auto 30px; }
-  
-  /* Header Móvil */
-  .main-header__content { flex-direction: column; align-items: flex-start; gap: 15px; }
-  .main-header h1 { font-size: 24px; }
-  
-  /* Banner Móvil Responsivo */
-  .banner { min-height: 250px; text-align: center; }
-  .banner::before {
-    background: linear-gradient(180deg, rgba(5, 7, 12, 0.9) 0%, rgba(5, 7, 12, 0.7) 100%);
-  }
-  .banner__content { 
-    max-width: 100%; 
-    padding: 40px 20px; 
-    align-items: center; 
-    justify-content: center;
-  }
-  .banner__title { font-size: 30px; }
-  .banner__subtitle { 
-    font-size: 1rem; 
-    background: rgba(0,0,0,0.4); /* Fondo para lectura */
-    padding: 12px; 
-    border-radius: 10px; 
-    margin-top: 10px;
-  }
-  .brand-badge { width: 85px; right: 15px; top: 15px; }
-
-  /* Buscador Móvil */
-  .search-hero { padding: 25px; }
-  .search-hero__body { flex-direction: column; text-align: center; gap: 25px; }
-  .search-hero__info { flex-direction: column; gap: 15px; }
-  .search-hero p { max-width: 100%; }
-  .btn-cta { justify-content: center; width: 100%; padding: 16px; }
+.grid--main { 
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px; 
 }
 
-@media (max-width: 640px) { 
-  .grid--main { grid-template-columns: 1fr; } /* Una columna en celulares */
-  .main-header h1 { font-size: 20px; }
-  .section__head h2 { font-size: 17px; }
+.module { 
+  padding: 24px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 16px;
+}
+
+.module:hover:not(:has(button[disabled])) { 
+  transform: translateY(-5px);
+  background: var(--card-hover-bg);
+  border-color: var(--primary);
+}
+
+.module__icon {
+  width: 44px; height: 44px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+
+.module h3 { margin: 0; font-size: 18px; }
+.module p { margin: 0; color: var(--text-muted); font-size: 14px; line-height: 1.5; flex: 1; }
+
+.btn--primary { 
+  background: var(--primary); 
+  color: #fff; 
+  padding: 12px;
+  border-radius: 99px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  transition: var(--transition);
+}
+
+/* ==========================================================================
+   ESTILO PARA EL BOTÓN DEL MAPA (MÓVIL / DESKTOP)
+   ========================================================================== */
+.section__meta-map-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.section__meta-map-link:hover { color: var(--primary); }
+
+.section__meta-icon {
+    display: flex;
+    align-items: center; justify-content: center;
+    transition: var(--transition);
+}
+
+/* ==========================================================================
+   MEDIA QUERIES (OPTIMIZACIÓN MÓVIL)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .wrap { margin: 20px auto; gap: 24px; }
+  
+  .main-header__content { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 12px; 
+  }
+  
+  .banner { min-height: 280px; text-align: left; }
+  .banner__content { padding: 30px 20px; }
+  .brand-badge { width: 80px; top: 15px; right: 15px; }
+
+  .search-hero__body { flex-direction: column; gap: 20px; }
+  .search-hero__info { flex-direction: column; text-align: center; }
+  .btn-cta { width: 100%; justify-content: center; }
+
+  /* Transformación del link a botón flotante circular */
+  .section__meta-text { display: none; }
+  .section__meta-icon {
+      background: var(--primary);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 15px var(--primary-glow);
+  }
+}
+
+@media (max-width: 480px) {
+  .banner__title { font-size: 28px; }
+  .module { padding: 20px; }
 }

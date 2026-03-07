@@ -13,7 +13,8 @@ exports.guardarNovedad = async (req, res) => {
             placa: placa,
             codigoCliente: codigo_cliente,
             tipoRetro: tipo_retroalimentacion,
-            comentarios: observacion
+            comentarios: observacion,
+            estado: 'Pendiente'
         });
 
         await nuevaNovedad.save();
@@ -75,7 +76,7 @@ exports.obtenerConsolidadoValle = async (req, res) => {
                 cd: n.cd,
                 placa: n.placa,
                 fecha: n.fechaReporte,
-                estado: n.estado || 'Realizado',
+                estado: n.estado || 'Pendiente',
                 // CAMBIO AQUÍ: Usamos 'comentarios' que es como lo definiste en el modelo Retro
                 descripcion: n.comentarios || 'Sin observación' 
             })),

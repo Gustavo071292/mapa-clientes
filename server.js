@@ -37,7 +37,7 @@ app.get("/equipos-empoderados/retro/resumen-gerencial", (req, res) => {
 
 // ====== APIs (Mapa + Novedades) ======
 app.get("/api/cds", (req, res) => {
-    res.json({ ok: true, data: [{ code: "AV28", name: "Popayán" }, { code: "AV57", name: "Tuluá" }, { code: "AV46", name: "Cali" }, { code: "AV99", name: "Yumbo" }] });
+    res.json({ ok: true, data: [{ code: "AV28", name: "Popayán" }, { code: "AV57", name: "Tuluá" }, { code: "AV46", name: "Cali" }, { code: "AV01", name: "Yumbo" }] });
 });
 
 app.use("/api/delivery", deliveryRoutes); // RESTAURADO: Búsqueda de clientes activa
