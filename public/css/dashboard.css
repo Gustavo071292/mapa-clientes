@@ -131,7 +131,7 @@ body {
     border-radius: 12px;
     border: 1px solid var(--borde);
     
-    /* FIX: Altura definida para evitar gráficas infinitas */
+    /* FIX: Altura definida en PC para evitar gráficas infinitas */
     height: 400px; 
     position: relative; /* Clave para Chart.js responsivo */
     width: 100%;
@@ -223,10 +223,10 @@ td {
 .btn-cancel { background: #444; color: white; border: none; flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; }
 
 /* ==========================================================================
-   MEDIA QUERIES
+   MEDIA QUERIES (OPTIMIZACIÓN PARA CELULAR Y TABLET)
    ========================================================================== */
 @media (max-width: 768px) {
-    body { padding: 15px; }
+    body { padding: 10px; }
 
     .main-header {
         flex-direction: column;
@@ -237,13 +237,27 @@ td {
     .filters-bar {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
 
     .charts-section {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Gráficas en una sola columna en móvil */
     }
     
     .chart-container {
-        height: 350px; /* Un poco más pequeña en móvil */
+        /* FIX VITAL: Altura controlada en móvil para que no se estiren */
+        height: 300px !important; 
+        position: relative;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+
+    .kpi-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        margin: 15% auto;
+        padding: 20px;
     }
 }

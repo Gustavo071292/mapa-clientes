@@ -1,6 +1,6 @@
 /**
  * SISTEMA INTEGRAL DPO - GERENCIA VALLE
- * Lógica del Dashboard Ejecutivo de Control
+ * Lógica del Dashboard Ejecutivo de Control (Versión Final Optimizada)
  */
 
 // Variables globales para el estado y manejo de gráficos
@@ -15,6 +15,7 @@ let reporteSeleccionado = null;
  */
 async function cargarDataDashboard() {
     try {
+        // Ruta absoluta con '/' para asegurar compatibilidad en producción
         const response = await fetch('/api/retro/consolidado-valle');
         const result = await response.json();
         
@@ -35,7 +36,7 @@ async function cargarDataDashboard() {
  * Filtra la data y actualiza todos los componentes visuales
  */
 function renderizarTodo() {
-    // Captura de valores de filtros
+    // Captura segura de valores de filtros
     const cd = document.getElementById('filtroCD')?.value || 'TODOS';
     const tipo = document.getElementById('filtroTipo')?.value || 'TODOS';
     const estado = document.getElementById('filtroEstado')?.value || 'TODOS';
@@ -49,7 +50,7 @@ function renderizarTodo() {
         
         let cumpleFecha = true;
         if (fechaFiltro && d.fecha) {
-            // Normalización a YYYY-MM-DD para comparación precisa
+            // Normalización a YYYY-MM-DD para comparación contra el input date
             const fechaItem = new Date(d.fecha).toISOString().split('T')[0];
             cumpleFecha = (fechaItem === fechaFiltro);
         }
@@ -57,10 +58,10 @@ function renderizarTodo() {
         return cumpleCD && cumpleTipo && cumpleEstado && cumpleFecha;
     });
 
-    // Actualización dinámica de KPIs superiores
+    // Actualización de KPIs superiores
     actualizarKPIs(filtrados);
 
-    // Actualización de componentes visuales (Gráficos y Tabla)
+    // Actualización de Gráficos y Tabla
     actualizarGraficoEfectividad(filtrados);
     actualizarGraficoPorCD(filtrados); 
     actualizarGraficoPlacas(filtrados);
@@ -74,7 +75,7 @@ function actualizarKPIs(filtrados) {
     const ids = {
         'totalNovedades': 'Novedad',
         'totalPorques': '5 Porqués',
-        'totalPendientes': 'Pendiente' // En este caso filtramos por campo estado
+        'totalPendientes': 'Pendiente'
     };
 
     Object.keys(ids).forEach(id => {
@@ -90,7 +91,7 @@ function actualizarKPIs(filtrados) {
 }
 
 /**
- * 4. GRÁFICO TENDENCIA POR CD (Barras Verticales)
+ * 4. GRÁFICO TENDENCIA POR CD (Optimizado para Celular)
  */
 function actualizarGraficoPorCD(items) {
     const cds = ['Cali', 'Popayan', 'Tulua', 'Yumbo'];
@@ -118,7 +119,7 @@ function actualizarGraficoPorCD(items) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: false, // Evita el estiramiento infinito en móviles
             scales: {
                 y: { beginAtZero: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', stepSize: 1 } },
                 x: { ticks: { color: '#f0f6fc' } }
@@ -129,7 +130,7 @@ function actualizarGraficoPorCD(items) {
 }
 
 /**
- * 5. GRÁFICO NIVEL DE GESTIÓN (Dona / Gauge)
+ * 5. GRÁFICO NIVEL DE GESTIÓN (Dona)
  */
 function actualizarGraficoEfectividad(items) {
     const realizados = items.filter(d => d.estado === 'Realizado').length;
@@ -149,8 +150,7 @@ function actualizarGraficoEfectividad(items) {
             datasets: [{
                 data: [realizados, pendientes],
                 backgroundColor: ['#238636', '#c8102e'],
-                borderWidth: 0,
-                hoverOffset: 4
+                borderWidth: 0
             }]
         },
         options: {
@@ -178,7 +178,7 @@ function actualizarGraficoEfectividad(items) {
 }
 
 /**
- * 6. GRÁFICO TOP 5 PLACAS (Barras Horizontales)
+ * 6. GRÁFICO TOP 5 PLACAS
  */
 function actualizarGraficoPlacas(items) {
     const conteo = {};
@@ -220,35 +220,27 @@ function actualizarGraficoPlacas(items) {
 }
 
 /**
- * 7. TABLA DE AUDITORÍA Y CONTROL
+ * 7. TABLA DE AUDITORÍA
  */
 function actualizarTablaAuditoria(items) {
     const tbody = document.getElementById('cuerpoTabla');
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    // Ordenamos por fecha descendente (más recientes primero)
     const ordenados = [...items].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
 
     ordenados.forEach(item => {
         const tr = document.createElement('tr');
-        const fechaStr = new Date(item.fecha).toLocaleDateString('es-ES', {
-            day: '2-digit', month: '2-digit', year: 'numeric'
-        });
+        const fechaStr = new Date(item.fecha).toLocaleDateString('es-ES');
         const estado = item.estado || 'Pendiente';
-        const badgeClass = estado.toLowerCase().replace(/\s+/g, '-');
         
         tr.innerHTML = `
             <td>${item.icono || '📋'} ${item.tipoDoc}</td>
             <td>${item.cd}</td>
-            <td><strong style="color: #f2c200;">${item.placa}</strong></td>
+            <td><strong>${item.placa}</strong></td>
             <td>${fechaStr}</td>
-            <td><span class="badge ${badgeClass}">${estado}</span></td>
-            <td>
-                <button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipoDoc}')">
-                    ⚙️ Gestionar
-                </button>
-            </td>
+            <td><span class="badge ${estado.toLowerCase().replace(/\s+/g, '-')}">${estado}</span></td>
+            <td><button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipoDoc}')">⚙️ Gestionar</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -263,7 +255,6 @@ function abrirModalGestion(id, tipoDoc) {
     
     if (reporte) {
         document.getElementById('detalleTextoOriginal').innerText = reporte.descripcion || "Sin descripción disponible.";
-        document.getElementById('infoReporte').innerText = `Gestión de Evidencia: ${tipoDoc}`;
         document.getElementById('modalGestion').style.display = 'block';
     }
 }
@@ -291,10 +282,7 @@ async function guardarGestion() {
         const result = await response.json();
         if (result.exito) {
             cerrarModal();
-            // Recarga solo la data de Atlas para refrescar el tablero
             await cargarDataDashboard(); 
-        } else {
-            alert("Error al guardar: " + result.mensaje);
         }
     } catch (error) {
         console.error("Error en el guardado:", error);
@@ -311,10 +299,8 @@ function cerrarModal() {
  * 9. INICIALIZACIÓN Y EVENT LISTENERS
  */
 window.onload = () => {
-    // Carga inicial
     cargarDataDashboard();
 
-    // Integración de filtros reactivos (actualizan el dashboard al cambiar)
     const filtros = ['filtroCD', 'filtroTipo', 'filtroEstado', 'filtroFecha'];
     filtros.forEach(id => {
         document.getElementById(id)?.addEventListener('change', renderizarTodo);
