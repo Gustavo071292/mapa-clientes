@@ -116,7 +116,7 @@ body {
 .red { border-bottom: 4px solid var(--rojo-primario); }
 
 /* ==========================================================================
-   SECCIÓN DE GRÁFICAS (CORRECCIÓN DE TAMAÑO)
+   SECCIÓN DE GRÁFICAS
    ========================================================================== */
 .charts-section {
     display: grid;
@@ -130,10 +130,8 @@ body {
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--borde);
-    
-    /* FIX: Altura definida en PC para evitar gráficas infinitas */
-    height: 400px; 
-    position: relative; /* Clave para Chart.js responsivo */
+    height: 400px; /* Altura para PC */
+    position: relative;
     width: 100%;
 }
 
@@ -192,7 +190,7 @@ td {
 .badge.no-ejecutado { background: rgba(255, 193, 7, 0.15); color: #f1c40f; border: 1px solid var(--amarillo-alerta); }
 
 /* ==========================================================================
-   MODAL
+   MODAL Y ACCIONES
    ========================================================================== */
 .modal {
     display: none;
@@ -241,11 +239,11 @@ td {
     }
 
     .charts-section {
-        grid-template-columns: 1fr; /* Gráficas en una sola columna en móvil */
+        grid-template-columns: 1fr;
     }
     
+    /* FIX VITAL: Altura controlada y forzada en móviles */
     .chart-container {
-        /* FIX VITAL: Altura controlada en móvil para que no se estiren */
         height: 300px !important; 
         position: relative;
         margin-bottom: 20px;
