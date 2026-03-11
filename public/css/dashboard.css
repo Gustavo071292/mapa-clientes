@@ -73,7 +73,7 @@ body {
 }
 
 /* ==========================================================================
-   KPIs Y ESTADÍSTICAS
+   KPIs Y ESTADÍSTICAS (PC)
    ========================================================================== */
 .kpi-stats {
     display: grid;
@@ -116,7 +116,7 @@ body {
 .red { border-bottom: 4px solid var(--rojo-primario); }
 
 /* ==========================================================================
-   SECCIÓN DE GRÁFICAS
+   SECCIÓN DE GRÁFICAS (PC)
    ========================================================================== */
 .charts-section {
     display: grid;
@@ -130,7 +130,7 @@ body {
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--borde);
-    height: 400px; /* Altura para PC */
+    height: 400px; 
     position: relative;
     width: 100%;
 }
@@ -211,51 +211,40 @@ td {
     border-radius: 12px;
 }
 
-.modal-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 25px;
-}
-
-.btn-save { background: var(--rojo-primario); color: white; border: none; flex: 2; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-.btn-cancel { background: #444; color: white; border: none; flex: 1; padding: 12px; border-radius: 6px; cursor: pointer; }
-
 /* ==========================================================================
-   MEDIA QUERIES (OPTIMIZACIÓN PARA CELULAR Y TABLET)
+   ESTILOS EXCLUSIVOS PARA CELULAR (OCULTAR GRÁFICAS)
    ========================================================================== */
 @media (max-width: 768px) {
     body { padding: 10px; }
 
-    .main-header {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
+    /* 1. Ocultamos gráficas y KPIs para enfoque en gestión técnica */
+    #seccion-graficas, 
+    .kpi-grid { 
+        display: none !important; 
     }
 
+    /* 2. Filtros compactos en cuadrícula */
     .filters-bar {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 8px;
+        margin-bottom: 15px;
     }
 
-    .charts-section {
-        grid-template-columns: 1fr;
+    .main-header h1 {
+        font-size: 1.2rem;
+        text-align: center;
+        margin-bottom: 10px;
     }
-    
-    /* FIX VITAL: Altura controlada y forzada en móviles */
-    .chart-container {
-        height: 300px !important; 
-        position: relative;
-        margin-bottom: 20px;
+
+    /* 3. Tabla priorizada */
+    .auditoria-section {
+        padding: 15px;
+        margin-top: 0;
+    }
+
+    .btn-gestionar {
+        padding: 10px; /* Botón más grande para touch */
         width: 100%;
-    }
-
-    .kpi-stats {
-        grid-template-columns: 1fr;
-    }
-
-    .modal-content {
-        margin: 15% auto;
-        padding: 20px;
     }
 }

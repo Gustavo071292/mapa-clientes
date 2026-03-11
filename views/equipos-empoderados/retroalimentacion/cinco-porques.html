@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Herramienta 5 Porqués - IA DPO</title>
-    <link rel="stylesheet" href="/css/cinco-porques.css">
+    <link rel="stylesheet" href="/css/cinco-porques.css?v=2">
 </head>
 <body>
     <div class="container">
@@ -71,35 +71,35 @@
             <div id="niveles-container">
                 <div class="paso-box" id="nivel-1">
                     <label>1. ¿Por qué ocurrió la novedad?</label>
-                    <input type="text" id="p1" required placeholder="Escriba o use la IA para sugerencias">
+                    <input type="text" id="p1" required placeholder="Escriba o use la IA para sugerencias" oninput="mostrarSiguienteNivel(1)">
                     <button type="button" class="btn-ia" onclick="consultarIA(1)">✨ Sugerencias IA</button>
                     <div id="ia-res-1" class="ia-assistant" style="display:none;"></div>
                 </div>
 
-                <div class="paso-box" id="nivel-2">
+                <div class="paso-box animate__fadeIn" id="nivel-2">
                     <label>2. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p2" required>
+                    <input type="text" id="p2" required oninput="mostrarSiguienteNivel(2)">
                     <button type="button" class="btn-ia" onclick="consultarIA(2)">✨ Sugerencias IA</button>
                     <div id="ia-res-2" class="ia-assistant" style="display:none;"></div>
                 </div>
 
-                <div class="paso-box" id="nivel-3">
+                <div class="paso-box animate__fadeIn" id="nivel-3">
                     <label>3. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p3" required>
+                    <input type="text" id="p3" required oninput="mostrarSiguienteNivel(3)">
                     <button type="button" class="btn-ia" onclick="consultarIA(3)">✨ Sugerencias IA</button>
                     <div id="ia-res-3" class="ia-assistant" style="display:none;"></div>
                 </div>
 
-                <div class="paso-box" id="nivel-4">
+                <div class="paso-box animate__fadeIn" id="nivel-4">
                     <label>4. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p4" required>
+                    <input type="text" id="p4" required oninput="mostrarSiguienteNivel(4)">
                     <button type="button" class="btn-ia" onclick="consultarIA(4)">✨ Sugerencias IA</button>
                     <div id="ia-res-4" class="ia-assistant" style="display:none;"></div>
                 </div>
 
-                <div class="paso-box" id="nivel-5" style="border-bottom: 3px solid #f2c200;">
+                <div class="paso-box animate__fadeIn" id="nivel-5" style="border-bottom: 3px solid #f2c200;">
                     <label>5. Causa Raíz (Conclusión final)</label>
-                    <input type="text" id="p5" required>
+                    <input type="text" id="p5" required oninput="mostrarSiguienteNivel(5)">
                     <button type="button" class="btn-ia" onclick="consultarIA(5)">✨ Sugerencias IA Final</button>
                     <div id="ia-res-5" class="ia-assistant" style="display:none;"></div>
                 </div>

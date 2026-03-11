@@ -15,7 +15,6 @@ let reporteSeleccionado = null;
  */
 async function cargarDataDashboard() {
     try {
-        // Ruta absoluta con '/' para asegurar compatibilidad en producción
         const response = await fetch('/api/retro/consolidado-valle');
         const result = await response.json();
         
@@ -33,7 +32,7 @@ async function cargarDataDashboard() {
 
 /**
  * 2. ORQUESTADOR DE RENDERIZADO
- * Filtra la data y actualiza todos los componentes visuales
+ * Filtra la data y actualiza componentes según el dispositivo
  */
 function renderizarTodo() {
     // Captura segura de valores de filtros
@@ -50,21 +49,24 @@ function renderizarTodo() {
         
         let cumpleFecha = true;
         if (fechaFiltro && d.fecha) {
-            // Normalización a YYYY-MM-DD para comparación contra el input date
             const fechaItem = new Date(d.fecha).toISOString().split('T')[0];
             cumpleFecha = (fechaItem === fechaFiltro);
         }
-
         return cumpleCD && cumpleTipo && cumpleEstado && cumpleFecha;
     });
 
-    // Actualización de KPIs superiores
+    // Actualización de KPIs superiores (Solo se muestran si existen en el DOM)
     actualizarKPIs(filtrados);
 
-    // Actualización de Gráficos y Tabla
-    actualizarGraficoEfectividad(filtrados);
-    actualizarGraficoPorCD(filtrados); 
-    actualizarGraficoPlacas(filtrados);
+    // --- MEJORA DE RENDIMIENTO PARA MÓVIL ---
+    // Solo procesamos y renderizamos gráficas si la pantalla es mayor a 768px (PC/Tablet)
+    if (window.innerWidth > 768) {
+        actualizarGraficoEfectividad(filtrados);
+        actualizarGraficoPorCD(filtrados); 
+        actualizarGraficoPlacas(filtrados);
+    }
+
+    // La tabla SIEMPRE se actualiza porque es la prioridad en móvil
     actualizarTablaAuditoria(filtrados);
 }
 
@@ -91,7 +93,7 @@ function actualizarKPIs(filtrados) {
 }
 
 /**
- * 4. GRÁFICO TENDENCIA POR CD (Optimizado para Celular)
+ * 4. GRÁFICO TENDENCIA POR CD
  */
 function actualizarGraficoPorCD(items) {
     const cds = ['Cali', 'Popayan', 'Tulua', 'Yumbo'];
@@ -119,7 +121,7 @@ function actualizarGraficoPorCD(items) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Evita el estiramiento infinito en móviles
+            maintainAspectRatio: false,
             scales: {
                 y: { beginAtZero: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', stepSize: 1 } },
                 x: { ticks: { color: '#f0f6fc' } }
@@ -233,11 +235,12 @@ function actualizarTablaAuditoria(items) {
         const tr = document.createElement('tr');
         const fechaStr = new Date(item.fecha).toLocaleDateString('es-ES');
         const estado = item.estado || 'Pendiente';
+        const placaDisplay = item.placa || "SIN PLACA";
         
         tr.innerHTML = `
             <td>${item.icono || '📋'} ${item.tipoDoc}</td>
             <td>${item.cd}</td>
-            <td><strong>${item.placa}</strong></td>
+            <td><strong>${placaDisplay}</strong></td>
             <td>${fechaStr}</td>
             <td><span class="badge ${estado.toLowerCase().replace(/\s+/g, '-')}">${estado}</span></td>
             <td><button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipoDoc}')">⚙️ Gestionar</button></td>

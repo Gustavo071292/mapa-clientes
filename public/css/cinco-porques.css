@@ -1,4 +1,6 @@
-/* Estilos para Herramienta 5 Porqués - Gerencia Valle */
+/* ==========================================================================
+   Estilos Herramienta 5 Porqués - Gerencia Valle (Versión Final)
+   ========================================================================== */
 :root { 
     --bavaria-red: #c8102e; 
     --dpo-gold: #f2c200; 
@@ -19,10 +21,16 @@ body {
     border-top: 5px solid var(--bavaria-red); 
 }
 
+/* --- BLOQUES DE NIVELES --- */
 .paso-box { 
     margin-bottom: 25px; 
     padding: 15px; 
     border-bottom: 1px solid #333; 
+}
+
+/* Ocultar niveles superiores inicialmente para el efecto cascada */
+#nivel-2, #nivel-3, #nivel-4, #nivel-5 {
+    display: none;
 }
 
 label { 
@@ -40,29 +48,37 @@ input[type="text"], select, textarea, input[type="date"] {
     color: white; 
     border-radius: 8px; 
     margin-bottom: 10px; 
+    transition: border 0.3s;
 }
 
+input:focus {
+    border: 1px solid var(--dpo-gold);
+    outline: none;
+}
+
+/* --- ASISTENTE DE IA --- */
 .ia-assistant { 
     background: #252525; 
     border-left: 4px solid var(--dpo-gold); 
     padding: 15px; 
     margin-top: 10px; 
     border-radius: 0 8px 8px 0; 
-    display: none; 
 }
 
 .sugerencia-item { 
-    background: #333; 
+    background: #2d333b; 
+    border: 1px solid #444;
     padding: 10px; 
     margin: 5px 0; 
-    border-radius: 5px; 
+    border-radius: 6px; 
     cursor: pointer; 
-    transition: 0.3s; 
+    transition: background 0.2s; 
     font-size: 0.9em; 
 }
 
 .sugerencia-item:hover { 
-    background: #444; 
+    background: var(--bavaria-red); 
+    color: white;
     border: 1px solid var(--dpo-gold); 
 }
 
@@ -81,6 +97,14 @@ input[type="text"], select, textarea, input[type="date"] {
     color: black; 
 }
 
+/* --- PLAN DE ACCIÓN Y BOTONES --- */
+.plan-accion-section { 
+    background: #2a2a2a; 
+    padding: 20px; 
+    border-radius: 10px; 
+    border: 1px dashed var(--dpo-gold); 
+}
+
 .btn-save { 
     background: var(--bavaria-red); 
     color: white; 
@@ -92,18 +116,16 @@ input[type="text"], select, textarea, input[type="date"] {
     width: 100%; 
     font-size: 1.1em; 
     margin-top: 20px; 
+    transition: 0.3s;
 }
 
-.plan-accion-section { 
-    background: #2a2a2a; 
-    padding: 20px; 
-    border-radius: 10px; 
-    border: 1px dashed var(--dpo-gold); 
+.btn-save:hover {
+    background: #a00d25;
 }
-/* Ocultamos los niveles superiores inicialmente */
-#nivel-2, #nivel-3, #nivel-4, #nivel-5 {
-    display: none;
-    animation: fadeIn 0.5s ease-in; /* Un efecto suave al aparecer */
+
+/* --- ANIMACIONES --- */
+.animate__fadeIn {
+    animation: fadeIn 0.6s ease-in-out;
 }
 
 @keyframes fadeIn {
