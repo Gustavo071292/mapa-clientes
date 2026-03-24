@@ -23,20 +23,19 @@
                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <div style="flex: 1;">
                         <label>🆔 Cédula</label>
-                        <input type="text" id="cedula" placeholder="Cédula" required>
+                        <input type="text" id="cedula" placeholder="Ej: 1061754111" required>
                     </div>
                     <div class="input-group">
-          <label for="cd">📍 CD</label>
-             <select id="cd" name="cd" required onchange="actualizarPlacas()">
-                <option value="">Seleccione CD...</option>
-                <option value="Cali">Cali</option>
-                <option value="Popayan">Popayán</option>
-                <option value="Tulua">Tuluá</option>
-                <option value="Yumbo">Yumbo</option>
-             </select>
-        </div>
+                        <label for="cd">📍 CD</label>
+                        <select id="cd" required onchange="actualizarPlacas()">
+                            <option value="">Seleccione CD...</option>
+                            <option value="Cali">Cali</option>
+                            <option value="Popayan">Popayán</option>
+                            <option value="Tulua">Tuluá</option>
+                            <option value="Yumbo">Yumbo</option>
+                        </select>
+                    </div>
                 </div>
-
                 <div style="margin-bottom: 15px;">
                     <label>🚛 Placa del Vehículo</label>
                     <select id="placa" required>
@@ -47,25 +46,69 @@
 
             <div class="paso-box">
                 <label>🔢 Código de Cliente (8 dígitos)</label>
-                <input type="text" id="codigo_cliente" placeholder="Ej: 12345678" 
-                       pattern="\d{8}" title="Debe contener exactamente 8 números" required>
+                <input type="text" id="codigo_cliente" placeholder="Ej: 12345678" pattern="\d{8}" required>
+            </div>
+
+            <div class="paso-box">
+                <label>📊 Indicador Relacionado</label>
+                <select id="indicador" required>
+                    <option value="">Seleccione indicador...</option>
+                    <option value="Rechazos">Rechazos</option>
+                    <option value="Modulación">Modulación</option>
+                    <option value="RMD">RMD</option>
+                    <option value="Adherencia a Km">Adherencia a Km</option>
+                    <option value="Adherencia a Tiempo">Adherencia a Tiempo</option>
+                    <option value="PNP">PNP</option>
+                    <option value="Cashless">Cashless</option>
+                    <option value="TML">TML</option>
+                    <option value="TR">TR (Tiempo en ruta)</option>
+                    <option value="TI">TI (Tiempo interno)</option>
+                    <option value="DQI">DQI (Roturas)</option>
+                    <option value="Otro">Otro (Especificar)</option>
+                </select>
             </div>
 
             <div class="paso-box">
                 <label>🔄 Tipo de Retroalimentación</label>
-                <select id="tipo_retro" required>
+                <select id="tipo_retro" required onchange="checkTipoNovedad()">
                     <option value="">Seleccione tipo...</option>
                     <option value="Pre ruta">Pre ruta</option>
                     <option value="En ruta">En ruta</option>
                     <option value="Post ruta">Post ruta</option>
                     <option value="PDV o Ruta Critica">PDV o Ruta Critica</option>
+                    <option value="Reporte de roturas">Reporte de roturas</option>
                 </select>
+            </div>
+
+            <div id="seccion_roturas" style="display: none; border: 1px dashed #f2c200; padding: 15px; border-radius: 8px; margin-bottom: 20px; background: #1a1a1a;">
+                <h4 style="color: #f2c200; margin-top: 0;">📦 Detalle de Roturas</h4>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <div style="flex: 1;">
+                        <label>📁 Categoría</label>
+                        <select id="categoria" onchange="filtrarMateriales()">
+                            <option value="">Seleccione...</option>
+                            <option value="Maltas">Maltas</option>
+                            <option value="Agua">Agua</option>
+                            <option value="Cervezas">Cervezas</option>
+                            <option value="MKP">MKP</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>🍾 Material</label>
+                        <select id="material">
+                            <option value="">Seleccione categoría...</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label>🔢 Unidades</label>
+                    <input type="number" id="unidades" min="0" placeholder="Cantidad de unidades rotas">
+                </div>
             </div>
 
             <div class="paso-box">
                 <label>📝 Observación (Máx. 255 caracteres)</label>
-                <textarea id="observacion" rows="4" maxlength="255" 
-                          placeholder="Describa la novedad aquí..." required oninput="contarCaracteres()"></textarea>
+                <textarea id="observacion" rows="4" maxlength="255" placeholder="Describa la novedad aquí..." required oninput="contarCaracteres()"></textarea>
                 <small id="charCount" style="color: #aaa;">0 / 255 caracteres</small>
             </div>
 

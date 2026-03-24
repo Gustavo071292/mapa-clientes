@@ -1,28 +1,133 @@
-:root { --bavaria-red: #c8102e; --dpo-gold: #f2c200; }
+/* VARIABLES BAVARIA / DPO */
+:root { 
+    --bavaria-red: #c8102e; 
+    --dpo-gold: #f2c200; 
+    --dark-bg: #0f0f0f;
+    --card-bg: #1a1a1a;
+    --input-bg: #2a2a2a;
+}
 
-body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', sans-serif; }
+/* RESET Y CUERPO */
+body { 
+    background-color: var(--dark-bg); 
+    color: white; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0;
+    padding: 20px;
+}
 
 .container { 
     max-width: 600px; 
-    margin: 20px auto; 
-    padding: 20px; 
-    background: #1a1a1a; 
+    margin: 40px auto; 
+    padding: 25px; 
+    background: var(--card-bg); 
     border-radius: 15px; 
     border-top: 5px solid var(--bavaria-red); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-.paso-box { margin-bottom: 20px; padding: 10px; border-bottom: 1px solid #333; }
+header h2 { 
+    margin-bottom: 5px; 
+    color: white; 
+}
 
-label { display: block; font-weight: bold; color: var(--dpo-gold); margin-bottom: 8px; }
+/* CAJAS DE PASOS */
+.paso-box { 
+    margin-bottom: 25px; 
+    padding-bottom: 15px; 
+    border-bottom: 1px solid #333; 
+}
 
+label { 
+    display: block; 
+    font-weight: bold; 
+    color: var(--dpo-gold); 
+    margin-bottom: 10px; 
+    font-size: 0.95em;
+}
+
+/* INPUTS, SELECTS Y TEXTAREAS */
 input, select, textarea { 
-    width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; 
-    color: white; border-radius: 8px; box-sizing: border-box; 
+    width: 100%; 
+    padding: 12px; 
+    background: var(--input-bg); 
+    border: 1px solid #444; 
+    color: white; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
+    font-size: 1em;
+    transition: all 0.3s ease;
 }
 
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--dpo-gold);
+    box-shadow: 0 0 5px rgba(242, 194, 0, 0.2);
+}
+
+/* --- SECCIÓN DINÁMICA DE ROTURAS --- */
+#seccion_roturas {
+    background-color: rgba(242, 194, 0, 0.05); /* Fondo sutil amarillo */
+    border: 1px dashed var(--dpo-gold) !important;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+#seccion_roturas h4 {
+    margin-top: 0;
+    color: var(--dpo-gold);
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 1px;
+}
+
+/* BOTÓN DE GUARDADO */
 .btn-save { 
-    background: var(--bavaria-red); color: white; border: none; padding: 15px; 
-    border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1em; 
+    background: var(--bavaria-red); 
+    color: white; 
+    border: none; 
+    padding: 16px; 
+    border-radius: 10px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    width: 100%; 
+    font-size: 1.1em; 
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-.btn-save:hover { background: #a00d25; }
+.btn-save:hover { 
+    background: #a00d25; 
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(200, 16, 46, 0.3);
+}
+
+/* CONTADOR DE CARACTERES */
+#charCount {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #888;
+}
+
+/* ANIMACIONES Y RESPONSIVE */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .container { margin: 10px; width: auto; padding: 15px; }
+    
+    /* Para que Cédula y CD se apilen en pantallas pequeñas */
+    div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+}

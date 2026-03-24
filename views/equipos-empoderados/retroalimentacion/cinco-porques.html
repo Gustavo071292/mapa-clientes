@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Herramienta 5 Porqués - IA DPO</title>
-    <link rel="stylesheet" href="/css/cinco-porques.css?v=2">
+    <title>Reporte de Novedades - Gerencia Valle</title>
+    <link rel="stylesheet" href="/css/novedades.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="header-content">
-                <h2>2.2.1 Herramienta de Gestión (5 Porqués)</h2>
-                <p style="color: #aaa;">Análisis de Causa Raíz asistido por IA - Gerencia Valle</p>
-            </div>
+            <h2>Reporte de Novedades / Ruta</h2>
+            <p style="color: #aaa;">Registro de incidencias operativas - DPO</p>
         </header>
 
-        <form id="formCincoPorques">
-            <div class="paso-box" style="border-left: 5px solid #c8102e; background: #252525;">
-                <label style="color: white; font-weight: bold;">🚩 Descripción de la Novedad / Incidente</label>
-                <textarea id="novedad_principal" rows="2" placeholder="Ej: Cliente de tienda la mejor, demora mucho la tripulacion..." required></textarea>
+        <form id="formNovedades">
+            <div class="paso-box">
+                <label>📅 Fecha del Reporte</label>
+                <input type="date" id="fecha" required>
             </div>
 
             <div class="paso-box">
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label>📍 Centro de Distribución (CD)</label>
-                        <select id="cd" name="cd" required onchange="actualizarPlacas()" style="width: 100%;">
+                        <label>🆔 Cédula</label>
+                        <input type="text" id="cedula" placeholder="Ej: 1061754111" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="cd">📍 CD</label>
+                        <select id="cd" required onchange="actualizarPlacas()">
                             <option value="">Seleccione CD...</option>
                             <option value="Cali">Cali</option>
                             <option value="Popayan">Popayán</option>
@@ -33,100 +35,86 @@
                             <option value="Yumbo">Yumbo</option>
                         </select>
                     </div>
-                    <div style="flex: 1;">
-                        <label>🆔 Cédula del Colaborador</label>
-                        <input type="text" id="cedula" placeholder="Ingrese cédula" required style="width: 100%;">
-                    </div>
                 </div>
+                <div style="margin-bottom: 15px;">
+                    <label>🚛 Placa del Vehículo</label>
+                    <select id="placa" required>
+                        <option value="">Primero seleccione un CD...</option>
+                    </select>
+                </div>
+            </div>
 
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+            <div class="paso-box">
+                <label>🔢 Código de Cliente (8 dígitos)</label>
+                <input type="text" id="codigo_cliente" placeholder="Ej: 12345678" pattern="\d{8}" required>
+            </div>
+
+            <div class="paso-box">
+                <label>📊 Indicador Relacionado</label>
+                <select id="indicador" required>
+                    <option value="">Seleccione indicador...</option>
+                    <option value="Rechazos">Rechazos</option>
+                    <option value="Modulación">Modulación</option>
+                    <option value="RMD">RMD</option>
+                    <option value="Adherencia a Km">Adherencia a Km</option>
+                    <option value="Adherencia a Tiempo">Adherencia a Tiempo</option>
+                    <option value="PNP">PNP</option>
+                    <option value="Cashless">Cashless</option>
+                    <option value="TML">TML</option>
+                    <option value="TR">TR (Tiempo en ruta)</option>
+                    <option value="TI">TI (Tiempo interno)</option>
+                    <option value="DQI">DQI (Roturas)</option>
+                    <option value="Otro">Otro (Especificar)</option>
+                </select>
+            </div>
+
+            <div class="paso-box">
+                <label>🔄 Tipo de Retroalimentación</label>
+                <select id="tipo_retro" required onchange="checkTipoNovedad()">
+                    <option value="">Seleccione tipo...</option>
+                    <option value="Pre ruta">Pre ruta</option>
+                    <option value="En ruta">En ruta</option>
+                    <option value="Post ruta">Post ruta</option>
+                    <option value="PDV o Ruta Critica">PDV o Ruta Critica</option>
+                    <option value="Reporte de roturas">Reporte de roturas</option>
+                </select>
+            </div>
+
+            <div id="seccion_roturas" style="display: none;">
+                <h4>📦 Detalle de Roturas</h4>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                     <div style="flex: 1;">
-                        <label>🚛 Placa del Vehículo</label>
-                        <select id="placa" name="placa" required style="width: 100%;">
-                            <option value="">Primero seleccione un CD...</option>
+                        <label>📁 Categoría</label>
+                        <select id="categoria" onchange="filtrarMateriales()">
+                            <option value="">Seleccione...</option>
+                            <option value="Maltas">Maltas</option>
+                            <option value="Agua">Agua</option>
+                            <option value="Cervezas">Cervezas</option>
+                            <option value="MKP">MKP</option>
                         </select>
                     </div>
                     <div style="flex: 1;">
-                        <label>📊 Indicador a Analizar</label>
-                        <select id="indicador" onchange="verificarOtroIndicador()" required style="width: 100%;">
-                            <option value="">Seleccione indicador...</option>
-                            <option value="Rechazos">Rechazos</option>
-                            <option value="Modulación">Modulación</option>
-                            <option value="RMD">RMD</option>
-                            <option value="Adherencia a Km">Adherencia a Km</option>
-                            <option value="Adherencia a Tiempo">Adherencia a Tiempo</option>
-                            <option value="PNP">PNP</option>
-                            <option value="Cashless">Cashless</option>
-                            <option value="TML">TML</option>
-                            <option value="Otro">Otro (Especificar)</option>
+                        <label>🍾 Material</label>
+                        <select id="material">
+                            <option value="">Seleccione categoría...</option>
                         </select>
                     </div>
                 </div>
-
-                <div id="campo_otro_indicador" style="display: none; margin-bottom: 15px;">
-                    <input type="text" id="otro_indicador_texto" placeholder="Especifique el indicador..." style="width: 100%;">
+                <div>
+                    <label>🔢 Unidades</label>
+                    <input type="number" id="unidades" min="0" placeholder="Cantidad rotas">
                 </div>
             </div>
 
-            <div id="niveles-container">
-                <div class="paso-box" id="nivel-1">
-                    <label>1. ¿Por qué ocurrió la novedad?</label>
-                    <input type="text" id="p1" required placeholder="Escriba o use la IA para sugerencias" oninput="mostrarSiguienteNivel(1)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(1)">✨ Sugerencias IA</button>
-                    <div id="ia-res-1" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box animate__fadeIn" id="nivel-2">
-                    <label>2. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p2" required oninput="mostrarSiguienteNivel(2)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(2)">✨ Sugerencias IA</button>
-                    <div id="ia-res-2" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box animate__fadeIn" id="nivel-3">
-                    <label>3. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p3" required oninput="mostrarSiguienteNivel(3)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(3)">✨ Sugerencias IA</button>
-                    <div id="ia-res-3" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box animate__fadeIn" id="nivel-4">
-                    <label>4. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p4" required oninput="mostrarSiguienteNivel(4)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(4)">✨ Sugerencias IA</button>
-                    <div id="ia-res-4" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box animate__fadeIn" id="nivel-5" style="border-bottom: 3px solid #f2c200;">
-                    <label>5. Causa Raíz (Conclusión final)</label>
-                    <input type="text" id="p5" required oninput="mostrarSiguienteNivel(5)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(5)">✨ Sugerencias IA Final</button>
-                    <div id="ia-res-5" class="ia-assistant" style="display:none;"></div>
-                </div>
+            <div class="paso-box">
+                <label>📝 Observación (Máx. 255 caracteres)</label>
+                <textarea id="observacion" rows="4" maxlength="255" placeholder="Describa la novedad..." required oninput="contarCaracteres()"></textarea>
+                <small id="charCount">0 / 255 caracteres</small>
             </div>
 
-            <div class="plan-accion-section" style="margin-top: 20px; padding: 20px; background: #1a1a1a; border-radius: 8px;">
-                <label style="color: #f2c200; font-weight: bold;">📌 Plan de Acción Definido</label>
-                <textarea id="plan_accion" rows="3" required placeholder="Describa las acciones correctivas..."></textarea>
-                
-                <div style="display: flex; gap: 15px; margin-top: 15px;">
-                    <div style="flex: 1;">
-                        <label>👤 Responsable</label>
-                        <input type="text" id="responsable" placeholder="Nombre del responsable" required style="width: 100%;">
-                    </div>
-                    <div style="flex: 1;">
-                        <label>📅 Fecha Compromiso</label>
-                        <input type="date" id="fecha_compromiso" required style="width: 100%;">
-                    </div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-save" style="margin-top: 25px; width: 100%; padding: 15px; background: #c8102e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                💾 Guardar Análisis en MongoDB Atlas
-            </button>
+            <button type="submit" class="btn-save">💾 Guardar Reporte en Atlas</button>
         </form>
     </div>
-
-    <script src="/js/cinco-porques.js"></script>
+    <script src="/js/novedades.js"></script>
 </body>
 </html>

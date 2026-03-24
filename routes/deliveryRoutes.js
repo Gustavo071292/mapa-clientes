@@ -1,12 +1,41 @@
 const express = require("express");
 const router = express.Router();
+const path = require("path"); // Importante para las rutas de archivos
 const Cliente = require("../models/Cliente");
 
+// Función de utilidad para números
 const toNum = (v) => {
   if (!v) return null;
   const n = Number(String(v).replace(",", "."));
   return Number.isFinite(n) ? n : null;
 };
+
+// --- RUTAS DE NAVEGACIÓN (Vistas HTML) ---
+
+// Esta ruta carga el menú principal (Procesos y Manuales)
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/ejecucion-entrega/index.html"));
+});
+
+// Rutas para los sub-procesos (asegúrate de que el archivo exista en la carpeta)
+router.get("/pre-ruta", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/ejecucion-entrega/pre-ruta/index.html"));
+});
+
+router.get("/en-ruta", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/ejecucion-entrega/en-ruta/index.html"));
+});
+
+router.get("/post-ruta", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/ejecucion-entrega/post-ruta/index.html"));
+});
+
+router.get("/dqi", (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/ejecucion-entrega/deliveryQualityIndex/index.html"));
+});
+
+
+// --- RUTAS DE API (Datos JSON) ---
 
 // GET /api/delivery/buscar
 router.get("/buscar", async (req, res) => {
@@ -39,4 +68,5 @@ router.post("/por-clientes", async (req, res) => {
   } catch (err) { res.status(500).json({ error: "Error masivo" }); }
 });
 
+// ÚNICO EXPORT AL FINAL
 module.exports = router;

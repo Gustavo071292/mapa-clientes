@@ -1,0 +1,133 @@
+/* Variables de color coherentes con tu proyecto */
+:root {
+    --primary-red: #d32f2f;
+    --dark-bg: #0b0f19;
+    --card-bg: #161b22;
+    --card-hover: #21262d;
+    --text-main: #ffffff;
+    --text-muted: #8b949e;
+    --border-color: #30363d;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    padding: 40px 20px;
+}
+
+.header-section {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    border-left: 5px solid var(--primary-red);
+    padding-left: 20px;
+}
+
+.header-section h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.header-section p {
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.column-title {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+/* Tarjetas de Procesos y Manuales */
+.item-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    color: inherit;
+}
+
+.item-card:hover {
+    background: var(--card-hover);
+    border-color: var(--primary-red);
+    transform: translateX(8px);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* --- ICON BOX UNIFICADO --- */
+.icon-box {
+    font-size: 1.5rem;
+    background: #1e293b;
+    width: 65px; /* Un poco más ancho para emojis dobles */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+    color: var(--primary-red);
+}
+
+.item-card:hover .icon-box {
+    transform: scale(1.1);
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 2px 0 0 0;
+}
+
+.arrow-icon {
+    font-weight: bold;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Variación para Manuales */
+.manual-card {
+    border-left: 4px solid #484f58;
+}
+
+.manual-card:hover {
+    border-left-color: #238636; /* Verde sutil para diferenciar PDFs */
+}
+
+/* Colores de estado (Bordes sutiles) */
+.status-pre { border-color: #f59e0b; }   /* Naranja */
+.status-ruta { border-color: #3b82f6; }  /* Azul */
+.status-post { border-color: #22c55e; }  /* Verde */
+.status-dqi { border-color: var(--primary-red); } /* Rojo */
+
+@media (max-width: 850px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}

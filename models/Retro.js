@@ -9,8 +9,14 @@ const RetroSchema = new mongoose.Schema({
     tipoRetro: { 
         type: String, 
         required: true,
-        enum: ['Pre ruta', 'En ruta', 'Post ruta', 'PDV o Ruta Critica'] 
+        // Agregamos 'Reporte de roturas' al listado permitido
+        enum: ['Pre ruta', 'En ruta', 'Post ruta', 'PDV o Ruta Critica', 'Reporte de roturas'] 
     },
+    // Nuevos campos para el detalle de averías
+    categoriaRotura: { type: String, default: null },
+    materialRotura: { type: String, default: null },
+    unidadesRotas: { type: Number, default: 0 },
+    
     comentarios: { type: String, default: "" },
     createdAt: { type: Date, default: Date.now }
 });

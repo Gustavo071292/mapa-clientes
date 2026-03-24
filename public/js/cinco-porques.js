@@ -32,12 +32,10 @@ function verificarOtroIndicador() {
 }
 
 /**
- * 3. LÓGICA DE FLUJO (Cascada Manual y Automática)
- * Esta función activa el siguiente nivel cuando hay texto suficiente.
+ * 3. LÓGICA DE FLUJO
  */
 function mostrarSiguienteNivel(nivelActual) {
     const valor = document.getElementById(`p${nivelActual}`).value;
-    
     if (valor.trim().length > 3) {
         if (nivelActual < 5) {
             const prox = document.getElementById(`nivel-${nivelActual + 1}`);
@@ -46,7 +44,6 @@ function mostrarSiguienteNivel(nivelActual) {
                 prox.scrollIntoView({ behavior: 'smooth' });
             }
         } else {
-            // Al completar el 5to nivel, pre-llenamos el Plan de Acción
             const planAccion = document.getElementById('plan_accion');
             if (planAccion) planAccion.value = "Acción preventiva basada en: " + valor;
         }
@@ -60,6 +57,7 @@ async function consultarIA(nivel) {
     const novedadBase = document.getElementById('novedad_principal').value;
     const textoAnt = nivel === 1 ? novedadBase : document.getElementById(`p${nivel-1}`).value;
     const resBox = document.getElementById(`ia-res-${nivel}`);
+    const indicadorSel = document.getElementById('indicador').value; // Capturamos el KPI aquí
     
     if(!textoAnt) return alert("Completa el paso anterior antes de pedir sugerencias.");
 
@@ -70,17 +68,23 @@ async function consultarIA(nivel) {
     }
 
     resBox.style.display = 'block';
-    resBox.innerHTML = '<p style="font-size:0.8em; color: #f2c200;">🤖 IA Analizando...</p>';
+    resBox.innerHTML = `<p style="font-size:0.8em; color: #f2c200;">🤖 Analizando ${indicadorSel}...</p>`;
 
     try {
         const response = await fetch('/api/retro/ia-sugerencia', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ textoEntrada: textoAnt, nivelPorqué: nivel, contextoOriginal: novedadBase, historialAnterior: hist })
+            body: JSON.stringify({ 
+                textoEntrada: textoAnt, 
+                nivelPorqué: nivel, 
+                contextoOriginal: novedadBase, 
+                historialAnterior: hist,
+                indicadorSeleccionado: indicadorSel // <--- AHORA SÍ ESTÁ DENTRO DE LA FUNCIÓN
+            })
         });
 
         const data = await response.json();
-        resBox.innerHTML = '<strong>IA DPO sugiere:</strong>';
+        resBox.innerHTML = `<strong>IA DPO sugiere para ${indicadorSel}:</strong>`;
         
         data.opciones.forEach(opc => {
             const div = document.createElement('div');
@@ -89,7 +93,6 @@ async function consultarIA(nivel) {
             div.onclick = () => { 
                 document.getElementById(`p${nivel}`).value = opc; 
                 resBox.style.display = 'none';
-                // Llamamos a la lógica de flujo unificada
                 mostrarSiguienteNivel(nivel);
             };
             resBox.appendChild(div);
@@ -100,7 +103,7 @@ async function consultarIA(nivel) {
 }
 
 /**
- * 5. GUARDAR EN ATLAS (Base de Datos)
+ * 5. GUARDAR EN ATLAS
  */
 const form = document.getElementById('formCincoPorques');
 if (form) {
@@ -109,7 +112,7 @@ if (form) {
         const ind = document.getElementById('indicador').value;
         const payload = {
             cd: document.getElementById('cd').value,
-            cedula: document.getElementById('cedula').value,
+            transporte: document.getElementById('transporte').value,
             placa: document.getElementById('placa').value,
             indicador: ind === 'Otro' ? document.getElementById('otro_indicador_texto').value : ind,
             descripcion_novedad: document.getElementById('novedad_principal').value,
