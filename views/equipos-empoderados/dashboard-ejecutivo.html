@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitor de Cumplimiento Gerencial - Valle</title>
-    <link rel="stylesheet" href="/css/dashboard.css?v=3">
+    <link rel="stylesheet" href="/css/dashboard.css?v=4">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -12,7 +12,7 @@
         <header class="main-header">
             <h1>Monitor de Cumplimiento Gerencial</h1>
             <div class="filters-bar">
-                <select id="filtroCD" onchange="cargarDataDashboard()">
+                <select id="filtroCD">
                     <option value="TODOS">Todos los CD's</option>
                     <option value="Cali">Cali</option>
                     <option value="Yumbo">Yumbo</option>
@@ -20,21 +20,22 @@
                     <option value="Tulua">Tuluá</option>
                 </select>
 
-                <select id="filtroTipo" onchange="cargarDataDashboard()">
+                <select id="filtroTipo">
                     <option value="TODOS">Tipo: Todos</option>
-                    <option value="Novedad">Reporte de ruta</option>
+                    <option value="Novedad">Reporte de ruta (Novedad)</option>
+                    <option value="Rotura">Reporte de ruta (Rotura)</option>
                     <option value="5 Porqués">Gestión del día anterior</option>
                 </select>
 
-                <select id="filtroEstado" onchange="cargarDataDashboard()">
+                <select id="filtroEstado">
                     <option value="TODOS">Estado: Todos</option>
-                    <option value="Pendiente">🔴 Pendientes</option>
+                    <option value="Pendiente">🔴 Pendiente</option>
                     <option value="Realizado">🟢 Realizado</option>
                     <option value="No ejecutado">🟡 No ejecutado</option>
                 </select>
 
                 <div class="filter-date-wrapper">
-                    <input type="date" id="filtroFecha" onchange="cargarDataDashboard()" class="input-date-premium">
+                    <input type="date" id="filtroFecha" class="input-date-premium">
                 </div>
             </div>
         </header>
@@ -43,11 +44,11 @@
             <div class="kpi-stats">
                 <div class="stat-box blue">
                     <span id="totalNovedades">0</span>
-                    <p>🚚 Novedades</p>
+                    <p>🚚 Reportes de Ruta</p>
                 </div>
                 <div class="stat-box yellow">
                     <span id="totalPorques">0</span>
-                    <p>🤝 5 Porqués</p>
+                    <p>🧠 Gestión Día Anterior</p>
                 </div>
                 <div class="stat-box red">
                     <span id="totalPendientes">0</span>
@@ -56,14 +57,23 @@
             </div>
         </section>
 
-        <section id="seccion-graficas" class="charts-section">
+        <section class="charts-section">
             <div class="chart-container">
                 <h3 class="chart-title">📊 Tendencia por CD</h3>
-                <canvas id="chartPorCD"></canvas> 
+                <div style="height: 280px;"><canvas id="chartPorCD"></canvas></div>
             </div>
             <div class="chart-container">
-                <h3 class="chart-title">Top 5 Placas con más Novedades</h3>
-                <canvas id="chartTopPlacas"></canvas>
+                <h3 class="chart-title">🚛 Top 5 Placas</h3>
+                <div style="height: 280px;"><canvas id="chartTopPlacas"></canvas></div>
+            </div>
+        </section>
+
+        <section class="charts-section-full" style="margin: 20px 0;">
+            <div class="chart-container-full" style="background: #1c1c1c; padding: 20px; border-radius: 8px; border: 1px solid #30363d;">
+                <h3 class="chart-title" style="color: #f2c200; margin-bottom: 15px;">📊 Análisis de Indicadores Críticos (Pareto)</h3>
+                <div style="height: 300px;">
+                    <canvas id="chartIndicadores"></canvas>
+                </div>
             </div>
         </section>
 
@@ -75,7 +85,7 @@
                         <tr>
                             <th>Tipo</th>
                             <th>CD</th>
-                            <th>Placa</th>
+                            <th>ID (Placa/SAP)</th>
                             <th>Fecha</th>
                             <th>Estado</th>
                             <th>Acción</th>
@@ -87,23 +97,17 @@
         </section>
     </div>
 
-    <div id="modalGestion" class="modal">
+    <div id="modalGestion" class="modal" style="display: none;">
         <div class="modal-content">
-            <header class="modal-header">
-                <h3>⚙️ Gestionar Reporte</h3>
-                <p id="infoReporte"></p>
-            </header>
-
-            <div id="contenedorDetalleOriginal" class="original-desc">
-                <label>📋 DESCRIPCIÓN ORIGINAL:</label>
+            <header class="modal-header"><h3>⚙️ Gestionar Reporte</h3></header>
+            <div class="original-desc" style="background: #1a1a1a; padding: 10px; border-radius: 5px; margin: 10px 0;">
+                <label style="color: #f2c200; font-size: 0.8em;">📋 DESCRIPCIÓN ORIGINAL:</label>
                 <p id="detalleTextoOriginal"></p>
             </div>
-
             <div class="form-group">
                 <label>📝 Comentario de Gestión</label>
-                <textarea id="comentarioGestion" placeholder="Ej: Se realizó feedback con la tripulación..."></textarea>
+                <textarea id="comentarioGestion" rows="4"></textarea>
             </div>
-
             <div class="form-group">
                 <label>📌 Cambiar Estado</label>
                 <select id="nuevoEstado">
@@ -112,14 +116,13 @@
                     <option value="No ejecutado">🟡 No ejecutado</option>
                 </select>
             </div>
-
-            <div class="modal-actions">
+            <div class="modal-actions" style="margin-top: 20px; display: flex; gap: 10px;">
                 <button onclick="guardarGestion()" class="btn-save">💾 Guardar Cambios</button>
                 <button onclick="cerrarModal()" class="btn-cancel">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <script src="/js/dashboard-ejecutivo.js?v=2"></script>
+    <script src="/js/dashboard-ejecutivo.js?v=4"></script>
 </body>
 </html>

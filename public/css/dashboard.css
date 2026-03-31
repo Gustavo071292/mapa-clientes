@@ -67,13 +67,15 @@ body {
     transition: var(--transition);
 }
 
+.filters-bar select:hover { border-color: var(--texto-gris); }
+
 .input-date-premium::-webkit-calendar-picker-indicator {
     filter: invert(1);
     cursor: pointer;
 }
 
 /* ==========================================================================
-   KPIs Y ESTADÍSTICAS (PC)
+   KPIs Y ESTADÍSTICAS
    ========================================================================== */
 .kpi-stats {
     display: grid;
@@ -116,13 +118,13 @@ body {
 .red { border-bottom: 4px solid var(--rojo-primario); }
 
 /* ==========================================================================
-   SECCIÓN DE GRÁFICAS (PC)
+   SECCIÓN DE GRÁFICAS (Grid y Full Width)
    ========================================================================== */
 .charts-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 25px;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
 }
 
 .chart-container {
@@ -130,15 +132,28 @@ body {
     padding: 20px;
     border-radius: 12px;
     border: 1px solid var(--borde);
-    height: 400px; 
+    min-height: 350px;
     position: relative;
+}
+
+/* Estilo para la nueva gráfica de Indicadores que ocupa todo el ancho */
+.chart-container-full {
+    background: var(--bg-tarjeta);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--borde);
+    margin-bottom: 30px;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .chart-title {
     font-size: 1rem;
-    color: var(--texto-gris);
-    margin-bottom: 15px;
+    color: var(--texto-blanco);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 /* ==========================================================================
@@ -149,6 +164,7 @@ body {
     padding: 25px;
     border-radius: 12px;
     border: 1px solid var(--borde);
+    margin-top: 20px;
 }
 
 .table-responsive {
@@ -174,31 +190,45 @@ th {
 td {
     padding: 15px;
     border-bottom: 1px solid var(--borde);
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
+/* Estilos de Badges (Estados) */
 .badge {
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 12px;
-    font-size: 0.75em;
+    font-size: 0.75rem;
     font-weight: bold;
-    display: inline-block;
+    text-transform: capitalize;
 }
 
-.badge.pendiente { background: rgba(200, 16, 46, 0.15); color: #ff4d4d; border: 1px solid var(--rojo-primario); }
-.badge.realizado { background: rgba(40, 167, 69, 0.15); color: #2ecc71; border: 1px solid var(--verde-exito); }
-.badge.no-ejecutado { background: rgba(255, 193, 7, 0.15); color: #f1c40f; border: 1px solid var(--amarillo-alerta); }
+.badge.pendiente { background: rgba(200, 16, 46, 0.1); color: #ff4d4d; border: 1px solid var(--rojo-primario); }
+.badge.realizado { background: rgba(35, 134, 54, 0.1); color: #3fb950; border: 1px solid var(--verde-exito); }
+.badge.no-ejecutado { background: rgba(210, 153, 34, 0.1); color: #d29922; border: 1px solid var(--amarillo-alerta); }
+
+.btn-gestionar {
+    background: #30363d;
+    color: var(--texto-blanco);
+    border: 1px solid var(--borde);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.btn-gestionar:hover { background: #444c56; border-color: var(--texto-gris); }
 
 /* ==========================================================================
-   MODAL Y ACCIONES
+   MODAL DE GESTIÓN
    ========================================================================== */
 .modal {
     display: none;
     position: fixed;
-    z-index: 9999;
+    z-index: 1000;
     left: 0; top: 0; width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.8);
-    backdrop-filter: blur(4px);
+    background-color: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
 }
 
 .modal-content {
@@ -207,44 +237,58 @@ td {
     padding: 30px;
     border: 1px solid var(--borde);
     width: 90%;
-    max-width: 550px;
+    max-width: 500px;
     border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.modal-header h3 { margin: 0 0 15px 0; color: var(--texto-blanco); }
+
+.original-desc {
+    background: #0d1117;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid var(--borde);
+}
+
+textarea {
+    width: 100%;
+    background: #0d1117;
+    color: var(--texto-blanco);
+    border: 1px solid var(--borde);
+    padding: 12px;
+    border-radius: 8px;
+    resize: none;
+    margin-top: 10px;
 }
 
 /* ==========================================================================
-   ESTILOS EXCLUSIVOS PARA CELULAR (OCULTAR GRÁFICAS)
+   RESPONSIVE (AJUSTES CELULAR)
    ========================================================================== */
 @media (max-width: 768px) {
     body { padding: 10px; }
 
-    /* 1. Ocultamos gráficas y KPIs para enfoque en gestión técnica */
-    #seccion-graficas, 
+    /* Ocultamos gráficas para enfocarnos en la tabla de tareas */
+    .charts-section, 
+    .charts-section-full,
     .kpi-grid { 
         display: none !important; 
     }
 
-    /* 2. Filtros compactos en cuadrícula */
+    .main-header { flex-direction: column; align-items: flex-start; }
+
     .filters-bar {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 15px;
-    }
-
-    .main-header h1 {
-        font-size: 1.2rem;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    /* 3. Tabla priorizada */
-    .auditoria-section {
-        padding: 15px;
-        margin-top: 0;
-    }
-
-    .btn-gestionar {
-        padding: 10px; /* Botón más grande para touch */
         width: 100%;
     }
+
+    .modal-content {
+        margin: 15% auto;
+        padding: 20px;
+    }
+
+    /* Ajuste para que la tabla sea legible en scroll lateral */
+    td { padding: 10px 5px; font-size: 0.85rem; }
 }

@@ -28,7 +28,7 @@ app.get("/clientes", (req, res) => res.sendFile(path.join(__dirname, "public/pil
 app.get("/equipos-empoderados/retro/novedades", (req, res) => {
     res.sendFile(path.join(__dirname, "views/equipos-empoderados/retroalimentacion/novedades.html"));
 });
-app.get("/equipos-empoderados/retro/resumen", (req, res) => {
+app.get("/equipos-empoderados/retro/cinco-porques", (req, res) => {
     res.sendFile(path.join(__dirname, "views/equipos-empoderados/retroalimentacion/cinco-porques.html"));
 });
 app.get("/equipos-empoderados/retro/resumen-gerencial", (req, res) => {

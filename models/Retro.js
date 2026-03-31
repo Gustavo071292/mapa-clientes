@@ -9,7 +9,6 @@ const RetroSchema = new mongoose.Schema({
     tipoRetro: { 
         type: String, 
         required: true,
-        // Agregamos 'Reporte de roturas' al listado permitido
         enum: ['Pre ruta', 'En ruta', 'Post ruta', 'PDV o Ruta Critica', 'Reporte de roturas'] 
     },
     // Nuevos campos para el detalle de averías
@@ -17,7 +16,20 @@ const RetroSchema = new mongoose.Schema({
     materialRotura: { type: String, default: null },
     unidadesRotas: { type: Number, default: 0 },
     
+    // --- CAMPO INDICADOR (Vital para el Pareto) ---
+    indicador: { type: String, default: 'General' },
+
     comentarios: { type: String, default: "" },
+
+    // --- CAMPOS DE GESTIÓN (Lo que faltaba para el Dashboard) ---
+    estado: { 
+        type: String, 
+        enum: ['Pendiente', 'Realizado'], 
+        default: 'Pendiente' 
+    },
+    comentarioGestion: { type: String, default: "" },
+    fechaGestion: { type: Date },
+    
     createdAt: { type: Date, default: Date.now }
 });
 

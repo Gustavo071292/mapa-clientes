@@ -1,50 +1,37 @@
 /**
  * SISTEMA INTEGRAL DPO - GERENCIA VALLE
- * Lógica del Dashboard Ejecutivo de Control (Versión Final Optimizada)
+ * Dashboard Ejecutivo Unificado - v6.0 (Final - Unificación de Placas y Gestión)
  */
 
-// Variables globales para el estado y manejo de gráficos
 let dataGlobal = [];
-let myDoughnutChart = null;
-let myBarChartPlacas = null;
-let myBarChartCD = null; 
+let charts = {}; 
 let reporteSeleccionado = null;
 
-/**
- * 1. CARGA INICIAL: Obtiene la data unificada del Backend (Atlas)
- */
+// 1. CARGA DE DATOS DESDE EL BACKEND
 async function cargarDataDashboard() {
     try {
         const response = await fetch('/api/retro/consolidado-valle');
         const result = await response.json();
-        
         if (result.exito) {
             dataGlobal = result.data;
             renderizarTodo(); 
-        } else {
-            console.error("Error del servidor:", result.mensaje);
         }
     } catch (error) {
-        console.error("Error al cargar dashboard:", error);
-        alert("❌ Error de comunicación: No se pudo conectar con el Servidor DPO.");
+        console.error("Error en cargarDataDashboard:", error);
+        alert("❌ Error de conexión con MongoDB Atlas.");
     }
 }
 
-/**
- * 2. ORQUESTADOR DE RENDERIZADO
- * Filtra la data y actualiza componentes según el dispositivo
- */
+// 2. FILTRADO Y RENDERIZADO
 function renderizarTodo() {
-    // Captura segura de valores de filtros
     const cd = document.getElementById('filtroCD')?.value || 'TODOS';
     const tipo = document.getElementById('filtroTipo')?.value || 'TODOS';
     const estado = document.getElementById('filtroEstado')?.value || 'TODOS';
     const fechaFiltro = document.getElementById('filtroFecha')?.value; 
     
-    // Aplicación de lógica de filtrado cruzado
     let filtrados = dataGlobal.filter(d => {
         const cumpleCD = (cd === 'TODOS' || d.cd === cd);
-        const cumpleTipo = (tipo === 'TODOS' || d.tipoDoc === tipo);
+        const cumpleTipo = (tipo === 'TODOS' || d.tipo === tipo);
         const cumpleEstado = (estado === 'TODOS' || d.estado === estado);
         
         let cumpleFecha = true;
@@ -55,70 +42,72 @@ function renderizarTodo() {
         return cumpleCD && cumpleTipo && cumpleEstado && cumpleFecha;
     });
 
-    // Actualización de KPIs superiores (Solo se muestran si existen en el DOM)
     actualizarKPIs(filtrados);
-
-    // --- MEJORA DE RENDIMIENTO PARA MÓVIL ---
-    // Solo procesamos y renderizamos gráficas si la pantalla es mayor a 768px (PC/Tablet)
-    if (window.innerWidth > 768) {
-        actualizarGraficoEfectividad(filtrados);
-        actualizarGraficoPorCD(filtrados); 
-        actualizarGraficoPlacas(filtrados);
-    }
-
-    // La tabla SIEMPRE se actualiza porque es la prioridad en móvil
     actualizarTablaAuditoria(filtrados);
+    
+    // Renderizado de gráficas
+    if (window.innerWidth > 768) {
+        dibujarGrafica('chartPorCD', 'bar', generarDataCD(filtrados));
+        dibujarGrafica('chartTopPlacas', 'bar', generarDataPlacas(filtrados), { indexAxis: 'y' });
+        dibujarGrafica('chartIndicadores', 'bar', generarDataPareto(filtrados));
+    }
 }
 
-/**
- * 3. ACTUALIZACIÓN DE INDICADORES (KPIs)
- */
-function actualizarKPIs(filtrados) {
-    const ids = {
-        'totalNovedades': 'Novedad',
-        'totalPorques': '5 Porqués',
-        'totalPendientes': 'Pendiente'
-    };
+// 3. LÓGICA DE PLACAS (Unificada para Top 5)
+function generarDataPlacas(items) {
+    const conteo = {};
+    items.forEach(i => { 
+        // Se usa 'identificador' que ya viene corregido como placa desde el backend
+        const id = i.identificador; 
+        if (id && id !== "S/N" && id !== "SIN PLACA") {
+            conteo[id] = (conteo[id] || 0) + 1; 
+        }
+    });
+    
+    const sorted = Object.entries(conteo)
+        .sort(([,a], [,b]) => b - a)
+        .slice(0, 5);
 
-    Object.keys(ids).forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            if (id === 'totalPendientes') {
-                element.innerText = filtrados.filter(d => d.estado === 'Pendiente').length;
-            } else {
-                element.innerText = filtrados.filter(d => d.tipoDoc === ids[id]).length;
+    return {
+        labels: sorted.map(p => p[0]),
+        datasets: [{ 
+            data: sorted.map(p => p[1]), 
+            backgroundColor: '#d29922' 
+        }]
+    };
+}
+
+// 4. LÓGICA DINÁMICA DE PARETO
+function generarDataPareto(items) {
+    const conteo = {};
+    items.forEach(i => {
+        if (i.descripcion && i.descripcion.includes(':')) {
+            const nombre = i.descripcion.split(':')[0].trim();
+            if (nombre !== 'General' || Object.keys(conteo).length === 0) {
+                conteo[nombre] = (conteo[nombre] || 0) + 1;
             }
         }
     });
+    const sorted = Object.entries(conteo).sort(([,a], [,b]) => b - a);
+    return {
+        labels: sorted.map(p => p[0]),
+        datasets: [{
+            label: 'Incidentes',
+            data: sorted.map(p => p[1]),
+            backgroundColor: '#3fb950',
+            borderRadius: 5
+        }]
+    };
 }
 
-/**
- * 4. GRÁFICO TENDENCIA POR CD
- */
-function actualizarGraficoPorCD(items) {
-    const cds = ['Cali', 'Popayan', 'Tulua', 'Yumbo'];
-    const conteo = { 'Cali': 0, 'Popayan': 0, 'Tulua': 0, 'Yumbo': 0 };
-
-    items.forEach(i => {
-        if (conteo.hasOwnProperty(i.cd)) conteo[i.cd]++;
-    });
-
-    const canvas = document.getElementById('chartPorCD');
-    if (!canvas) return;
-    
-    if (myBarChartCD) myBarChartCD.destroy();
-
-    myBarChartCD = new Chart(canvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: cds,
-            datasets: [{
-                label: 'Reportes',
-                data: cds.map(c => conteo[c]),
-                backgroundColor: ['#c8102e', '#f2c200', '#30363d', '#8b949e'],
-                borderRadius: 5
-            }]
-        },
+// 5. FUNCIÓN MAESTRA CHART.JS
+function dibujarGrafica(canvasId, type, data, extraOptions = {}) {
+    const ctx = document.getElementById(canvasId);
+    if (!ctx) return;
+    if (charts[canvasId]) charts[canvasId].destroy();
+    charts[canvasId] = new Chart(ctx, {
+        type: type,
+        data: data,
         options: {
             responsive: true,
             maintainAspectRatio: false,
@@ -126,138 +115,19 @@ function actualizarGraficoPorCD(items) {
                 y: { beginAtZero: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', stepSize: 1 } },
                 x: { ticks: { color: '#f0f6fc' } }
             },
-            plugins: { legend: { display: false } }
+            plugins: { legend: { display: false } },
+            ...extraOptions
         }
     });
 }
 
-/**
- * 5. GRÁFICO NIVEL DE GESTIÓN (Dona)
- */
-function actualizarGraficoEfectividad(items) {
-    const realizados = items.filter(d => d.estado === 'Realizado').length;
-    const pendientes = items.filter(d => d.estado === 'Pendiente').length;
-    const total = items.length;
-    const porcentaje = total > 0 ? Math.round((realizados / total) * 100) : 0;
-
-    const canvas = document.getElementById('chartEfectividad');
-    if (!canvas) return;
-
-    if (myDoughnutChart) myDoughnutChart.destroy();
-
-    myDoughnutChart = new Chart(canvas.getContext('2d'), {
-        type: 'doughnut',
-        data: {
-            labels: ['Gestionado', 'Pendiente'],
-            datasets: [{
-                data: [realizados, pendientes],
-                backgroundColor: ['#238636', '#c8102e'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '80%',
-            plugins: { legend: { display: false } }
-        },
-        plugins: [{
-            id: 'textCenter',
-            beforeDraw: (chart) => {
-                const { width, height, ctx } = chart;
-                ctx.restore();
-                ctx.font = "bold 2.5em sans-serif";
-                ctx.textBaseline = "middle";
-                ctx.fillStyle = "#f0f6fc";
-                const text = porcentaje + "%",
-                      textX = Math.round((width - ctx.measureText(text).width) / 2),
-                      textY = height / 2;
-                ctx.fillText(text, textX, textY);
-                ctx.save();
-            }
-        }]
-    });
-}
-
-/**
- * 6. GRÁFICO TOP 5 PLACAS
- */
-function actualizarGraficoPlacas(items) {
-    const conteo = {};
-    items.forEach(i => {
-        const p = i.placa || "S/P";
-        conteo[p] = (conteo[p] || 0) + 1;
-    });
-    
-    const sorted = Object.entries(conteo)
-        .sort(([,a], [,b]) => b - a)
-        .slice(0, 5);
-
-    const canvas = document.getElementById('chartTopPlacas');
-    if (!canvas) return;
-
-    if (myBarChartPlacas) myBarChartPlacas.destroy();
-    
-    myBarChartPlacas = new Chart(canvas.getContext('2d'), {
-        type: 'bar',
-        data: {
-            labels: sorted.map(p => p[0]),
-            datasets: [{
-                label: 'Eventos',
-                data: sorted.map(p => p[1]),
-                backgroundColor: '#d29922' 
-            }]
-        },
-        options: {
-            indexAxis: 'y', 
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: { 
-                x: { beginAtZero: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', stepSize: 1 } },
-                y: { ticks: { color: '#f0f6fc' } }
-            },
-            plugins: { legend: { display: false } }
-        }
-    });
-}
-
-/**
- * 7. TABLA DE AUDITORÍA
- */
-function actualizarTablaAuditoria(items) {
-    const tbody = document.getElementById('cuerpoTabla');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    const ordenados = [...items].sort((a,b) => new Date(b.fecha) - new Date(a.fecha));
-
-    ordenados.forEach(item => {
-        const tr = document.createElement('tr');
-        const fechaStr = new Date(item.fecha).toLocaleDateString('es-ES');
-        const estado = item.estado || 'Pendiente';
-        const placaDisplay = item.placa || "SIN PLACA";
-        
-        tr.innerHTML = `
-            <td>${item.icono || '📋'} ${item.tipoDoc}</td>
-            <td>${item.cd}</td>
-            <td><strong>${placaDisplay}</strong></td>
-            <td>${fechaStr}</td>
-            <td><span class="badge ${estado.toLowerCase().replace(/\s+/g, '-')}">${estado}</span></td>
-            <td><button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipoDoc}')">⚙️ Gestionar</button></td>
-        `;
-        tbody.appendChild(tr);
-    });
-}
-
-/**
- * 8. GESTIÓN DE MODAL Y GUARDADO
- */
-function abrirModalGestion(id, tipoDoc) {
+// 6. GESTIÓN DE MODAL Y GUARDADO
+function abrirModalGestion(id, tipo) {
+    reporteSeleccionado = { id, tipo }; 
     const reporte = dataGlobal.find(item => item._id === id);
-    reporteSeleccionado = { id, tipoDoc };
-    
     if (reporte) {
-        document.getElementById('detalleTextoOriginal').innerText = reporte.descripcion || "Sin descripción disponible.";
+        document.getElementById('detalleTextoOriginal').innerText = reporte.descripcion || "Sin descripción.";
+        document.getElementById('comentarioGestion').value = ""; 
         document.getElementById('modalGestion').style.display = 'block';
     }
 }
@@ -265,47 +135,108 @@ function abrirModalGestion(id, tipoDoc) {
 async function guardarGestion() {
     const comentario = document.getElementById('comentarioGestion')?.value;
     const nuevoEstado = document.getElementById('nuevoEstado')?.value;
-
+    
     if (!comentario || comentario.trim().length < 5) {
-        return alert("⚠️ Por favor, ingresa un comentario de gestión detallado.");
+        return alert("⚠️ Por favor, escribe un comentario de gestión (mín. 5 caracteres).");
     }
 
     try {
+        const btnGuardar = document.querySelector('button[onclick="guardarGestion()"]');
+        btnGuardar.disabled = true;
+        btnGuardar.innerText = "⏳ Guardando...";
+
         const response = await fetch('/api/retro/gestionar-reporte', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: reporteSeleccionado.id,
-                tipoDoc: reporteSeleccionado.tipoDoc,
-                nuevoEstado: nuevoEstado,
-                comentario: comentario
+            body: JSON.stringify({ 
+                id: reporteSeleccionado.id, 
+                tipoDoc: reporteSeleccionado.tipo, 
+                nuevoEstado: nuevoEstado, 
+                comentario: comentario 
             })
         });
 
         const result = await response.json();
+
         if (result.exito) {
             cerrarModal();
-            await cargarDataDashboard(); 
+            await cargarDataDashboard(); // Refresco automático de interfaz
+            alert("✅ Cambios guardados correctamente.");
+        } else {
+            alert("❌ Error: " + result.mensaje);
         }
-    } catch (error) {
-        console.error("Error en el guardado:", error);
+    } catch (e) {
+        alert("❌ Error de comunicación con el servidor.");
+    } finally {
+        const btnGuardar = document.querySelector('button[onclick="guardarGestion()"]');
+        if (btnGuardar) {
+            btnGuardar.disabled = false;
+            btnGuardar.innerText = "💾 Guardar Cambios";
+        }
     }
 }
 
-function cerrarModal() {
-    document.getElementById('modalGestion').style.display = 'none';
-    const textarea = document.getElementById('comentarioGestion');
-    if (textarea) textarea.value = '';
+function cerrarModal() { 
+    document.getElementById('modalGestion').style.display = 'none'; 
 }
 
-/**
- * 9. INICIALIZACIÓN Y EVENT LISTENERS
- */
+// 7. COMPONENTES DE INTERFAZ (Tabla corregida para Placas)
+function actualizarKPIs(filtrados) {
+    document.getElementById('totalNovedades').innerText = filtrados.filter(d => d.tipo !== '5 Porqués').length;
+    document.getElementById('totalPorques').innerText = filtrados.filter(d => d.tipo === '5 Porqués').length;
+    document.getElementById('totalPendientes').innerText = filtrados.filter(d => d.estado === 'Pendiente').length;
+}
+
+function actualizarTablaAuditoria(items) {
+    const tbody = document.getElementById('cuerpoTabla');
+    if (!tbody) return;
+    tbody.innerHTML = items.sort((a,b) => new Date(b.fecha) - new Date(a.fecha)).map(item => {
+        const claseEstado = item.estado.toLowerCase().replace(/\s+/g, '-');
+        return `
+        <tr>
+            <td>${item.extra?.fuente === 'Análisis' ? '🧠' : '🚚'} ${item.tipo}</td>
+            <td>${item.cd}</td>
+            <td><strong>${item.identificador}</strong></td> 
+            <td>${new Date(item.fecha).toLocaleDateString()}</td>
+            <td><span class="badge ${claseEstado}">${item.estado}</span></td>
+            <td><button class="btn-gestionar" onclick="abrirModalGestion('${item._id}', '${item.tipo}')">⚙️</button></td>
+        </tr>
+    `}).join('');
+}
+
+// 8. EXPORTACIÓN Y AUXILIARES
+function exportarAExcel() {
+    const cd = document.getElementById('filtroCD').value;
+    const filtrados = dataGlobal.filter(d => cd === 'TODOS' || d.cd === cd);
+    const dataParaExcel = filtrados.map(d => ({
+        Fecha: new Date(d.fecha).toLocaleDateString(),
+        CD: d.cd, 
+        Tipo: d.tipo,
+        Indicador: d.extra?.indicador || "S/N",
+        Placa: d.identificador, 
+        Estado: d.estado, 
+        Detalle: d.descripcion, 
+        Responsable: d.extra?.responsable || "S/N"
+    }));
+    const ws = XLSX.utils.json_to_sheet(dataParaExcel);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Reporte DPO");
+    XLSX.writeFile(wb, `DPO_Valle_${new Date().getTime()}.xlsx`);
+}
+
+function generarDataCD(items) {
+    const conteo = { Cali:0, Popayan:0, Tulua:0, Yumbo:0 };
+    items.forEach(i => { if(conteo.hasOwnProperty(i.cd)) conteo[i.cd]++; });
+    return {
+        labels: Object.keys(conteo),
+        datasets: [{ data: Object.values(conteo), backgroundColor: '#c8102e' }]
+    };
+}
+
+// 9. LISTENERS
 window.onload = () => {
     cargarDataDashboard();
-
-    const filtros = ['filtroCD', 'filtroTipo', 'filtroEstado', 'filtroFecha'];
-    filtros.forEach(id => {
+    ['filtroCD', 'filtroTipo', 'filtroEstado', 'filtroFecha'].forEach(id => {
         document.getElementById(id)?.addEventListener('change', renderizarTodo);
     });
 };

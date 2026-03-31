@@ -1,4 +1,4 @@
-// 1. DEFINICIÓN DE DATOS
+// 1. DEFINICIÓN DE DATOS (Mantenemos tu base de datos de placas y roturas)
 const basePlacas = {
     "Cali": ["JRK753", "JRK999", "KYO757", "LJT872", "GES495", "TRK554", "GUQ877", "XMC383", "VCL947", "VCL955", "VCM060", "VCM063", "VCM065", "VCM618", "VEJ903", "VCN578", "VEL154", "VCN303", "LJT865", "LUM913", "LGU445", "LGU464", "LGU363", "LGU384", "LGU459", "LGU474", "LGU490", "LGU493", "GUQ635", "GUQ641", "WNZ760", "PRY821", "PRY822", "PSX042", "LJV480", "LJV481", "LJV485", "LJV489", "LJV502", "PSX361", "PSX360", "PSX362", "PSX363", "PSX364", "PSX365", "PSX366", "PSX367", "PSX400", "QJX386", "QJX387", "QJX388", "QJX546", "QJX646", "QJX710", "QJX773", "QJX767", "QJX769", "QJX774", "QJX775", "QJX777", "QJX776", "QJX772", "QJX771", "QJX768", "QJX790", "QJX798", "PSX920", "PSX921", "PSX949", "PSX990", "PSY081", "LJV504", "LJV486", "TRK547", "GUQ895", "VCM009", "VCM613", "VCN097", "VCN302", "VEL941", "VEL502", "LJU893", "LJU892", "LJV505", "LGU481", "LGU468", "TRJ369", "TRK563", "TRK605", "GUQ893", "GUQ896", "GUQ886", "GUQ887", "GUQ889", "UYX698", "XMC384", "VCL948", "VCM007", "VCM036", "VCM257", "VCM260", "VCM619", "VCM855", "VCM068"],
     "Tulua": ["JTS031", "GUQ876", "LJV483", "KSP183", "KSP877", "KSP879", "LCM443", "LCM592", "LCM594", "LCM599", "KSP878", "PSX035"],
@@ -30,12 +30,13 @@ function actualizarPlacas() {
 function checkTipoNovedad() {
     const tipo = document.getElementById('tipo_retro').value;
     const seccion = document.getElementById('seccion_roturas');
-    seccion.style.display = (tipo === 'Reporte de roturas') ? 'block' : 'none';
+    if (seccion) seccion.style.display = (tipo === 'Reporte de roturas') ? 'block' : 'none';
 }
 
 function filtrarMateriales() {
     const cat = document.getElementById('categoria').value;
     const selectMat = document.getElementById('material');
+    if (!selectMat) return;
     selectMat.innerHTML = '<option value="">Seleccione material...</option>';
     if (cat && referenciasRoturas[cat]) {
         referenciasRoturas[cat].forEach(ref => {
@@ -51,12 +52,20 @@ function filtrarMateriales() {
 
 function contarCaracteres() {
     const text = document.getElementById('observacion').value;
-    document.getElementById('charCount').innerText = `${text.length} / 255 caracteres`;
+    const count = document.getElementById('charCount');
+    if (count) count.innerText = `${text.length} / 255 caracteres`;
 }
 
 // 3. ENVÍO DE DATOS
 document.getElementById('formNovedades').onsubmit = async (e) => {
     e.preventDefault();
+    
+    // Bloqueamos el botón para evitar doble envío
+    const btn = e.target.querySelector('button[type="submit"]');
+    const originalText = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "⏳ Guardando...";
+
     const tipoRetro = document.getElementById('tipo_retro').value;
     
     const payload = {
@@ -79,12 +88,21 @@ document.getElementById('formNovedades').onsubmit = async (e) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
+        
         const result = await response.json();
+        
         if (result.exito) {
             alert("✅ Reporte guardado con éxito en Atlas.");
             window.location.reload();
+        } else {
+            alert("❌ Error al guardar: " + result.mensaje);
+            btn.disabled = false;
+            btn.innerText = originalText;
         }
     } catch (error) {
-        alert("❌ Error crítico de conexión.");
+        console.error("Error envío:", error);
+        alert("❌ Error crítico de conexión con el servidor.");
+        btn.disabled = false;
+        btn.innerText = originalText;
     }
 };

@@ -6,7 +6,6 @@ const CincoPorquesSchema = new mongoose.Schema({
     placa: String,
     indicador: String,
     descripcion_novedad: String,
-    // Definimos los campos individuales para que coincidan con el payload del frontend
     p1: String,
     p2: String,
     p3: String,
@@ -16,18 +15,23 @@ const CincoPorquesSchema = new mongoose.Schema({
     plan_accion: String,
     responsable: String,
     fecha_compromiso: Date,
+    // CORRECCIÓN: Agregamos 'Realizado' para que coincida con el Dashboard
     estado: { 
         type: String, 
-        enum: ['Pendiente', 'En Proceso', 'Cerrado'], 
+        enum: ['Pendiente', 'En Proceso', 'Realizado', 'Cerrado'], 
         default: 'Pendiente' 
     },
+    // CAMPOS PARA GESTIÓN DESDE DASHBOARD
+    comentarioGestion: { type: String, default: "" },
+    fechaGestion: { type: Date },
+    
     fecha_creacion: { 
         type: Date, 
         default: Date.now 
     }
 }, { 
     strict: false,
-    collection: 'cinco_porques' // Nombre sugerido para la colección en Atlas
+    collection: 'cinco_porques' 
 });
 
 module.exports = mongoose.model('CincoPorques', CincoPorquesSchema);
