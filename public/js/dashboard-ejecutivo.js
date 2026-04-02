@@ -45,12 +45,71 @@ function renderizarTodo() {
     actualizarKPIs(filtrados);
     actualizarTablaAuditoria(filtrados);
     
+    
     // Renderizado de gráficas
     if (window.innerWidth > 768) {
         dibujarGrafica('chartPorCD', 'bar', generarDataCD(filtrados));
         dibujarGrafica('chartTopPlacas', 'bar', generarDataPlacas(filtrados), { indexAxis: 'y' });
         dibujarGrafica('chartIndicadores', 'bar', generarDataPareto(filtrados));
-    }
+        dibujarGrafica('chartMensual', 'line', generarDataMensual(filtrados), { 
+            plugins: { 
+                legend: { 
+                    display: true, 
+                    labels: { color: '#f0f6fc', font: { size: 12 } } 
+                } 
+            } 
+        });
+    } 
+}
+
+function generarDataMensual(items) {
+    const mesesNombre = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+    const cds = ["Cali", "Popayan", "Tulua", "Yumbo"];
+    const colores = {
+        'Cali': '#c8102e',    // Rojo
+        'Popayan': '#d29922', // Dorado
+        'Tulua': '#3fb950',   // Verde
+        'Yumbo': '#3498db'    // Azul
+    };
+
+    // 1. Identificar los meses presentes en los datos para el eje X
+    const mesesSet = new Set();
+    items.forEach(i => {
+        const d = new Date(i.fecha);
+        mesesSet.add(`${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`);
+    });
+    const mesesOrdenados = Array.from(mesesSet).sort();
+
+    // 2. Crear un dataset por cada ciudad (Líneas comparativas)
+    const datasets = cds.map(cd => {
+        const dataPorMes = mesesOrdenados.map(mesAnio => {
+            return items.filter(i => {
+                const d = new Date(i.fecha);
+                const itemMesAnio = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+                return i.cd === cd && itemMesAnio === mesAnio;
+            }).length;
+        });
+
+        return {
+            label: cd,
+            data: dataPorMes,
+            borderColor: colores[cd],
+            backgroundColor: 'transparent',
+            tension: 0.4,
+            borderWidth: 3,
+            pointRadius: 5,
+            pointHoverRadius: 8
+        };
+    });
+
+    return {
+        labels: mesesOrdenados.map(m => {
+            const [anio, mes] = m.split('-');
+            return mesesNombre[parseInt(mes) - 1];
+        }),
+        // Filtramos para no mostrar ciudades que tengan 0 reportes en todos los meses filtrados
+        datasets: datasets.filter(ds => ds.data.some(val => val > 0))
+    };
 }
 
 // 3. LÓGICA DE PLACAS (Unificada para Top 5)
