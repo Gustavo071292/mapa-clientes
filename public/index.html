@@ -1,122 +1,179 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portal DPO • Gerencia Valle</title>
-  <link rel="stylesheet" href="/home/styles.css" />
-  <link rel="icon" type="image/x-icon" href="/img/Zonavalle.ico">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="apple-touch-icon" href="/img/Zonavalle.ico">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Portal DPO • Gerencia Valle</title>
+    
+    <link rel="stylesheet" href="/home/styles.css" />
+    <link rel="icon" type="image/x-icon" href="/img/Zonavalle.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/img/Zonavalle.ico">
+    
+    <meta name="theme-color" content="#c8102e">
+    <meta name="description" content="Sistema Integral DPO - Gestión de logística y entrega Gerencia Valle">
 </head>
 
 <body>
-  <main class="wrap">
+    <main class="wrap">
 
-    <header class="main-header">
-      <div class="main-header__content">
-        <div class="welcome-text">
-          <span class="welcome-text__label">SISTEMA INTEGRAL DPO</span>
-          <h1>Gerencia Valle <span class="sep">/</span> <span class="highlight">Delivery</span></h1>
-        </div>
-        <div class="system-status">
-          <span class="status-dot"></span>
-          <span id="current-date">Cargando...</span>
-        </div>
-      </div>
-    </header>
-
-    <section class="banner card">
-      <div class="banner__bg" aria-hidden="true"></div>
-      <img class="brand-badge" src="/img/home_delivery/Zonavalle.png" alt="Logotipo Gerencia Valle">
-      <div class="banner__content">
-        <div class="banner__badge">
-          <span class="dot"></span>
-          <span>Pilar Estratégico Delivery</span>
-        </div>
-        <h2 class="banner__title">Excelencia en Logística</h2>
-        <p class="banner__subtitle">
-          Transformando la ejecución en el mercado mediante disciplina operativa y tecnología de vanguardia.
-        </p>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="card search-hero">
-        <div class="search-hero__body">
-          <div class="search-hero__info">
-            <div class="icon-main">📌</div>
-            <div>
-              <h3>Búsqueda de Clientes</h3>
-              <p>Localización en tiempo real, <b>ETA</b> <b>NPS</b> , <b>CASHLESS</b>. </p>
+        <header class="main-header">
+            <div class="main-header__content">
+                <div class="welcome-text">
+                    <span class="welcome-text__label">SISTEMA INTEGRAL DPO</span>
+                    <h1>Gerencia Valle <span class="sep">/</span> <span class="highlight">Delivery</span></h1>
+                </div>
+                <div class="system-status" aria-live="polite">
+                    <span class="status-dot"></span>
+                    <time id="current-date">Cargando...</time>
+                </div>
             </div>
-          </div>
-          <div class="search-hero__action">
-            <a class="btn-cta" href="/clientes" target="_blank">
-              <span>EXPLORAR MAPA</span>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+        </header>
 
-    <section class="section">
-      <header class="section__head">
-        <h2>Pilar Delivery</h2>
-        <span class="section__meta">Módulos del Ecosistema</span>
-      </header>
+        <section class="banner card" aria-labelledby="banner-title">
+            <div class="banner__bg" aria-hidden="true"></div>
+            <img class="brand-badge" src="/img/home_delivery/Zonavalle.png" alt="Logotipo Gerencia Valle">
+            <div class="banner__content">
+                <div class="banner__badge">
+                    <span class="dot"></span>
+                    <span>Pilar Estratégico Delivery</span>
+                </div>
+                <h2 id="banner-title" class="banner__title">Excelencia en Logística</h2>
+                <p class="banner__subtitle">
+                    Transformando la ejecución en el mercado mediante disciplina operativa y tecnología de vanguardia.
+                </p>
+            </div>
+        </section>
 
-      <div class="grid grid--main">
-        <article class="card module" style="border-top: 3px solid #c8102e;">
-          <div class="module__icon">🚚</div>
-          <h3>Ejecución de la Entrega</h3>
-          <p>Estándares de servicio, control de rechazos y evidencia digital en ruta.</p>
-          <a href="/ejecucion-entrega" class="btn btn--primary" style="text-decoration: none; text-align: center;">
-            EXPLORAR MÓDULO
-          </a>
-        </article>
+        <section class="section">
+            <div class="card search-hero">
+                <div class="search-hero__body">
+                    <div class="search-hero__info">
+                        <div class="icon-main" aria-hidden="true">📌</div>
+                        <div>
+                            <h3>Búsqueda de Clientes</h3>
+                            <p>Localización en tiempo real, <strong>ETA</strong>, <strong>NPS</strong> y <strong>CASHLESS</strong>.</p>
+                        </div>
+                    </div>
+                    <div class="search-hero__action">
+                        <a class="btn-cta" id="btnClientes" href="/clientes" target="_blank" rel="noopener">
+                            <span>EXPLORAR MAPA</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <article class="card module" style="border-top: 3px solid #c8102e;">
-          <div class="module__icon">🤝</div>
-          <h3>Equipos Empoderados</h3>
-          <p>Disciplina operativa, cultura de seguridad y retroalimentación de valor.</p>
-          <a href="/equipos-empoderados" class="btn btn--primary" style="text-decoration: none; text-align: center;">
-            EXPLORAR MÓDULO
-          </a>
-        </article>
+        <section class="pilar-delivery-container" aria-labelledby="pilar-title">
+            <div class="pilar-header">
+                <h2 id="pilar-title">Pilar Delivery</h2>
+                <span class="subtext">Módulos del Ecosistema</span>
+            </div>
 
-        <article class="card module">
-          <div class="module__icon">📈</div>
-          <h3>Eficiencia del Proceso</h3>
-          <p>Productividad de flota, tiempos de carga y cumplimiento de ventanas horarias.</p>
-          <button class="btn btn--ghost" disabled>Próximamente</button>
-        </article>
+            <div class="modulos-list" id="modulos-list">
+                
+                <article class="modulo-item active" data-modulo="ejecucion">
+                    <div class="modulo-info">
+                        <span class="modulo-icon" aria-hidden="true">🚚</span>
+                        <div>
+                            <span class="modulo-title">Ejecución de la Entrega</span>
+                            <p class="modulo-desc-mobile">Estándares de servicio, control de rechazos y evidencia digital en ruta.</p>
+                        </div>
+                    </div>
+                    <div class="modulo-actions">
+                        <span class="modulo-status status-active"></span>
+                        <a href="/ejecucion-entrega" class="modulo-action-btn">EXPLORAR</a>
+                    </div>
+                </article>
 
-        <article class="card module">
-          <div class="module__icon">🙂</div>
-          <h3>Experiencia del Cliente</h3>
-          <p>Análisis de NPS, gestión de reclamos y hallazgos críticos de mercado.</p>
-          <button class="btn btn--ghost" disabled>Próximamente</button>
-        </article>
+                <article class="modulo-item active" data-modulo="equipos">
+                    <div class="modulo-info">
+                        <span class="modulo-icon" aria-hidden="true">🤝</span>
+                        <div>
+                            <span class="modulo-title">Equipos Empoderados</span>
+                            <p class="modulo-desc-mobile">Disciplina operativa, cultura de seguridad y retroalimentación de valor.</p>
+                        </div>
+                    </div>
+                    <div class="modulo-actions">
+                        <span class="modulo-status status-active"></span>
+                        <a href="/equipos-empoderados" class="modulo-action-btn">EXPLORAR</a>
+                    </div>
+                </article>
 
-        <article class="card module">
-          <div class="module__icon">🛠️</div>
-          <h3>Mejora de la Entrega</h3>
-          <p>Planes de acción correctiva, estandarización y proyectos de optimización.</p>
-          <button class="btn btn--ghost" disabled>Próximamente</button>
-        </article>
-      </div>
-    </section>
+                <article class="modulo-item upcoming" data-modulo="eficiencia">
+                    <div class="modulo-info">
+                        <span class="modulo-icon" aria-hidden="true">📈</span>
+                        <div>
+                            <span class="modulo-title">Eficiencia del Proceso</span>
+                            <p class="modulo-desc-mobile">Productividad de flota, tiempos de carga y cumplimiento de ventanas horarias.</p>
+                        </div>
+                    </div>
+                    <div class="modulo-actions">
+                        <span class="modulo-status status-upcoming"></span>
+                        <button class="modulo-action-btn disabled" disabled>PRÓXIMAMENTE</button>
+                    </div>
+                </article>
 
-  </main>
+                <article class="modulo-item upcoming" data-modulo="experiencia">
+                    <div class="modulo-info">
+                        <span class="modulo-icon" aria-hidden="true">🙂</span>
+                        <div>
+                            <span class="modulo-title">Experiencia del Cliente</span>
+                            <p class="modulo-desc-mobile">Análisis de NPS, gestión de reclamos y hallazgos críticos de mercado.</p>
+                        </div>
+                    </div>
+                    <div class="modulo-actions">
+                        <span class="modulo-status status-upcoming"></span>
+                        <button class="modulo-action-btn disabled" disabled>PRÓXIMAMENTE</button>
+                    </div>
+                </article>
 
-  <script>
-    // Fecha Dinámica con Formato Profesional
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('current-date').textContent = new Date().toLocaleDateString('es-ES', options);
-  </script>
+                <article class="modulo-item upcoming" data-modulo="mejora">
+                    <div class="modulo-info">
+                        <span class="modulo-icon" aria-hidden="true">🛠️</span>
+                        <div>
+                            <span class="modulo-title">Mejora de la Entrega</span>
+                            <p class="modulo-desc-mobile">Planes de acción correctiva, estandarización y proyectos de optimización.</p>
+                        </div>
+                    </div>
+                    <div class="modulo-actions">
+                        <span class="modulo-status status-upcoming"></span>
+                        <button class="modulo-action-btn disabled" disabled>PRÓXIMAMENTE</button>
+                    </div>
+                </article>
+
+                <article class="modulo-item action-required" data-modulo="rta">
+                    <div class="modulo-info">
+                        <span class="modulo-icon" aria-hidden="true">⚠️</span>
+                        <div>
+                            <span class="modulo-title">Gestión RTA</span>
+                            <p class="modulo-desc-mobile">Respuesta en Tiempo Activada: Análisis y seguimiento de desviaciones.</p>
+                        </div>
+                    </div>
+                    <div class="modulo-actions">
+                        <span class="modulo-status status-action"></span>
+                        <a href="/gestion-rta" class="modulo-action-btn danger">GESTIONAR</a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/home/app.js"></script>
+    <script>
+        // Fecha Dinámica (Independiente de app.js por seguridad)
+        document.addEventListener("DOMContentLoaded", () => {
+            const dateEl = document.getElementById('current-date');
+            if (dateEl) {
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateEl.textContent = new Date().toLocaleDateString('es-ES', options);
+            }
+        });
+    </script>
 </body>
 </html>

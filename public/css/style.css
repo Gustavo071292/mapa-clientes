@@ -58,3 +58,140 @@
     font-weight: bold;
     border: 1px solid #c8102e;
 }
+/* Estilos para el contenedor y cabecera de la sección */
+.pilar-delivery-container {
+    padding: 20px;
+    background-color: #121212; /* Ajustar a tu color de fondo oscuro real */
+    color: #fff;
+    font-family: sans-serif; /* Usar tu fuente real */
+}
+
+.pilar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 15px;
+}
+
+.pilar-header h2 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.pilar-header .subtext {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+
+/* Estilos para la lista y elementos individuales */
+.modulos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacio entre filas */
+}
+
+.modulo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a; /* Fondo tarjeta, ligeramente más claro */
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border-left: 4px solid transparent; /* Para indicador de estado lateral opcional */
+}
+
+/* Efectos de hover y toque (UX) */
+.modulo-item:hover:not(.upcoming) {
+    background-color: #252525;
+}
+
+.modulo-item:active:not(.upcoming) {
+    transform: scale(0.98);
+}
+
+/* Indicadores de estado en el borde izquierdo (Opcional) */
+.modulo-item.active {
+    border-left-color: #28a745; /* Verde activo */
+}
+
+.modulo-item.action-required {
+    border-left-color: #dc3545; /* Rojo alerta */
+}
+
+.modulo-item.upcoming {
+    opacity: 0.7;
+    cursor: default;
+}
+
+/* Estilos para el contenido interno de la fila */
+.modulo-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modulo-icon {
+    font-size: 1.2rem;
+}
+
+.modulo-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.modulo-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botones compactos y estados */
+.modulo-action-btn {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.modulo-item.active .modulo-action-btn:hover {
+    background-color: #fff;
+    color: #121212;
+}
+
+.modulo-action-btn.danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.modulo-action-btn.disabled {
+    background-color: #555;
+    border-color: #555;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* Indicadores de estado de punto (UX) */
+.modulo-status {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-active { background-color: #28a745; }
+.status-upcoming { background-color: #6c757d; }
+.status-action { background-color: #dc3545; }
+
+/* Media Query para pantallas más grandes (opcional, para refinar en desktop) */
+@media (min-width: 768px) {
+    /* Aquí podrías ajustar el padding, tamaño de fuente, etc., pero el layout base funciona bien */
+}

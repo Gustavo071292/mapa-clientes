@@ -1,0 +1,431 @@
+/* ==========================================================================
+   GESTIÓN RTA - FORMULARIO CORPORATIVO DARK / BAVARIA
+   ========================================================================== */
+
+:root {
+    --primary: #c41230;
+    --primary-dark: #8b0000;
+    --accent-gold: #d4af37;
+    --secondary: #9ca3af;
+
+    --bg-main: #0a0c0e;
+    --bg-card: #16191d;
+    --bg-input: #1f2328;
+    --bg-soft: #1a1d21;
+
+    --text-main: #f1f1f1;
+    --text-muted: #9ca3af;
+    --placeholder: #6b7280;
+
+    --border: #2d3139;
+    --input-focus: rgba(212, 175, 55, 0.25);
+
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --success-text: #34d399;
+
+    --radius: 12px;
+    --touch-target: 48px;
+}
+
+/* ==============================
+   CONTROL DE PASOS
+   ============================== */
+
+.rta-step {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.rta-step.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ==============================
+   CARD PRINCIPAL
+   ============================== */
+
+.card.search-hero {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--accent-gold);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    margin: 16px auto;
+    max-width: 800px;
+}
+
+.search-hero__body {
+    padding: 20px;
+}
+
+/* ==============================
+   ENCABEZADO DE PASO
+   ============================== */
+
+.search-hero__info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.icon-main {
+    font-size: 24px;
+    background: var(--bg-input);
+    color: var(--accent-gold);
+    padding: 12px;
+    border-radius: 10px;
+    line-height: 1;
+    border: 1px solid var(--border);
+}
+
+.rta-info-group h3 {
+    font-size: 1.125rem;
+    color: var(--text-main);
+    margin-bottom: 2px;
+}
+
+.rta-info-group p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+/* ==============================
+   FORMULARIO BASE
+   ============================== */
+
+.form-group {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-gold);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.input-field,
+.select-field,
+.textarea-field {
+    appearance: none;
+    background-color: var(--bg-input);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 16px;
+    min-height: var(--touch-target);
+    padding: 12px 16px;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.input-field::placeholder,
+.textarea-field::placeholder {
+    color: var(--placeholder);
+}
+
+.input-field:focus,
+.select-field:focus,
+.textarea-field:focus {
+    background-color: var(--bg-soft);
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 0 3px var(--input-focus);
+    outline: none;
+}
+
+.select-field {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d4af37'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-right: 40px;
+}
+
+.select-field option {
+    background-color: var(--bg-card);
+    color: var(--text-main);
+}
+
+.textarea-field {
+    min-height: 100px;
+    resize: none;
+}
+
+.input-field:required:invalid {
+    box-shadow: none;
+}
+
+/* ==============================
+   GRILLAS
+   ============================== */
+
+.form-row {
+    display: grid;
+    gap: 16px;
+}
+
+@media (min-width: 640px) {
+    .grid-2,
+    .form-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ==============================
+   FOOTER Y BOTONES
+   ============================== */
+
+.form-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.dual-btn {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 12px;
+}
+
+.btn-cta {
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    border: 1px solid var(--accent-gold);
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    font-size: 1rem;
+    font-weight: 700;
+    justify-content: center;
+    min-height: var(--touch-target);
+    padding: 12px 24px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    user-select: none;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+}
+
+.btn-cta:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-cta:active {
+    transform: scale(0.98);
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-input);
+    color: var(--text-main);
+    border-color: var(--text-muted);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.btn-cta svg {
+    margin-left: 8px;
+    transition: transform 0.2s ease;
+}
+
+.btn-cta:hover svg {
+    transform: translateX(4px);
+}
+
+/* ==============================
+   SCROLLBAR
+   ============================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-gold);
+}
+
+/* ==============================
+   SELECCIÓN DE HALLAZGO NO OK
+   ============================== */
+
+.selection-panel {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    margin-bottom: 20px;
+}
+
+.no-ok-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.no-ok-option {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    padding: 12px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.no-ok-option:hover {
+    border-color: var(--accent-gold);
+    background: var(--bg-soft);
+}
+
+.no-ok-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    accent-color: var(--accent-gold);
+}
+
+.option-info strong {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--accent-gold);
+    letter-spacing: 1px;
+}
+
+.option-info span {
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.feedback-ok {
+    padding: 10px;
+    border-radius: 6px;
+    background: var(--success-bg);
+    color: var(--success-text);
+    font-size: 0.85rem;
+}
+
+/* ==============================
+   SUGERENCIAS IA - KPI
+   ============================== */
+
+#ia-assistant-wrapper {
+    margin-bottom: 20px;
+}
+
+.rta-sugerencias-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.rta-card-sug {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 14px;
+    transition: all 0.2s ease;
+}
+
+.rta-card-sug:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+}
+
+.rta-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.rta-card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+}
+
+.rta-card-preview {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    line-height: 1.35;
+}
+
+.btn-select-sug {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 12px;
+    border: 1px solid var(--accent-gold);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--accent-gold);
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.btn-select-sug:hover {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
+
+@media (min-width: 768px) {
+    .rta-sugerencias-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .search-hero__body {
+        padding: 16px;
+    }
+
+    .dual-btn {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-cta {
+        padding: 14px 18px;
+    }
+
+    .no-ok-option {
+        align-items: flex-start;
+    }
+}

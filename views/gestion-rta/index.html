@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión RTA • Gerencia Valle</title>
+    
+    <link rel="stylesheet" href="/home/styles.css">
+    <link rel="stylesheet" href="/css/rta-styles.css">
+    
+</head>
+<body>
+    <main class="wrap">
+        
+        <header class="main-header">
+            <div class="main-header__content">
+                <div class="welcome-text">
+                    <span class="welcome-text__label">MEJORA CONTINUA</span>
+                    <h1>Gestión <span class="highlight">RTA</span></h1>
+                </div>
+                <nav class="header-actions">
+                <a href="/gestion-rta" id="btn-back-dashboard" class="btn-cta btn-secondary">
+                 <span>← VOLVER</span>
+                 </a>
+                </nav>
+            </div>
+        </header>
+
+        <form id="rta-master-form" class="rta-form-stepped">
+
+            <div class="rta-step active" id="step-1">
+                <article class="card search-hero">
+                    <div class="search-hero__body">
+                        <header class="search-hero__info">
+                            <div class="icon-main" aria-hidden="true">📋</div>
+                            <div class="rta-info-group">
+                                <h3>Paso 1: Contexto</h3>
+                                <p>Identificación y ubicación del evento.</p>
+                            </div>
+                        </header>
+                        
+                        <div class="form-content">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fecha">Fecha del Hallazgo</label>
+                                    <input type="date" id="fecha" name="fecha" class="input-field" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ejecutor">Nombre quien ejecuta RTA</label>
+                                    <input type="text" id="ejecutor" name="ejecutor" placeholder="Nombre y Apellido" class="input-field" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="negocio">Negocio</label>
+                                    <select id="negocio" name="negocio" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione negocio...</option>
+                                        <option value="Fleet">Flota</option>
+                                        <option value="Warehouse">Almacén</option>
+                                        <option value="Delivery">Entrega</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cd">CD</label>
+                                    <select id="cd" name="cd" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione ubicación...</option>
+                                        <option value="Yumbo">Yumbo</option>
+                                        <option value="Cali">Cali</option>
+                                        <option value="Popayan">Popayán</option>
+                                        <option value="Tulua">Tuluá</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="equipo">Equipo</label>
+                                    <select id="equipo" name="equipo" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione equipo...</option>
+                                        <option value="Montacargas">Montacargas</option>
+                                        <option value="Camiones">Camiones</option>
+                                        <option value="Impresoras">Impresoras</option>
+                                        <option value="Carretillas">Carretillas</option>
+                                        <option value="Gatos">Gatos hidráulicos</option>
+                                        <option value="Sistemas">Sistemas</option>
+                                        <option value="Estibador">Estibador manual</option>
+                                        <option value="Celulares">Celulares BEES Delivery / IREP</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <footer class="form-footer">
+                                <button type="button" class="btn-cta full-width btn-next" data-next="2">
+                                    <span>CONTINUAR</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+                            </footer>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="rta-step" id="step-2">
+                <article class="card search-hero">
+                    <div class="search-hero__body">
+                        <header class="search-hero__info">
+                            <div class="icon-main" aria-hidden="true">📝</div>
+                            <div class="rta-info-group">
+                                <h3>Paso 2: Descripción</h3>
+                                <p>Detalle de la anormalidad y circunstancias.</p>
+                            </div>
+                        </header>
+                        
+                        <div class="form-content">
+                            <div class="form-group">
+                                <label for="tipo-anomalia">Tipo de anomalía</label>
+                                <select id="tipo-anomalia" name="tipo_anomalia" class="select-field" required>
+                                    <option value="" disabled selected>Seleccione...</option>
+                                    <option value="Operacion">Operación</option>
+                                    <option value="Calidad">Calidad</option>
+                                    <option value="Mantenimiento">Mantenimiento</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="desc-anomalia">Describa la Anormalidad</label>
+                                <textarea id="desc-anomalia" name="desc_anomalia" rows="2" class="textarea-field" placeholder="Resumen de la desviación..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="desc-problema">Describa el Problema</label>
+                                <textarea id="desc-problema" name="desc_problema" rows="3" class="textarea-field" placeholder="Consecuencia observada..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tipo-gravedad">Naturaleza de la anomalía</label>
+                                <select id="tipo-gravedad" name="naturaleza_anomalia" class="select-field" required>
+                                    <option value="" disabled selected>Seleccione...</option>
+                                    <option value="Accidental">Accidental</option>
+                                    <option value="Repetitivo">Repetitivo</option>
+                                </select>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="que-detecto">¿Qué se detectó?</label>
+                                    <input type="text" id="que-detecto" name="que_detecto" class="input-field" placeholder="Ej: Fuga, error..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cuando-detecto">¿Cuándo se detectó?</label>
+                                    <input type="datetime-local" id="cuando-detecto" name="cuando_detecto" class="input-field" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="donde-detecto">¿Dónde se detectó?</label>
+                                <input type="text" id="donde-detecto" name="donde_detecto" class="input-field" placeholder="Ubicación específica" required>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="quien-detecto">¿Quién lo Detectó?</label>
+                                    <input type="text" id="quien-detecto" name="quien_detecto" class="input-field" placeholder="Nombre y Apellido" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="quien-intervino">Intervino</label>
+                                    <input type="text" id="quien-intervino" name="quien_intervino" class="input-field" placeholder="Nombre y Apellido">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="kpi">KPI Afectado</label>
+                                <select id="kpi" name="kpi" class="select-field" required>
+                                    <option value="" disabled selected>Seleccione indicador...</option>
+                                    <option value="NPS">NPS</option>
+                                    <option value="OTIF">OTIF</option>
+                                    <option value="RMD">RMD</option>
+                                    <option value="InFull">InFull</option>
+                                    <option value="OnTime">OnTime</option>
+                                    <option value="TML">TML</option>
+                                    <option value="WQI">WQI</option>
+                                    <option value="TRI">TRI</option>
+                                    <option value="VLC">VLC</option>
+                                    <option value="LTI">LTI</option>
+                                    <option value="RTM">RTM</option>
+                                    <option value="TP">TP</option>
+                                    <option value="TQI">TQI</option>
+                                    <option value="DQI">DQI</option>
+                                    <option value="AE">AE</option>
+                                    <option value="AO">AO</option>
+                                    <option value="AU">AU</option>
+                                    <option value="TO">TO</option>
+                                    <option value="TR">TR</option>
+                                    <option value="TV">TV</option>
+                                </select>
+                            </div>
+
+                            <footer class="form-footer dual-btn">
+                                <button type="button" class="btn-cta btn-secondary btn-prev" data-prev="1">ANTERIOR</button>
+                                <button type="button" class="btn-cta btn-next" data-next="3">
+                                    <span>CONTINUAR</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+                            </footer>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="rta-step" id="step-3">
+                <article class="card search-hero">
+                    <div class="search-hero__body">
+                        <header class="search-hero__info">
+                            <div class="icon-main" aria-hidden="true">🛡️</div>
+                            <div class="rta-info-group">
+                                <h3>Paso 3: Validación y SOP</h3>
+                                <p>Verificación de puntos clave y cumplimiento de estándares.</p>
+                            </div>
+                        </header>
+                        
+                        <div class="form-content">
+                            <div class="form-section-divider">
+                                <p class="section-subtitle">Puntos Examinados</p>
+                            </div>
+
+                            <div class="inspection-points">
+                                <div class="inspection-block">
+                                    <div class="form-group">
+                                        <label for="punto-1">Punto examinado #1</label>
+                                        <input type="text" id="punto-1" name="punto_1" class="input-field" placeholder="Descripción del punto 1" required>
+                                    </div>
+                                    <div class="form-row grid-2">
+                                        <div class="form-group">
+                                            <label for="resultado-1">Resultado</label>
+                                            <select id="resultado-1" name="resultado_1" class="select-field" required>
+                                                <option value="" disabled selected>Seleccione...</option>
+                                                <option value="OK">OK</option>
+                                                <option value="NO_OK">NO OK</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="accion-1">Acción tomada</label>
+                                            <input type="text" id="accion-1" name="accion_1" class="input-field" placeholder="¿Qué se hizo?">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="inspection-block">
+                                    <div class="form-group">
+                                        <label for="punto-2">Punto examinado #2</label>
+                                        <input type="text" id="punto-2" name="punto_2" class="input-field" placeholder="Descripción del punto 2">
+                                    </div>
+                                    <div class="form-row grid-2">
+                                        <div class="form-group">
+                                            <label for="resultado-2">Resultado</label>
+                                            <select id="resultado-2" name="resultado_2" class="select-field">
+                                                <option value="" disabled selected>Seleccione...</option>
+                                                <option value="OK">OK</option>
+                                                <option value="NO_OK">NO OK</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="accion-2">Acción tomada</label>
+                                            <input type="text" id="accion-2" name="accion_2" class="input-field" placeholder="¿Qué se hizo?">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="inspection-block">
+                                    <div class="form-group">
+                                        <label for="punto-3">Punto examinado #3</label>
+                                        <input type="text" id="punto-3" name="punto_3" class="input-field" placeholder="Descripción del punto 3">
+                                    </div>
+                                    <div class="form-row grid-2">
+                                        <div class="form-group">
+                                            <label for="resultado-3">Resultado</label>
+                                            <select id="resultado-3" name="resultado_3" class="select-field">
+                                                <option value="" disabled selected>Seleccione...</option>
+                                                <option value="OK">OK</option>
+                                                <option value="NO_OK">NO OK</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="accion-3">Acción tomada</label>
+                                            <input type="text" id="accion-3" name="accion_3" class="input-field" placeholder="¿Qué se hizo?">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section-divider">
+                                <p class="section-subtitle">Cumplimiento de SOP</p>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="sop-disponible">¿SOP Disponible?</label>
+                                    <select id="sop-disponible" name="sop_disponible" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione opción...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sop-aplicable">¿Es aplicable?</label>
+                                    <select id="sop-aplicable" name="sop_aplicable" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione opción...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="sop-revisar">¿Necesario revisar?</label>
+                                    <select id="sop-revisar" name="sop_revisar" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione opción...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sop-capacitacion">¿Capacitación?</label>
+                                    <select id="sop-capacitacion" name="sop_capacitacion" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione opción...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="sop-implementado">¿Implementado?</label>
+                                    <select id="sop-implementado" name="sop_implementado" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione opción...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reincidencia">¿Repetición (6 meses)?</label>
+                                    <select id="reincidencia" name="reincidencia" class="select-field" required>
+                                        <option value="" disabled selected>Seleccione opción...</option>
+                                        <option value="Si">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <footer class="form-footer dual-btn">
+                                <button type="button" class="btn-cta btn-secondary btn-prev" data-prev="2">ANTERIOR</button>
+                                <button type="button" class="btn-cta btn-next" data-next="4">
+                                    <span>CONTINUAR</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                                    </svg>
+                                </button>
+                            </footer>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="rta-step" id="step-4">
+                <article class="card search-hero">
+                    <div class="search-hero__body">
+                        <header class="search-hero__info">
+                            <div class="icon-main" aria-hidden="true">🧠</div>
+                            <div class="rta-info-group">
+                                <h3>Paso 4: Análisis y Acción</h3>
+                                <p>Identificación de causa raíz y definición de compromisos.</p>
+                            </div>
+                        </header>
+                        
+                    <div class="form-content">
+
+                        <div id="selection-no-ok-container" class="form-group selection-panel"></div>
+
+                        <div id="ia-assistant-wrapper" class="form-group">
+                            <h4 style="color: var(--accent-gold); margin-bottom: 10px;">
+                                  Asistente de Análisis DPO
+                            </h4>
+
+                     <div id="sugerencias-ia-container" class="rta-sugerencias-grid"></div>
+                    </div>
+
+                            <div class="form-group">
+                                    <label for="por-que-1">¿Por qué #1?</label>
+                                <input type="text" id="por-que-1" name="por_que_1" class="input-field" placeholder="¿Por qué ocurrió el problema inicial?" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="por-que-2">¿Por qué #2?</label>
+                                <input type="text" id="por-que-2" name="por_que_2" class="input-field" placeholder="¿Por qué ocurrió lo anterior?">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="por-que-3">¿Por qué #3?</label>
+                                <input type="text" id="por-que-3" name="por_que_3" class="input-field" placeholder="Profundice en la causa">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="por-que-4">¿Por qué #4?</label>
+                                <input type="text" id="por-que-4" name="por_que_4" class="input-field" placeholder="Siga la cadena de causalidad">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="por-que-5">¿Por qué #5?</label>
+                                <input type="text" id="por-que-5" name="por_que_5" class="input-field" placeholder="Causa técnica o de sistema">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="causa-raiz">Causa Raíz Final</label>
+                                <textarea id="causa-raiz" name="causa_raiz" rows="2" class="textarea-field" placeholder="Conclusión del análisis de los 5 porqués" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="plan-accion">Acción a Implementar</label>
+                                <textarea id="plan-accion" name="plan_accion" rows="3" class="textarea-field" placeholder="Describa la tarea correctiva o preventiva" required></textarea>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="responsable-accion">Responsable</label>
+                                    <input type="text" id="responsable-accion" name="responsable_accion" class="input-field" placeholder="Nombre encargado" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="fecha-compromiso">Fecha Compromiso</label>
+                                    <input type="date" id="fecha-compromiso" name="fecha_compromiso" class="input-field" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row grid-2">
+                                <div class="form-group">
+                                    <label for="estado-rta">Estado</label>
+                                    <select id="estado-rta" name="estado_rta" class="select-field" required>
+                                        <option value="Pendiente" selected>Pendiente</option>
+                                        <option value="En Proceso">En Proceso</option>
+                                        <option value="Realizado">Realizado</option>
+                                        <option value="Cerrado">Cerrado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="prioridad-rta">Prioridad</label>
+                                    <select id="prioridad-rta" name="prioridad_rta" class="select-field" required>
+                                        <option value="Baja">Baja</option>
+                                        <option value="Media" selected>Media</option>
+                                        <option value="Alta">Alta</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <footer class="form-footer dual-btn">
+                                <button type="button" class="btn-cta btn-secondary btn-prev" data-prev="3">ANTERIOR</button>
+                                <button type="submit" class="btn-cta">
+                                    <span>FINALIZAR Y GUARDAR</span>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                        <polyline points="17 21 17 13 7 13 7 21"/>
+                                        <polyline points="7 3 7 8 15 8"/>
+                                    </svg>
+                                </button>
+                            </footer>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </form>
+    </main>
+    <script src="/js/rta-logic.js"></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Gestión RTA • Gerencia Valle</title>
+    
+    <link rel="stylesheet" href="/home/styles.css"> 
+    <link rel="stylesheet" href="/css/rta-dashboard.css">
+</head>
+<body>
+    <main class="wrap">
+        
+        <header class="main-header">
+            <div class="main-header__content">
+                <div class="welcome-text">
+                    <span class="welcome-text__label">MEJORA CONTINUA</span>
+                    <h1>Gestión <span class="highlight">RTA</span></h1>
+                    <p class="sub-welcome">Seguimiento y consulta de reportes RTA</p>
+                </div>
+                <nav class="header-actions">
+                    <a href="/gestion-rta/nuevo" class="btn-cta">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>NUEVO RTA</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="section rta-stats-grid">
+            <div class="card stat-card">
+                <span class="stat-label">Total RTAs</span>
+                <span class="stat-value" id="stat-total">--</span>
+            </div>
+            <div class="card stat-card stat-pending">
+                <span class="stat-label">Pendientes</span>
+                <span class="stat-value" id="stat-pending">--</span>
+            </div>
+            <div class="card stat-card stat-process">
+                <span class="stat-label">En Proceso</span>
+                <span class="stat-value" id="stat-process">--</span>
+            </div>
+            <div class="card stat-card stat-closed">
+                <span class="stat-label">Cerrados</span>
+                <span class="stat-value" id="stat-closed">--</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="card filter-card">
+                <div class="search-hero__body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="filter-search">Buscar</label>
+                            <input type="text" id="filter-search" class="input-field" placeholder="Ejecutor, anomalía...">
+                        </div>
+                        <div class="form-row grid-2">
+                            <div class="form-group">
+                                <label for="filter-cd">CD</label>
+                                <select id="filter-cd" class="select-field">
+                                    <option value="">Todos los CD</option>
+                                    <option value="Yumbo">Yumbo</option>
+                                    <option value="Cali">Cali</option>
+                                    <option value="Popayan">Popayán</option>
+                                    <option value="Tulua">Tuluá</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-estado">Estado</label>
+                                <select id="filter-estado" class="select-field">
+                                    <option value="">Todos los Estados</option>
+                                    <option value="Pendiente">Pendiente</option>
+                                    <option value="En Proceso">En Proceso</option>
+                                    <option value="Realizado">Realizado</option>
+                                    <option value="Cerrado">Cerrado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+    <div class="rta-analytics-grid">
+        <div class="card">
+            <div class="section__head">
+                <h2>Distribución de Reportes por CD</h2>
+            </div>
+            <div class="chart-container" id="rta-chart-wrapper">
+                <canvas id="chart-rta-cd"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="section__head">
+                <h2>Distribución por Estado</h2>
+            </div>
+            <div class="chart-container" id="rta-status-wrapper">
+                <canvas id="chart-rta-status"></canvas>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="card">
+        <div class="section__head">
+            <h2>Tendencia Mensual de RTAs</h2>
+        </div>
+        <div class="chart-container trend-chart-container">
+            <canvas id="chart-rta-trend"></canvas>
+        </div>
+    </div>
+</section>
+
+        <section class="section">
+            <div class="card list-card">
+                <div class="section__head">
+                    <h2>Histórico de Reportes</h2>
+                </div>
+                
+                <div class="rta-table-wrapper">
+                    <table class="rta-table" id="rta-data-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>CD</th>
+                                <th>KPI</th>
+                                <th>Anomalía</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rta-list-body">
+                            <tr>
+                                <td colspan="6" class="empty-msg">Cargando registros...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="rta-mobile-list" id="rta-mobile-container">
+                    </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/rta-dashboard.js"></script>
+
+<div id="modal-detalle" class="modal-overlay" style="display:none;">
+    <div class="modal-content card-rta-modal">
+        <div class="modal-header">
+            <div class="header-title">
+                <h3>DETALLE DE REPORTE</h3>
+                <span id="det-id-badge" class="badge-id"></span>
+            </div>
+            <button id="btn-close-modal" class="btn-close-x">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="detail-section">
+                <div class="info-grid-premium">
+                    <div class="info-item">
+                        <label>FECHA</label>
+                        <span id="det-fecha"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>CD</label>
+                        <span id="det-cd"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>KPI</label>
+                        <span id="det-kpi"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>EJECUTOR</label>
+                        <span id="det-ejecutor"></span>
+                    </div>
+                </div>
+
+                <div class="info-full">
+                    <label>ANOMALÍA</label>
+                    <p id="det-anomalia" class="highlight-gold"></p>
+                </div>
+
+                <div class="info-full">
+                    <label>DESCRIPCIÓN</label>
+                    <p id="det-desc" class="text-scrollable"></p>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4 class="section-title">HISTORIAL DE GESTIÓN</h4>
+                <div id="det-historial" class="historial-scroll"></div>
+            </div>
+
+            <div class="detail-section action-box">
+                <h4 class="section-title">ACTUALIZAR ESTADO</h4>
+                <div id="modal-feedback" class="modal-feedback-box" style="display:none;"></div>
+                <form id="form-gestion-preview">
+                    <div class="form-row grid-2">
+                        <div class="form-group">
+                            <label>NUEVO ESTADO</label>
+                            <select id="nuevo-estado" class="select-field">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="En Proceso">En Proceso</option>
+                                <option value="Realizado">Realizado</option>
+                                <option value="Cerrado">Cerrado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ESTADO ACTUAL</label>
+                            <span id="det-estado-badge" class="badge-status"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-10">
+                        <label>COMENTARIO DE GESTIÓN *</label>
+                        <textarea id="comentario-gestion" class="textarea-field" placeholder="Describa el avance o motivo del cierre..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-cta full-width mt-10">
+                             GUARDAR CAMBIOS
+                        </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
