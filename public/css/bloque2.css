@@ -139,3 +139,89 @@ header h1 {
     text-align: right;
     margin-bottom: 5px;
 }
+/* ==========================================================================
+   OPTIMIZACIÓN DE JERARQUÍA V3 - PRODUCCIÓN
+   ========================================================================== */
+
+/* 1. REORDENAMIENTO RESPONSIVE */
+@media (max-width: 849px) {
+    .grid-menu {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 25px;
+    }
+}
+
+/* 2. REFINAMIENTO DE TARJETAS */
+.card {
+    min-height: auto;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 3. BLOQUE RESULTADOS */
+.col-resultados .card {
+    background: rgba(22, 28, 40, 0.4);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.col-resultados .card h3 {
+    opacity: 0.8;
+}
+
+@media (hover: hover) {
+    .col-resultados .card:hover:not(.card-disabled) {
+        background: rgba(255, 255, 255, 0.03);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 4. BLOQUE FEEDBACK */
+.col-feedback .card {
+    background: var(--card-glass);
+    border-left: 4px solid var(--primary-red);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.col-feedback .card h3 {
+    color: #fff;
+    font-weight: 700;
+}
+
+@media (hover: hover) {
+    .col-feedback .card:hover {
+        background: rgba(30, 38, 55, 0.9);
+        border-color: var(--primary-red);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(200, 16, 46, 0.15);
+    }
+}
+
+/* 5. INTERACCIÓN TÁCTIL */
+.card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* 6. ESTADO DESHABILITADO */
+.card-disabled {
+    pointer-events: none;
+    filter: saturate(0.5);
+}
+
+.context-divider {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+.context-description {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    margin: 8px 0 0;
+}
+
+.status-active {
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+    border: 1px solid #d4af37;
+    padding: 4px 8px;
+    border-radius: 999px;
+}

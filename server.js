@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const deliveryRoutes = require("./routes/deliveryRoutes");
 const retroRoutes = require("./routes/retroRoutes");
 const rtaRoutes = require("./routes/rtaRoutes");
+const variableRoutes = require("./routes/variableRoutes");
 
 const app = express();
 app.use(express.json());
@@ -50,6 +51,10 @@ app.get("/equipos-empoderados/retro/resumen-gerencial", (req, res) => {
     res.sendFile(path.join(__dirname, "views/equipos-empoderados/dashboard-ejecutivo.html"));
 });
 
+app.get("/equipos-empoderados/visibilidad/variable", (req, res) => {
+    res.sendFile(path.join(__dirname, "views/equipos-empoderados/visibilidad/variable.html"));
+});
+
 // ====== APIs ======
 app.get("/api/cds", (req, res) => {
     res.json({
@@ -66,6 +71,7 @@ app.get("/api/cds", (req, res) => {
 app.use("/api/delivery", deliveryRoutes);
 app.use("/api/retro", retroRoutes);
 app.use("/api/rta", rtaRoutes);
+app.use("/api/variable", variableRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Portal DPO Funcionando en: http://localhost:${PORT}`));

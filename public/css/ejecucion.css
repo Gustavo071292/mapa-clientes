@@ -1,133 +1,392 @@
-/* Variables de color coherentes con tu proyecto */
 :root {
     --primary-red: #d32f2f;
+    --bavaria-gold: #d4af37;
     --dark-bg: #0b0f19;
     --card-bg: #161b22;
-    --card-hover: #21262d;
+    --border-color: #30363d;
     --text-main: #ffffff;
     --text-muted: #8b949e;
-    --border-color: #30363d;
 }
 
 body {
     background-color: var(--dark-bg);
     color: var(--text-main);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     padding: 40px 20px;
+    margin: 0;
 }
 
 .header-section {
-    max-width: 1200px;
-    margin: 0 auto 40px;
+    max-width: 1400px;
+    margin: 0 auto 30px;
     border-left: 5px solid var(--primary-red);
     padding-left: 20px;
 }
 
 .header-section h1 {
-    font-size: 2rem;
     margin: 0;
+    font-size: 2rem;
 }
 
 .header-section p {
+    margin: 6px 0 0;
     color: var(--text-muted);
-    margin-top: 5px;
 }
 
-.grid-container {
+.ejecucion-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    max-width: 1200px;
+    grid-template-columns: 1fr 340px;
+    gap: 30px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 .column-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
 }
 
-/* Tarjetas de Procesos y Manuales */
-.item-card {
-    background: var(--card-bg);
+.glass-effect {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.filter-bar {
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-size: 0.75rem;
+    color: var(--bavaria-gold);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.filter-group select,
+.filter-group input {
+    background: #000;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 18px 24px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    color: var(--text-main);
+    padding: 11px 12px;
+    border-radius: 8px;
+    outline: none;
+    min-width: 160px;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    border-color: var(--bavaria-gold);
+}
+
+.btn-consultar {
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    text-decoration: none;
-    color: inherit;
+    transition: 0.2s ease;
 }
 
-.item-card:hover {
-    background: var(--card-hover);
-    border-color: var(--primary-red);
-    transform: translateX(8px);
+.btn-consultar:hover {
+    background: #b71c1c;
+    transform: translateY(-1px);
 }
 
-.item-info {
-    display: flex;
-    align-items: center;
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
 }
 
-/* --- ICON BOX UNIFICADO --- */
+.kpi-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 25px;
+    min-height: 170px;
+    transition: 0.2s ease;
+}
+
+.kpi-card:hover {
+    border-color: rgba(212, 175, 55, 0.55);
+    transform: translateY(-3px);
+}
+
+.kpi-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.kpi-titles {
+    display: flex;
+    flex-direction: column;
+}
+
+.kpi-titles strong {
+    font-size: 1rem;
+}
+
+.indicator-name {
+    color: var(--bavaria-gold);
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+.kpi-help {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.4;
+}
+
 .icon-box {
-    font-size: 1.5rem;
-    background: #1e293b;
-    width: 65px; /* Un poco más ancho para emojis dobles */
+    font-size: 1.45rem;
+    background: rgba(30, 41, 59, 0.5);
+    min-width: 60px;
+    width: 60px;
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 12px;
-    border: 1px solid #334155;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s;
-    color: var(--primary-red);
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
 }
 
-.item-card:hover .icon-box {
-    transform: scale(1.1);
+.status-ok {
+    border-top: 4px solid #22c55e;
 }
 
-.subtitle {
+.status-alert {
+    border-top: 4px solid #f59e0b;
+}
+
+.status-critical {
+    border-top: 4px solid var(--primary-red);
+}
+
+.sop-context-info {
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
     font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-left: 3px solid var(--bavaria-gold);
+}
+
+.context-label {
     color: var(--text-muted);
-    margin: 2px 0 0 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 800;
 }
 
-.arrow-icon {
-    font-weight: bold;
+.context-value {
+    color: var(--text-main);
+    font-weight: 800;
+    letter-spacing: 0.4px;
+}
+
+.sop-scroll-area {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.sop-group-title {
+    font-size: 0.75rem;
+    color: var(--bavaria-gold);
+    text-transform: uppercase;
+    margin: 0 0 12px;
+    padding-left: 5px;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.sop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sop-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s ease;
+}
+
+.sop-item:hover {
+    border-color: var(--bavaria-gold);
+    background: rgba(212, 175, 55, 0.05);
+    transform: translateX(4px);
+}
+
+.sop-item[data-cd="ALL"] {
+    border-left: 2px solid rgba(255, 255, 255, 0.25);
+}
+
+.sop-item:not([data-cd="ALL"]) {
+    background: rgba(212, 175, 55, 0.02);
+}
+
+.sop-icon {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.sop-meta {
+    display: block;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    font-size: 0.9rem;
+    margin-top: 2px;
 }
 
-/* Variación para Manuales */
-.manual-card {
-    border-left: 4px solid #484f58;
+@media (min-height: 800px) {
+    .sop-scroll-area {
+        max-height: calc(100vh - 250px);
+        overflow-y: auto;
+        padding-right: 8px;
+    }
+
+    .sop-scroll-area::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sop-scroll-area::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sop-scroll-area::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 10px;
+    }
 }
 
-.manual-card:hover {
-    border-left-color: #238636; /* Verde sutil para diferenciar PDFs */
-}
-
-/* Colores de estado (Bordes sutiles) */
-.status-pre { border-color: #f59e0b; }   /* Naranja */
-.status-ruta { border-color: #3b82f6; }  /* Azul */
-.status-post { border-color: #22c55e; }  /* Verde */
-.status-dqi { border-color: var(--primary-red); } /* Rojo */
-
-@media (max-width: 850px) {
-    .grid-container {
+@media (max-width: 1100px) {
+    .ejecucion-layout {
         grid-template-columns: 1fr;
     }
+
+    .sop-sidebar {
+        margin-top: 35px;
+    }
+}
+
+@media (max-width: 650px) {
+    body {
+        padding: 28px 14px;
+    }
+
+    .header-section h1 {
+        font-size: 1.55rem;
+    }
+
+    .filter-bar {
+        align-items: stretch;
+    }
+
+    .filter-group,
+    .filter-group select,
+    .filter-group input,
+    .btn-consultar {
+        width: 100%;
+    }
+
+    .kpi-card {
+        padding: 20px;
+    }
+}
+/* --- CONTEXTO Y SEGMENTACIÓN SOP --- */
+.sop-context-info {
+    padding: 12px 15px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border-left: 4px solid var(--bavaria-gold);
+}
+
+.context-label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.context-value {
+    color: var(--text-main);
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.sop-group {
+    margin-bottom: 30px;
+}
+
+.sop-group-title {
+    font-size: 0.7rem;
+    color: var(--bavaria-gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    padding-left: 5px;
+}
+
+/* Scroll interno para no alargar la pantalla innecesariamente */
+.sop-scroll-area {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.sop-scroll-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sop-scroll-area::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+/* Efecto visual para SOPs generales */
+.sop-item[data-cd="ALL"] {
+    background: rgba(59, 130, 246, 0.03); /* Azul muy sutil para diferenciar general de local */
 }

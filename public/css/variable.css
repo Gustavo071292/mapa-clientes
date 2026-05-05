@@ -1,0 +1,215 @@
+:root {
+    --bg-color: #0b0b0b;
+    --bavaria-red: #e31221;
+    --bavaria-gold: #d4af37;
+    --glass: rgba(255, 255, 255, 0.05);
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #1a1a1a 0%, #0b0b0b 100%);
+    color: white; margin: 0; padding: 20px; line-height: 1.5;
+}
+
+.container { max-width: 600px; margin: 0 auto; }
+
+.header { text-align: center; margin-bottom: 25px; }
+.logo-badge {
+    width: 45px; height: 45px; background: var(--bavaria-red);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; margin: 0 auto 10px; font-weight: bold;
+}
+
+.glass {
+    background: var(--glass); backdrop-filter: blur(12px);
+    border: 1px solid var(--border); border-radius: 15px;
+    padding: 20px; margin-bottom: 15px;
+}
+
+.gold-border { border: 1px solid rgba(212, 175, 55, 0.3); }
+
+/* Formulario */
+.search-controls { display: flex; gap: 10px; margin-top: 5px; }
+input, select {
+    flex: 1; background: #000; border: 1px solid var(--border);
+    padding: 12px; color: white; border-radius: 8px;
+}
+
+.btn-primary {
+    background: var(--bavaria-red); color: white; border: none;
+    padding: 0 20px; border-radius: 8px; font-weight: bold; cursor: pointer;
+}
+
+/* User Header */
+.user-header { position: relative; text-align: left; }
+.porcentaje-badge {
+    position: absolute; top: 20px; right: 20px;
+    background: var(--bavaria-gold); color: black;
+    padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 1.2rem;
+}
+
+/* Pago Principal */
+.payment-summary { text-align: center; padding: 10px 0; }
+.label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 5px; }
+.value-main { font-size: 2.2rem; font-weight: 800; color: var(--bavaria-gold); display: block; }
+.base-reference { font-size: 0.85rem; color: #666; margin-top: 8px; }
+
+/* Metrics */
+.metrics-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.metric-item { text-align: center; padding: 15px 5px; }
+.value-sub { font-size: 1.2rem; font-weight: bold; display: block; }
+.red-text { color: var(--bavaria-red); }
+
+/* Detalle Diario */
+.btn-secondary {
+    width: 100%; background: transparent; border: 1px solid var(--border);
+    color: #888; padding: 12px; border-radius: 10px; cursor: pointer; margin-bottom: 15px;
+}
+
+.table-container { overflow-x: auto; font-size: 0.85rem; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); color: var(--bavaria-gold); }
+td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+.hidden { display: none; }
+.loader { text-align: center; padding: 30px; }
+.spinner { 
+    width: 30px; height: 30px; border: 3px solid var(--border); 
+    border-top: 3px solid var(--bavaria-red); border-radius: 50%; 
+    animation: spin 1s linear infinite; margin: 0 auto 10px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 480px) {
+    .metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* --- MEDIDOR SEMICIRCULAR --- */
+.gauge-wrapper {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    width: 120px;
+    text-align: center;
+}
+
+.gauge-body {
+    position: relative;
+    width: 120px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 120px 120px 0 0;
+    overflow: hidden;
+}
+
+.gauge-fill {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    background: #fff;
+    transform-origin: center top;
+    transform: rotate(0turn);
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), background 0.5s;
+}
+
+.gauge-cover {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    background: #151515;
+    border-radius: 50%;
+    bottom: 0;
+    left: 10%;
+    display: flex;
+    align-items: end;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+
+.porcentaje-texto {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+}
+
+.gauge-caption {
+    font-size: 0.65rem;
+    color: #888;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+.gauge-gold {
+    background: var(--bavaria-gold) !important;
+}
+
+.gauge-white {
+    background: #e0e0e0 !important;
+}
+
+.gauge-red {
+    background: var(--bavaria-red) !important;
+}
+
+/* --- COLORES INTELIGENTES DETALLE DIARIO --- */
+.row-success {
+    background: rgba(80, 250, 123, 0.05) !important;
+}
+
+.row-danger {
+    background: rgba(227, 18, 33, 0.08) !important;
+}
+
+.row-neutral {
+    background: transparent;
+}
+
+@media (max-width: 600px) {
+    tr.row-success {
+        border-left: 4px solid rgba(80, 250, 123, 0.3) !important;
+    }
+
+    tr.row-danger {
+        border-left: 4px solid rgba(227, 18, 33, 0.4) !important;
+    }
+
+    .gauge-wrapper {
+        position: static;
+        margin: 15px auto 0;
+    }
+
+    .user-header {
+        text-align: center;
+    }
+}
+/* 🎯 Rechazos - lógica de negocio */
+
+.rechazo-ok {
+    color: #2ecc71; /* verde elegante */
+    font-weight: 600;
+}
+
+.rechazo-alerta {
+    color: #e31221; /* rojo Bavaria */
+    font-weight: 700;
+}
+
+/* Logo corporativo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.logo-container img {
+    width: 55px;
+    height: 55px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(227,18,33,0.2), rgba(0,0,0,0));
+    padding: 6px;
+    box-shadow: 0 0 10px rgba(227,18,33,0.3);
+}

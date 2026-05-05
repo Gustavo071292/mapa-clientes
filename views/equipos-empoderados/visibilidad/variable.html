@@ -3,76 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Privado - Rendimiento Variable</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <style>
-        .login-box {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            background: #1a1a1a;
-            border-radius: 12px;
-            border: 2px solid #c8102e;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            margin: 20px 0;
-            background: #333;
-            border: 1px solid #444;
-            color: white;
-            border-radius: 5px;
-        }
-        .btn-access {
-            background: #c8102e;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
-    </style>
+    <title>Variable | Sistema Integral DPO</title>
+    <link rel="stylesheet" href="/css/variable.css">
 </head>
 <body>
-    <div class="login-box">
-        <img src="/img/lock-icon.png" alt="Seguridad" width="50">
-        <h2>Área Confidencial</h2>
-        <p>Ingrese la contraseña de Gerencia para ver el rendimiento de variable.</p>
-        
-        <form id="loginVariable">
-            <input type="password" id="passwordField" placeholder="Contraseña" required>
-            <button type="submit" class="btn-access">Ver Resultados</button>
-        </form>
-        
-        <p id="errorMessage" style="color: #ff4d4d; margin-top: 15px; display: none;">Contraseña incorrecta. Intente de nuevo.</p>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+            <img src="/img/home_delivery/Zonavalle.png" alt="Zona Valle Logo">
+            </div>
+            <h1>Compensación Variable</h1>
+            <p class="subtitle">Gestión de Compensación Variable • Consulta Individual</p>
+        </header>
+
+        <!-- Sección de búsqueda -->
+        <section class="search-section glass">
+            <div class="input-group">
+                <label>Identificador (Cédula)</label>
+                <div class="search-controls">
+                    <input type="text" id="cedula" placeholder="Ej: 1061..." maxlength="12">
+                    <button id="btn-consultar" class="btn-primary">Consultar</button>
+                </div>
+            </div>
+            <div id="selector-mes-container" class="input-group hidden">
+                <label>Mes de Gestión</label>
+                <select id="mes-select">
+                    <option value="" disabled selected>Seleccione mes...</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Cargando -->
+        <div id="loader" class="loader hidden">
+            <div class="spinner"></div>
+            <p>Obteniendo información oficial...</p>
+        </div>
+
+        <!-- Resultados Individuales -->
+        <main id="dashboard" class="hidden">
+            <!-- Cabecera de Usuario -->
+            <div class="user-header glass">
+    <div class="header-content">
+        <h2 id="user-name">---</h2>
+        <p id="user-info-sub">---</p>
     </div>
 
-    <script>
-        document.getElementById('loginVariable').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const password = document.getElementById('passwordField').value;
-            
-            // Enviamos la clave al servidor para que el authController la valide
-            const response = await fetch('/equipos-empoderados/visibilidad/variable/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
-            });
+    <div class="gauge-wrapper">
+        <div class="gauge-body">
+            <div id="gauge-fill" class="gauge-fill"></div>
+            <div class="gauge-cover">
+                <span id="badge-porcentaje" class="porcentaje-texto">0%</span>
+            </div>
+        </div>
+        <p class="gauge-caption">Resultado Gestión</p>
+    </div>
+</div>
 
-            const data = await response.json();
+            <!-- Tarjeta Principal de Pago -->
+            <div class="main-card glass gold-border">
+                <div class="payment-summary">
+                    <span class="label">Pago Variable DT (Oficial)</span>
+                    <span id="valor-pago-dt" class="value-main">$ 0</span>
+                    <div class="base-reference">
+                        Base de referencia (100%): <span id="valor-salario-base">$ 0</span>
+                    </div>
+                </div>
+            </div>
 
-            if (data.acceso) {
-                // Si la clave es correcta (Valle2026*), lo dejamos pasar
-                window.location.href = '/equipos-empoderados/visibilidad/rendimiento-final';
-            } else {
-                // Si falla, mostramos el error
-                document.getElementById('errorMessage').style.display = 'block';
-            }
-        });
-    </script>
+            <!-- Métricas Secundarias -->
+            <div class="metrics-grid">
+                <div class="metric-item glass">
+                    <span class="label">Días Trabajados</span>
+                    <span id="valor-dias" class="value-sub">0</span>
+                </div>
+                <div class="metric-item glass">
+                    <span class="label">Ausencia Justificada</span>
+                    <span id="valor-aus-just" class="value-sub">0</span>
+                </div>
+                <div class="metric-item glass">
+                    <span class="label">Ausencia Injustificada</span>
+                    <span id="valor-aus-injust" class="value-sub red-text">0</span>
+                </div>
+            </div>
+
+            <!-- Acción Detalle Diario -->
+            <div class="action-area">
+                <button id="btn-toggle-detalle" class="btn-secondary">Ver detalle diario (Referencia)</button>
+            </div>
+
+            <!-- Sección Detalle (Oculta por defecto) -->
+            <section id="detalle-diario-section" class="hidden">
+                <div class="detail-container glass">
+                    <h3 class="section-title">Detalle Operativo Diario</h3>
+                    <div class="table-container">
+                        <table id="tabla-detalle">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                    <th>Rechazos</th>
+                                    <th>Cumplimiento</th>
+                                    <th>Monto Ref.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body-detalle"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Mensajes de Error -->
+        <div id="error-container" class="error-msg glass hidden">
+            <span>⚠️</span>
+            <p id="error-text"></p>
+        </div>
+    </div>
+    <script src="/js/variable.js"></script>
 </body>
 </html>

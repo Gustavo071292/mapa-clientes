@@ -4,113 +4,221 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ejecución de la Entrega | Gerencia Valle</title>
+
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/ejecucion.css">
+    <script src="/js/ejecucion.js"></script>
 </head>
 <body>
 
     <div class="header-section">
         <h1>Ejecución de la Entrega</h1>
-        <p>Gestión operativa, estándares de servicio y control de calidad DPO.</p>
+        <p>Gestión operativa, estándares de servicio y desempeño DPO.</p>
     </div>
 
-    <div class="grid-container">
-        
-        <div class="column">
-            <h2 class="column-title">Dashboards Operativos</h2>
-            
-            <div class="item-card" onclick="location.href='/ejecucion/pre-ruta'">
-                <div class="item-info">
-                    <span class="icon-box status-pre">🚚🛑</span>
-                    <div>
-                        <strong>Pre-Ruta</strong>
-                        <p class="subtitle">Alistamiento, Checklist y Carga</p>
-                    </div>
+    <div class="ejecucion-layout">
+
+        <!-- PANEL PRINCIPAL: DESEMPEÑO -->
+        <main class="dashboard-main">
+            <h2 class="column-title">Desempeño Operativo</h2>
+
+            <section class="filter-bar glass-effect">
+                <div class="filter-group">
+                    <label for="filter-cd">Centro de Distribución</label>
+                    <select id="filter-cd">
+                        <option value="CALI">Cali</option>
+                        <option value="POPAYAN">Popayán</option>
+                        <option value="TULUA">Tuluá</option>
+                        <option value="YUMBO">Yumbo</option>
+                    </select>
                 </div>
-                <span class="arrow-icon">KPIs →</span>
+
+                <div class="filter-group">
+                    <label for="filter-mes">Mes de Gestión</label>
+                    <select id="filter-mes">
+                        <option value="01">Enero</option>
+                        <option value="02">Febrero</option>
+                        <option value="03">Marzo</option>
+                        <option value="04">Abril</option>
+                        <option value="05">Mayo</option>
+                        <option value="06">Junio</option>
+                        <option value="07">Julio</option>
+                        <option value="08">Agosto</option>
+                        <option value="09">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="filter-cedula">Cédula</label>
+                    <input type="text" id="filter-cedula" placeholder="ID colaborador">
+                </div>
+
+                <button type="button" class="btn-consultar">
+                    Consultar desempeño
+                </button>
+            </section>
+
+            <div class="kpi-grid">
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="icon-box">🚚🛑</span>
+                        <div class="kpi-titles">
+                            <strong>Pre-Ruta</strong>
+                            <span class="indicator-name">TML</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value">--</div>
+                    <p class="kpi-help">Tiempo muerto logístico inicial.</p>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="icon-box">🚚💨</span>
+                        <div class="kpi-titles">
+                            <strong>En Ruta</strong>
+                            <span class="indicator-name">TR</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value">--</div>
+                    <p class="kpi-help">Cumplimiento de tiempo en ruta.</p>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="icon-box">🚚🏁</span>
+                        <div class="kpi-titles">
+                            <strong>Post-Ruta</strong>
+                            <span class="indicator-name">TV</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value">--</div>
+                    <p class="kpi-help">Tiempo de viaje y retorno.</p>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="icon-box">📦💥</span>
+                        <div class="kpi-titles">
+                            <strong>Calidad D.Q.I</strong>
+                            <span class="indicator-name">Roturas</span>
+                        </div>
+                    </div>
+                    <div class="kpi-value">--</div>
+                    <p class="kpi-help">Unidades afectadas en el proceso.</p>
+                </div>
+
             </div>
+        </main>
 
-            <div class="item-card" onclick="location.href='/ejecucion/en-ruta'">
-                <div class="item-info">
-                    <span class="icon-box status-ruta">🚚💨</span>
-                    <div>
-                        <strong>En Ruta</strong>
-                        <p class="subtitle">Entregas, Rechazos y GPS</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">KPIs →</span>
-            </div>
+        <!-- PANEL SECUNDARIO: SOP -->
+<!-- PANEL SECUNDARIO: SOP -->
+<aside class="sop-sidebar">
+    <h2 class="column-title">Biblioteca SOP</h2>
+    
+    <div class="sop-context-info glass-effect">
+        <span class="context-label">Mostrando SOP para:</span>
+        <span id="sop-target-name" class="context-value">CD seleccionado + Zona Valle</span>
+    </div>
 
-            <div class="item-card" onclick="location.href='/ejecucion/post-ruta'">
-                <div class="item-info">
-                    <span class="icon-box status-post">🚚🏁</span>
-                    <div>
-                        <strong>Post-Ruta</strong>
-                        <p class="subtitle">Cierre, Liquidación y Arqueo</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">KPIs →</span>
-            </div>
+    <div class="sop-scroll-area">
 
-            <div class="item-card" onclick="location.href='/ejecucion/dqi'">
-                <div class="item-info">
-                    <span class="icon-box status-dqi">📦💥</span>
-                    <div>
-                        <strong>D.Q.I (Calidad)</strong>
-                        <p class="subtitle">Unidades Rotas y Auditorías</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">KPIs →</span>
-            </div>
-        </div>
+        <!-- SOP POR CD -->
+        <section class="sop-group" id="group-sop-cd">
+            <h3 class="sop-group-title">SOP Específicos del CD</h3>
 
-        <div class="column">
-            <h2 class="column-title">Manuales SOP</h2>
+            <nav class="sop-list">
 
-            <a href="/docs/sop-pre-ruta.pdf" target="_blank" class="item-card manual-card">
-                <div class="item-info">
-                    <span class="icon-box">📄</span>
-                    <div>
-                        <strong>SOP de Pre-Ruta</strong>
-                        <p class="subtitle">Manual de procedimientos</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">PDF</span>
-            </a>
+                <!-- CALI -->
+                <a href="/docs/CALI - SALIDA A RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="CALI">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Cali - Salida a Ruta</strong><span class="sop-meta">PDF • Cali</span></div>
+                </a>
 
-            <a href="/docs/sop-ruta.pdf" target="_blank" class="item-card manual-card">
-                <div class="item-info">
-                    <span class="icon-box">📄</span>
-                    <div>
-                        <strong>SOP de Ruta</strong>
-                        <p class="subtitle">Manual de procedimientos</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">PDF</span>
-            </a>
+                <a href="/docs/CALI - EJECUCION DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="CALI">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Cali - Ejecución de Ruta</strong><span class="sop-meta">PDF • Cali</span></div>
+                </a>
 
-            <a href="/docs/sop-post-ruta.pdf" target="_blank" class="item-card manual-card">
-                <div class="item-info">
-                    <span class="icon-box">📄</span>
-                    <div>
-                        <strong>SOP de Post-Ruta</strong>
-                        <p class="subtitle">Manual de procedimientos</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">PDF</span>
-            </a>
+                <a href="/docs/CALI - LLEGADA DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="CALI">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Cali - Llegada de Ruta</strong><span class="sop-meta">PDF • Cali</span></div>
+                </a>
 
-            <a href="/docs/sop-calidad.pdf" target="_blank" class="item-card manual-card">
-                <div class="item-info">
-                    <span class="icon-box">📄</span>
-                    <div>
-                        <strong>SOP de Calidad</strong>
-                        <p class="subtitle">Estándares D.Q.I</p>
-                    </div>
-                </div>
-                <span class="arrow-icon">PDF</span>
-            </a>
-        </div>
+                <!-- POPAYAN -->
+                <a href="/docs/POPAYAN - SALIDA A RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="POPAYAN">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Popayán - Salida a Ruta</strong><span class="sop-meta">PDF • Popayán</span></div>
+                </a>
+
+                <a href="/docs/POPAYAN - EJECUCION DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="POPAYAN">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Popayán - Ejecución de Ruta</strong><span class="sop-meta">PDF • Popayán</span></div>
+                </a>
+
+                <a href="/docs/POPAYAN - LLEGADA A RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="POPAYAN">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Popayán - Llegada a Ruta</strong><span class="sop-meta">PDF • Popayán</span></div>
+                </a>
+
+                <!-- TULUA -->
+                <a href="/docs/TULUA - SALIDA A RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="TULUA">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Tuluá - Salida a Ruta</strong><span class="sop-meta">PDF • Tuluá</span></div>
+                </a>
+
+                <a href="/docs/TULUA - EJECUCION DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="TULUA">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Tuluá - Ejecución de Ruta</strong><span class="sop-meta">PDF • Tuluá</span></div>
+                </a>
+
+                <a href="/docs/TULUA - LLEGADA DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="TULUA">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Tuluá - Llegada de Ruta</strong><span class="sop-meta">PDF • Tuluá</span></div>
+                </a>
+
+                <!-- YUMBO -->
+                <a href="/docs/YUMBO KA - SALIDA A RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="YUMBO">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Yumbo KA - Salida a Ruta</strong><span class="sop-meta">PDF • Yumbo</span></div>
+                </a>
+
+                <a href="/docs/YUMBO KA - EJECUCION DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="YUMBO">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Yumbo KA - Ejecución de Ruta</strong><span class="sop-meta">PDF • Yumbo</span></div>
+                </a>
+
+                <a href="/docs/YUMBO KA - LLEGADA DE RUTA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="YUMBO">
+                    <span class="sop-icon">📍</span>
+                    <div><strong>Yumbo KA - Llegada de Ruta</strong><span class="sop-meta">PDF • Yumbo</span></div>
+                </a>
+
+            </nav>
+        </section>
+
+        <!-- SOP GENERALES -->
+        <section class="sop-group" id="group-sop-general">
+            <h3 class="sop-group-title">SOP Generales Zona Valle</h3>
+
+            <nav class="sop-list">
+                <a href="/docs/ZONA VALLE - MANEJO DE DQI Y CALIDAD EN LA ENTREGA.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="ALL">
+                    <span class="sop-icon">🌎</span>
+                    <div><strong>Zona Valle - Manejo DQI y Calidad</strong><span class="sop-meta">PDF • Aplica a todos</span></div>
+                </a>
+
+                <a href="/docs/ZONA VALLE - MODULACIONES.pdf" target="_blank" rel="noopener noreferrer" class="sop-item" data-cd="ALL">
+                    <span class="sop-icon">🌎</span>
+                    <div><strong>Zona Valle - Modulaciones</strong><span class="sop-meta">PDF • Aplica a todos</span></div>
+                </a>
+            </nav>
+        </section>
+
+    </div>
+</aside>
+
     </div>
 
 </body>
