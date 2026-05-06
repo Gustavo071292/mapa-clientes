@@ -390,3 +390,62 @@ body {
 .sop-item[data-cd="ALL"] {
     background: rgba(59, 130, 246, 0.03); /* Azul muy sutil para diferenciar general de local */
 }
+
+/* KPI - Estados visuales */
+.kpi-card.status-ok {
+    border: 1px solid #22c55e;
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+.kpi-card.status-critical {
+    border: 1px solid #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+/* Opcional: valor también cambia de color */
+.kpi-card.status-ok .kpi-value {
+    color: #22c55e;
+}
+
+.kpi-card.status-critical .kpi-value {
+    color: #ef4444;
+}
+
+.colaborador-info {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--bavaria-gold);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 22px;
+}
+
+.colaborador-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+}
+
+#nombre-colaborador {
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+.historico-container {
+    margin-top: 40px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.historico-title {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}

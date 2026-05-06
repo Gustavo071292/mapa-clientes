@@ -75,3 +75,6 @@ app.use("/api/variable", variableRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Portal DPO Funcionando en: http://localhost:${PORT}`));
+
+const ejecucionRoutes = require('./routes/ejecucionRoutes');
+app.use('/api/ejecucion', ejecucionRoutes);
