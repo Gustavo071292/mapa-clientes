@@ -1,0 +1,140 @@
+:root {
+    --bavaria-red: #e31221;
+    --bavaria-blue: #005596; /* Azul para Triggered */
+    --bavaria-green: #28a745; /* Verde para Success */
+    --bavaria-gold: #ffc107; /* Opcional Warning */
+    --dark-bg: #0f0f0f;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --text-main: #ffffff;
+    --text-dim: #b0b0b0;
+}
+
+body.bavaria-dark-theme {
+    background-color: var(--dark-bg);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Glassmorphism Cards */
+.card-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Header */
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid var(--bavaria-red);
+    padding-left: 15px;
+    margin-bottom: 30px;
+}
+
+.module-number { color: var(--bavaria-red); font-weight: bold; }
+.corp-logo {
+    height: 60px;
+    object-fit: contain;
+    opacity: 0.95;
+}
+
+/* Filtros */
+.filter-panel {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label { font-size: 0.85rem; color: var(--text-dim); }
+
+input, select {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+/* Botones */
+.btn-primary { background: var(--bavaria-red); color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; transition: 0.3s; }
+.btn-secondary { background: transparent; color: white; border: 1px solid #444; padding: 10px 20px; cursor: pointer; border-radius: 4px; }
+.btn-primary:hover { opacity: 0.8; }
+
+/* Executive Header */
+.header-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 6px;
+    border-bottom: 3px solid var(--bavaria-red);
+}
+
+.card-label { display: block; font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; }
+.card-value { font-size: 1.1rem; font-weight: bold; margin-top: 5px; display: block; }
+
+/* Tabla Power BI Style */
+.table-container { padding: 0; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th { text-align: left; padding: 15px; border-bottom: 1px solid #333; color: var(--text-dim); font-weight: 500; }
+td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.02); }
+
+/* Estados de Resultado */
+.badge-result {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-success { background: rgba(40, 167, 69, 0.2); color: #2ecc71; border: 1px solid #28a745; }
+.status-warning { background: rgba(227, 18, 33, 0.2); color: #ff4d4d; border: 1px solid var(--bavaria-red); }
+.status-triggered { background: rgba(0, 85, 150, 0.2); color: #3498db; border: 1px solid var(--bavaria-blue); }
+.status-neutral { background: #222; color: #777; border: 1px solid #444; }
+
+/* Link de Gestión */
+.btn-gestion {
+    text-decoration: none;
+    color: white;
+    background: var(--bavaria-blue);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: 0.3s;
+}
+
+.btn-gestion:hover { background: #003d6b; }
+.no-gestion { color: var(--text-dim); font-style: italic; font-size: 0.85rem; }
+
+@media (max-width: 768px) {
+    .filter-panel { flex-direction: column; align-items: stretch; }
+}

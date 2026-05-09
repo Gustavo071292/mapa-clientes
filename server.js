@@ -7,8 +7,11 @@ const deliveryRoutes = require("./routes/deliveryRoutes");
 const retroRoutes = require("./routes/retroRoutes");
 const rtaRoutes = require("./routes/rtaRoutes");
 const variableRoutes = require("./routes/variableRoutes");
+const ejecucionRoutes = require("./routes/ejecucionRoutes");
+const desempenoKpiRoutes = require("./routes/desempenoKpiRoutes");
 
 const app = express();
+
 app.use(express.json());
 
 // Servir archivos estáticos de public
@@ -35,8 +38,13 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log("❌ Error:", err.message));
 
 // ====== VISTAS DE NAVEGACIÓN ======
-app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public/portal/index.html")));
-app.get("/clientes", (req, res) => res.sendFile(path.join(__dirname, "public/pilares/delivery/clientes/index.html")));
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/portal/index.html"));
+});
+
+app.get("/clientes", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/pilares/delivery/clientes/index.html"));
+});
 
 // ====== PILAR EQUIPOS EMPODERADOS ======
 app.get("/equipos-empoderados/retro/novedades", (req, res) => {
@@ -53,6 +61,11 @@ app.get("/equipos-empoderados/retro/resumen-gerencial", (req, res) => {
 
 app.get("/equipos-empoderados/visibilidad/variable", (req, res) => {
     res.sendFile(path.join(__dirname, "views/equipos-empoderados/visibilidad/variable.html"));
+});
+
+// Futuro HTML del módulo 1.1
+app.get("/equipos-empoderados/visibilidad/desempeno-kpi", (req, res) => {
+    res.sendFile(path.join(__dirname, "views/equipos-empoderados/visibilidad/desempeno-kpi.html"));
 });
 
 // ====== APIs ======
@@ -72,9 +85,11 @@ app.use("/api/delivery", deliveryRoutes);
 app.use("/api/retro", retroRoutes);
 app.use("/api/rta", rtaRoutes);
 app.use("/api/variable", variableRoutes);
+app.use("/api/ejecucion", ejecucionRoutes);
+app.use("/api/desempeno-kpi", desempenoKpiRoutes);
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Portal DPO Funcionando en: http://localhost:${PORT}`));
 
-const ejecucionRoutes = require('./routes/ejecucionRoutes');
-app.use('/api/ejecucion', ejecucionRoutes);
+app.listen(PORT, () => {
+    console.log(`🚀 Portal DPO Funcionando en: http://localhost:${PORT}`);
+});
