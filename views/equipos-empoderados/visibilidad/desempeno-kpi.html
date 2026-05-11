@@ -3,28 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1.1 Desempeño PI y KPI | Equipos Empoderados</title>
+    <title>1.1 Tablero Semanal | Zona Valle</title>
     <link rel="stylesheet" href="/css/desempeno-kpi.css">
-    <!-- Iconos FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bavaria-dark-theme">
     <div class="main-container">
-        <!-- Encabezado de Módulo -->
         <header class="module-header">
             <div class="title-group">
-                <h1><span class="module-number">1.1</span> Desempeño PI y KPI</h1>
-                <p>Gestión operativa diaria y cumplimiento de estándares DPO.</p>
+                <h1><span class="module-number">1.1</span> Tablero Semanal PI y KPI</h1>
+                <p>Visualización matricial de indicadores operativos - Zona Valle.</p>
             </div>
-            <div class="logo-container">
-                <img src="/img/home_delivery/Zonavalle.png" alt="Zona Valle Logo" class="corp-logo">
-            </div>
+            <img src="/img/home_delivery/Zonavalle.png" alt="Zona Valle" class="corp-logo">
         </header>
 
-        <!-- Panel de Filtros -->
         <section class="filter-panel card-glass">
             <div class="filter-group">
-                <label for="filter-cd">CD</label>
+                <label>CD</label>
                 <select id="filter-cd">
                     <option value="CALI">Cali</option>
                     <option value="POPAYAN">Popayán</option>
@@ -32,64 +27,49 @@
                 </select>
             </div>
             <div class="filter-group">
-                <label for="filter-fecha">Fecha de Operación</label>
-                <input type="date" id="filter-fecha">
+                <label>Año</label>
+                <input type="number" id="filter-anio" value="2026">
             </div>
             <div class="filter-group">
-                <label for="filter-cedula">Cédula Colaborador</label>
-                <input type="text" id="filter-cedula" placeholder="Ej: 1107536632">
+                <label>Semana</label>
+                <input type="number" id="filter-semana" placeholder="Ej: 14">
+            </div>
+            <div class="filter-group">
+                <label>Cédula</label>
+                <input type="text" id="filter-cedula" placeholder="10633471">
             </div>
             <div class="button-group">
-                <button id="btn-consultar" class="btn-primary">
-                    <i class="fas fa-search"></i> Consultar
-                </button>
-                <button id="btn-limpiar" class="btn-secondary">
-                    <i class="fas fa-eraser"></i> Limpiar
-                </button>
+                <button id="btn-consultar" class="btn-primary"><i class="fas fa-table"></i> Ver Tablero</button>
+                <button id="btn-limpiar" class="btn-secondary">Limpiar</button>
             </div>
         </section>
 
-        <!-- Header Ejecutivo (Tarjetas Superiores) -->
+        <div id="status-container" class="status-container"></div>
+
         <section id="executive-header" class="header-cards" style="display: none;">
             <div class="info-card">
                 <span class="card-label">Colaborador</span>
                 <span id="display-nombre" class="card-value">--</span>
             </div>
             <div class="info-card">
-                <span class="card-label">Placa</span>
-                <span id="display-placa" class="card-value">--</span>
-            </div>
-            <div class="info-card">
-                <span class="card-label">Transporte</span>
-                <span id="display-transporte" class="card-value">--</span>
+                <span class="card-label">Placa | Transporte</span>
+                <span id="display-info-ruta" class="card-value">--</span>
             </div>
         </section>
 
-        <!-- Tabla de KPIs -->
-        <section class="table-container card-glass">
-            <table id="kpi-table">
-                <thead>
+        <div class="table-wrapper card-glass">
+            <table id="weekly-table">
+                <thead id="weekly-table-head"></thead>
+                <tbody id="weekly-table-body">
                     <tr>
-                        <th>KPI Impactado</th>
-                        <th>Indicador PI</th>
-                        <th>UM</th>
-                        <th>Meta</th>
-                        <th>Disparador</th>
-                        <th class="text-center">Resultado Diario</th>
-                        <th class="text-center">Herramienta de Gestión</th>
-                    </tr>
-                </thead>
-                <tbody id="kpi-table-body">
-                    <!-- Se puebla dinámicamente -->
-                    <tr class="empty-state">
-                        <td colspan="7">Ingrese filtros para visualizar el desempeño operativo.</td>
+                        <td colspan="12" style="text-align:center; padding:50px; color:#666;">
+                            <i class="fas fa-info-circle"></i> Complete los filtros para generar la matriz semanal.
+                        </td>
                     </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
     </div>
-
-    <!-- Script de lógica -->
     <script src="/js/desempeno-kpi.js"></script>
 </body>
 </html>

@@ -1,15 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const desempenoKpiController = require('../controllers/desempenoKpiController');
+const controller = require('../controllers/desempenoKpiController');
 
-/**
- * Endpoints del Módulo 1.1 Desempeño PI y KPI
- */
-
-// Consulta de resultados diarios cruzados con metas
-router.get('/consulta', desempenoKpiController.getDesempenoKpi);
-
-// Consulta de la matriz de configuración y metas
-router.get('/config', desempenoKpiController.getKpiConfig);
+// Rutas de consulta de desempeño
+router.get('/consulta', controller.getDesempenoKpi);
+router.get('/semanal', controller.getDesempenoKpiSemanal);
+router.get('/config', controller.getKpiConfig);
 
 module.exports = router;

@@ -1,61 +1,38 @@
 const DesempenoKpi = require('../models/DesempenoKpi');
 const KpiConfig = require('../models/KpiConfig');
 
-/**
- * Consulta Principal: Obtiene el desempeño diario cruzado con metas
- */
+// GET /api/desempeno-kpi/consulta (DIARIO)
 exports.getDesempenoKpi = async (req, res) => {
     try {
         const { cd, fecha, cedula } = req.query;
-
-        if (!cd || !fecha || !cedula) {
-            return res.status(400).json({ 
-                success: false, 
-                message: "Parámetros obligatorios faltantes: cd, fecha y cedula." 
-            });
-        }
-
-        // QA: Normalización de cédula para toda la lógica de búsqueda y links
         const cedulaClean = String(cedula).trim();
-
         const registro = await DesempenoKpi.findOne({
             cd: String(cd).toUpperCase(),
-            fecha: fecha,
-            $or: [
-                { cc_conductor: cedulaClean },
-                { cc_responsable_ruta: cedulaClean }
-            ]
+            fecha,
+            $or: [{ cc_conductor: cedulaClean }, { cc_responsable_ruta: cedulaClean }]
         }).lean();
 
-        if (!registro) {
-            return res.status(404).json({ 
-                success: false, 
-                message: `No se encontró registro para la cédula ${cedulaClean} en la fecha ${fecha}.` 
-            });
-        }
+        if (!registro) return res.status(404).json({ success: false, message: "No hay datos." });
 
-        // Obtener configuración ordenada por creación (orden del seed)
         const configs = await KpiConfig.find().sort({ createdAt: 1 }).lean();
-
-        const tabla_desempeno = configs
-            .filter(conf => conf.aplicabilidad.includes(registro.cd))
-            .map(conf => {
-                const fieldKey = conf.mongo_field;
-                const valorReal = registro[fieldKey];
-
+        const tabla = configs
+            .filter(c => c.aplicabilidad.includes(registro.cd))
+            .map(c => {
+                const valor = registro[c.mongo_field];
                 return {
-                    kpi_impactado: conf.kpi_impactado,
-                    indicador_pi: conf.indicador_pi,
-                    unidad: conf.unidad,
-                    meta: formatValueByConfig(conf.meta, conf.display_format),
-                    disparador: formatValueByConfig(conf.disparador, conf.display_format),
-                    resultado_display: formatResultado(conf, registro, valorReal),
-                    evaluacion: evaluateKpiStatus(conf, valorReal, registro, cedulaClean)
+                    kpi_impactado: c.kpi_impactado,
+                    indicador_pi: c.indicador_pi,
+                    unidad: c.unidad,
+                    meta: exports.formatValueByConfig(c.meta, c.display_format),
+                    disparador: exports.formatValueByConfig(c.disparador, c.display_format),
+                    resultado_display: exports.formatResultado(c, registro, valor),
+                    evaluacion: exports.evaluateKpiStatus(c, valor, registro, cedulaClean)
                 };
             });
 
-        res.json({
-            success: true,
+        // QA: Header limpio y estructurado
+        res.json({ 
+            success: true, 
             header: {
                 nombre: registro.cc_conductor === cedulaClean ? registro.nombre_conductor : registro.nombre_responsable_ruta,
                 placa: registro.placa,
@@ -63,103 +40,125 @@ exports.getDesempenoKpi = async (req, res) => {
                 cd: registro.cd,
                 fecha: registro.fecha,
                 cedula: cedulaClean
-            },
-            tabla_desempeno
+            }, 
+            tabla_desempeno: tabla 
         });
-
-    } catch (error) {
-        console.error("Error en getDesempenoKpi:", error);
-        res.status(500).json({ success: false, message: "Error interno en el servidor operativo." });
-    }
+    } catch (e) { res.status(500).json({ success: false }); }
 };
 
-/**
- * Endpoint para obtener la matriz de configuración
- */
-exports.getKpiConfig = async (req, res) => {
+// GET /api/desempeno-kpi/semanal
+exports.getDesempenoKpiSemanal = async (req, res) => {
     try {
+        const { cd, semana, anio, cedula } = req.query;
+        const cedulaClean = String(cedula).trim();
+
+        const registros = await DesempenoKpi.find({
+            cd: String(cd).toUpperCase(),
+            semana: parseInt(semana),
+            anio: parseInt(anio),
+            $or: [{ cc_conductor: cedulaClean }, { cc_responsable_ruta: cedulaClean }]
+        }).sort({ fecha: 1 }).lean();
+
+        if (registros.length === 0) return res.status(404).json({ success: false, message: "Sin datos para la semana." });
+
+        const diasMap = new Map();
+        registros.forEach(r => {
+            if (!diasMap.has(r.fecha)) {
+                diasMap.set(r.fecha, { fecha: r.fecha, label: exports.formatDayLabelSecure(r.fecha) });
+            }
+        });
+        const diasConfig = Array.from(diasMap.values());
+
         const configs = await KpiConfig.find().sort({ createdAt: 1 }).lean();
-        res.json({ success: true, data: configs });
-    } catch (error) {
-        console.error("Error en getKpiConfig:", error);
-        res.status(500).json({ success: false, message: "Error al obtener configuración." });
-    }
+        const tabla = configs
+            .filter(conf => conf.aplicabilidad.includes(registros[0].cd))
+            .map(conf => {
+                return {
+                    kpi_impactado: conf.kpi_impactado,
+                    indicador_pi: conf.indicador_pi,
+                    unidad: conf.unidad,
+                    meta: exports.formatValueByConfig(conf.meta, conf.display_format),
+                    disparador: exports.formatValueByConfig(conf.disparador, conf.display_format),
+                    herramienta: conf.herramienta_gestion,
+                    resultados: diasConfig.map(dia => {
+                        const regDia = registros.find(r => r.fecha === dia.fecha);
+                        const valor = regDia ? regDia[conf.mongo_field] : null;
+                        return {
+                            fecha: dia.fecha,
+                            resultado_display: regDia ? exports.formatResultado(conf, regDia, valor) : "—",
+                            evaluacion: regDia ? exports.evaluateKpiStatus(conf, valor, regDia, cedulaClean) : { estado: "neutral", gestion_activa: false }
+                        };
+                    })
+                };
+            });
+
+        res.json({
+            success: true,
+            header: {
+                nombre: registros[0].cc_conductor === cedulaClean ? registros[0].nombre_conductor : registros[0].nombre_responsable_ruta,
+                placa: registros[0].placa,
+                transporte: registros[0].transporte,
+                cd: registros[0].cd,
+                semana: parseInt(semana),
+                anio: parseInt(anio),
+                cedula: cedulaClean
+            },
+            dias: diasConfig,
+            tabla_desempeno: tabla
+        });
+    } catch (e) { res.status(500).json({ success: false }); }
 };
 
-/**
- * HELPER: Motor de Evaluación de Estados (Lógica 1.1)
- */
-function evaluateKpiStatus(config, valor, registro, cedulaClean) {
-    if (valor === null || valor === undefined) {
-        return { 
-            estado: "neutral", 
-            gestion_activa: false, 
-            url: null 
-        };
-    }
-
+// HELPERS
+exports.evaluateKpiStatus = (config, valor, registro, cedulaClean) => {
+    if (valor === null || valor === undefined) return { estado: "neutral", gestion_activa: false, url: null };
     const { meta, disparador, direccion_logica } = config;
     let estado = "success";
-
     if (direccion_logica === "MENOR_ES_MEJOR") {
         if (valor >= disparador) estado = "triggered";
         else if (valor > meta) estado = "warning";
     } else {
-        // MAYOR_ES_MEJOR
         if (valor <= disparador) estado = "triggered";
         else if (valor < meta) estado = "warning";
     }
-
     return {
         estado,
         gestion_activa: estado === "triggered",
-        url: estado === "triggered" ? buildGestionUrl(cedulaClean, registro, config, valor) : null
+        url: estado === "triggered" ? exports.buildGestionUrl(cedulaClean, registro, config, valor) : null
     };
-}
+};
 
-/**
- * HELPER: Construcción de URL para Módulo 2.2
- */
-function buildGestionUrl(cedulaClean, registro, config, valor) {
+exports.buildGestionUrl = (cedula, reg, config, valor) => {
     const params = new URLSearchParams({
-        cedula: cedulaClean,
-        fecha: registro.fecha,
-        cd: registro.cd,
-        indicador: config.indicador_pi,
-        valor: valor,
-        source: "dashboard_1.1"
+        cedula, fecha: reg.fecha, cd: reg.cd, indicador: config.indicador_pi, valor, source: "dashboard_1.1"
     });
     return `/equipos-empoderados/retro/cinco-porques?${params.toString()}`;
-}
+};
 
-/**
- * HELPER: Formateo de Resultados basado en Configuración
- */
-function formatResultado(conf, registro, valor) {
-    if (valor === null || valor === undefined) return "Sin dato";
-    
-    // Si es formato hora, usamos el label guardado en el importador
-    if (conf.display_format === "HH_MM") {
-        const labelKey = `${conf.mongo_field}_label`;
-        return registro[labelKey] || "--:--";
-    }
-    
-    return formatValueByConfig(valor, conf.display_format);
-}
+exports.formatResultado = (conf, reg, valor) => {
+    if (valor === null || valor === undefined) return "—";
+    if (conf.display_format === "HH_MM") return reg[`${conf.mongo_field}_label`] || "--:--";
+    return exports.formatValueByConfig(valor, conf.display_format);
+};
 
-/**
- * HELPER: Conversión de valores numéricos a etiquetas legibles
- */
-function formatValueByConfig(val, format) {
-    if (val === null || val === undefined) return "--";
-    
+exports.formatValueByConfig = (val, format) => {
     if (format === "PERCENT") return `${val}%`;
-    
     if (format === "HH_MM") {
-        const hrs = Math.floor(val / 60);
-        const mins = val % 60;
-        return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+        const h = Math.floor(val / 60), m = val % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     }
-    
     return val;
-}
+};
+
+exports.formatDayLabelSecure = (fechaStr) => {
+    const [y, m, d] = fechaStr.split('-').map(Number);
+    const date = new Date(y, m - 1, d);
+    return `${['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][date.getDay()]} ${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}`;
+};
+
+exports.getKpiConfig = async (req, res) => {
+    try {
+        const configs = await KpiConfig.find().lean();
+        res.json({ success: true, configs });
+    } catch (e) { res.status(500).json({ success: false }); }
+};

@@ -1,118 +1,94 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Referencias al DOM
     const btnConsultar = document.getElementById('btn-consultar');
     const btnLimpiar = document.getElementById('btn-limpiar');
-    const tableBody = document.getElementById('kpi-table-body');
+    const tableHead = document.getElementById('weekly-table-head');
+    const tableBody = document.getElementById('weekly-table-body');
     const execHeader = document.getElementById('executive-header');
-    
-    // Inputs
-    const inputCd = document.getElementById('filter-cd');
-    const inputFecha = document.getElementById('filter-fecha');
-    const inputCedula = document.getElementById('filter-cedula');
+    const statusContainer = document.getElementById('status-container');
 
-    // Labels Header
-    const lblNombre = document.getElementById('display-nombre');
-    const lblPlaca = document.getElementById('display-placa');
-    const lblTransporte = document.getElementById('display-transporte');
+    const showMsg = (txt, type = 'info') => {
+        statusContainer.innerText = txt;
+        statusContainer.style.display = 'block';
+        statusContainer.className = `status-container ${type === 'error' ? 'msg-error' : 'msg-info'}`;
+    };
 
-    /**
-     * Consulta al Backend
-     */
-    const consultarDesempeno = async () => {
-        const cd = inputCd.value;
-        const fecha = inputFecha.value;
-        const cedula = inputCedula.value.trim();
+    const fetchWeekly = async () => {
+        const cd = document.getElementById('filter-cd').value;
+        const anio = document.getElementById('filter-anio').value;
+        const semana = document.getElementById('filter-semana').value;
+        const cedula = document.getElementById('filter-cedula').value.trim();
 
-        if (!fecha || !cedula) {
-            alert("Por favor complete Fecha y Cédula.");
-            return;
-        }
+        if (!semana || !cedula) return showMsg("Ingrese semana y cédula.", "error");
 
-        // UI Loading
-        btnConsultar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Consultando...';
         btnConsultar.disabled = true;
+        btnConsultar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
 
         try {
-            const response = await fetch(`/api/desempeno-kpi/consulta?cd=${cd}&fecha=${fecha}&cedula=${cedula}`);
-            const data = await response.json();
+            const res = await fetch(`/api/desempeno-kpi/semanal?cd=${cd}&semana=${semana}&anio=${anio}&cedula=${cedula}`);
+            const data = await res.json();
 
             if (data.success) {
-                renderDashboard(data);
+                renderTablero(data);
+                showMsg(`Semana ${semana} cargada.`);
             } else {
-                alert(data.message || "No se encontraron datos para esta consulta.");
-                resetDashboard();
+                showMsg(data.message || "No hay datos.", "error");
+                resetUI();
             }
-        } catch (error) {
-            console.error("Error en fetch:", error);
-            alert("Error de conexión con el servidor operativo.");
-        } finally {
-            btnConsultar.innerHTML = '<i class="fas fa-search"></i> Consultar';
+        } catch (e) { showMsg("Error de servidor.", "error"); }
+        finally {
             btnConsultar.disabled = false;
+            btnConsultar.innerHTML = '<i class="fas fa-table"></i> Ver Tablero';
         }
     };
 
-    /**
-     * Renderiza los datos en la UI
-     */
-    const renderDashboard = (data) => {
-        // 1. Mostrar Header Ejecutivo
+    const renderTablero = (data) => {
         execHeader.style.display = 'grid';
-        lblNombre.innerText = data.header.nombre || "No identificado";
-        lblPlaca.innerText = data.header.placa || "--";
-        lblTransporte.innerText = data.header.transporte || "--";
+        document.getElementById('display-nombre').innerText = data.header.nombre;
+        document.getElementById('display-info-ruta').innerText = `${data.header.placa} | ${data.header.transporte || 'PROPIO'}`;
 
-        // 2. Limpiar Tabla
+        // QA: Header con UM y Disparador
+        let headHtml = `<tr>
+            <th>KPI</th>
+            <th>Indicador PI</th>
+            <th>UM</th>
+            <th>Meta</th>
+            <th>Disparador</th>
+            <th>Gestión</th>`;
+        data.dias.forEach(d => { headHtml += `<th class="day-cell">${d.label}</th>`; });
+        headHtml += `</tr>`;
+        tableHead.innerHTML = headHtml;
+
         tableBody.innerHTML = '';
-
-        // 3. Renderizar Filas de KPIs
-        data.tabla_desempeno.forEach(row => {
+        data.tabla_desempeno.forEach(kpi => {
             const tr = document.createElement('tr');
-            
-            // Lógica de clase CSS según estado del backend
-            const statusClass = `status-${row.evaluacion.estado}`;
-            
-            // Lógica de Herramienta de Gestión
-            let gestionCol = `<span class="no-gestion">No requiere gestión</span>`;
-            if (row.evaluacion.gestion_activa) {
-                gestionCol = `
-                    <a href="${row.evaluacion.url}" class="btn-gestion">
-                        <i class="fas fa-external-link-alt"></i> Gestionar en 2.2
-                    </a>`;
-            }
+            let rowHtml = `
+                <td><strong>${kpi.kpi_impactado}</strong></td>
+                <td>${kpi.indicador_pi}</td>
+                <td class="text-dim">${kpi.unidad}</td>
+                <td class="text-dim">${kpi.meta}</td>
+                <td class="text-dim">${kpi.disparador}</td>
+                <td class="herramienta-text">${kpi.herramienta}</td>`;
 
-            tr.innerHTML = `
-                <td><strong>${row.kpi_impactado}</strong></td>
-                <td>${row.indicador_pi}</td>
-                <td class="text-dim">${row.unidad}</td>
-                <td>${row.meta}</td>
-                <td>${row.disparador}</td>
-                <td class="text-center">
-                    <span class="badge-result ${statusClass}">${row.resultado_display}</span>
-                </td>
-                <td class="text-center">${gestionCol}</td>
-            `;
+            kpi.resultados.forEach(res => {
+                const eval = res.evaluacion || { estado: 'neutral', gestion_activa: false };
+                const click = eval.gestion_activa ? `onclick="location.href='${eval.url}'"` : '';
+                rowHtml += `<td class="day-cell">
+                    <span class="result-box status-${eval.estado}" ${click} ${eval.gestion_activa ? 'style="cursor:pointer"':''}>
+                        ${res.resultado_display}
+                    </span>
+                </td>`;
+            });
+            tr.innerHTML = rowHtml;
             tableBody.appendChild(tr);
         });
     };
 
-    /**
-     * Limpia la interfaz
-     */
-    const resetDashboard = () => {
-        inputCedula.value = '';
-        tableBody.innerHTML = `
-            <tr class="empty-state">
-                <td colspan="7">Ingrese filtros para visualizar el desempeño operativo.</td>
-            </tr>`;
+    const resetUI = () => {
         execHeader.style.display = 'none';
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:40px;">Sin datos.</td></tr>';
     };
 
-    // Eventos
-    btnConsultar.addEventListener('click', consultarDesempeno);
-    btnLimpiar.addEventListener('click', resetDashboard);
-
-    // Permitir Enter en el campo cédula
-    inputCedula.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') consultarDesempeno();
-    });
+    btnConsultar.addEventListener('click', fetchWeekly);
+    btnLimpiar.addEventListener('click', resetUI);
 });
