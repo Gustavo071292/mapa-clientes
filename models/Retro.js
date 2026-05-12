@@ -9,7 +9,7 @@ const RetroSchema = new mongoose.Schema({
     tipoRetro: { 
         type: String, 
         required: true,
-        enum: ['Pre ruta', 'En ruta', 'Post ruta', 'PDV o Ruta Critica', 'Reporte de roturas'] 
+        enum: ['Pre ruta', 'En ruta', 'Post ruta', 'PDV o Ruta Critica', 'Reporte de roturas', 'Checklist T2', 'Reportes ACIS'] 
     },
     // Nuevos campos para el detalle de averías
     categoriaRotura: { type: String, default: null },

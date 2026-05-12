@@ -66,28 +66,45 @@ function generarDataMensual(items) {
     const mesesNombre = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
     const cds = ["Cali", "Popayan", "Tulua", "Yumbo"];
     const colores = {
-        'Cali': '#c8102e',    // Rojo
-        'Popayan': '#d29922', // Dorado
-        'Tulua': '#3fb950',   // Verde
-        'Yumbo': '#3498db'    // Azul
+        'Cali': '#c8102e',
+        'Popayan': '#d29922',
+        'Tulua': '#3fb950',
+        'Yumbo': '#3498db'
     };
 
     // 1. Identificar los meses presentes en los datos para el eje X
     const mesesSet = new Set();
+
     items.forEach(i => {
         const d = new Date(i.fecha);
-        mesesSet.add(`${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`);
+
+        mesesSet.add(
+            `${d.getFullYear()}-${(d.getMonth() + 1)
+                .toString()
+                .padStart(2, '0')}`
+        );
     });
+
     const mesesOrdenados = Array.from(mesesSet).sort();
 
-    // 2. Crear un dataset por cada ciudad (Líneas comparativas)
+    // 2. Crear datasets por CD
     const datasets = cds.map(cd => {
+
         const dataPorMes = mesesOrdenados.map(mesAnio => {
+
             return items.filter(i => {
+
                 const d = new Date(i.fecha);
-                const itemMesAnio = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+
+                const itemMesAnio =
+                    `${d.getFullYear()}-${(d.getMonth() + 1)
+                        .toString()
+                        .padStart(2, '0')}`;
+
                 return i.cd === cd && itemMesAnio === mesAnio;
+
             }).length;
+
         });
 
         return {
@@ -100,15 +117,19 @@ function generarDataMensual(items) {
             pointRadius: 5,
             pointHoverRadius: 8
         };
+
     });
 
     return {
         labels: mesesOrdenados.map(m => {
             const [anio, mes] = m.split('-');
-            return mesesNombre[parseInt(mes) - 1];
+
+            return `${mesesNombre[parseInt(mes) - 1]} ${anio}`;
         }),
-        // Filtramos para no mostrar ciudades que tengan 0 reportes en todos los meses filtrados
-        datasets: datasets.filter(ds => ds.data.some(val => val > 0))
+
+        datasets: datasets.filter(ds =>
+            ds.data.some(val => val > 0)
+        )
     };
 }
 
