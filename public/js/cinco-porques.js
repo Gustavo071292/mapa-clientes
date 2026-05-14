@@ -11,15 +11,22 @@ const basePlacas = {
 
 function actualizarPlacas() {
     const cd = document.getElementById('cd').value;
-    const select = document.getElementById('placa');
-    select.innerHTML = '<option value="">Seleccione placa...</option>';
+
+    if (!tomSelectPlaca) return;
+
+    tomSelectPlaca.clear();
+    tomSelectPlaca.clearOptions();
+
     if (cd && basePlacas[cd]) {
         basePlacas[cd].forEach(p => {
-            const opt = document.createElement('option');
-            opt.value = p; opt.text = p;
-            select.appendChild(opt);
+            tomSelectPlaca.addOption({
+                value: p,
+                text: p
+            });
         });
     }
+
+    tomSelectPlaca.refreshOptions(false);
 }
 
 function verificarOtroIndicador() {
@@ -60,7 +67,11 @@ async function consultarIA(nivel) {
         const response = await fetch('/api/retro/ia-sugerencia', { 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ textoEntrada: textoAnt, nivelPorqué: nivel, indicadorSeleccionado: kpi })
+            body: JSON.stringify({
+    contextoOriginal: textoAnt,
+    nivelPorqué: nivel,
+    indicadorSeleccionado: kpi
+})
         });
         const data = await response.json();
         resBox.innerHTML = `<strong>Sugerencias IA para ${kpi}:</strong>`;
@@ -75,7 +86,9 @@ async function consultarIA(nivel) {
             };
             resBox.appendChild(div);
         });
-    } catch (err) { resBox.innerHTML = '<p style="color:red;">Error con Gemini</p>'; }
+    } catch (err) { 
+    resBox.innerHTML = '<p style="color:red;">Error al cargar sugerencias.</p>'; 
+}
 }
 
 const form = document.getElementById('formCincoPorques');
@@ -111,3 +124,19 @@ if (form) {
         } catch (e) { alert("Error de conexión."); }
     };
 }
+
+let tomSelectPlaca;
+
+document.addEventListener("DOMContentLoaded", () => {
+    tomSelectPlaca = new TomSelect("#placa", {
+        create: false,
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        placeholder: "Buscar placa...",
+        maxOptions: 1000
+    });
+
+    actualizarPlacas();
+});

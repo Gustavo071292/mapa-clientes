@@ -292,14 +292,6 @@ async function buscarMasivo(clientes) {
   }
 }
 
-// Eventos de botones de carga
-document.getElementById("btnCargarArchivo")?.addEventListener("click", async () => {
-  const input = document.getElementById("archivoCodigos");
-  const file = input?.files?.[0];
-  if (!file) return;
-  const texto = await file.text();
-  await buscarMasivo(parseClientes(texto));
-});
 
 document.getElementById("btnMostrarManual")?.addEventListener("click", async () => {
   const texto = document.getElementById("codigosManual")?.value || "";

@@ -27,6 +27,17 @@
                     <option value="5 Porqués">Gestión del día anterior</option>
                 </select>
 
+                <select id="filtroTipoRetro">
+                <option value="TODOS">Detalle Retro: Todos</option>
+                 <option value="Pre ruta">Pre ruta</option>
+                 <option value="En ruta">En ruta</option>
+                 <option value="Post ruta">Post ruta</option>
+                 <option value="PDV o Ruta Critica">PDV o Ruta Critica</option>
+                 <option value="Reporte de roturas">Reporte de roturas</option>
+                 <option value="Checklist T2">Checklist T2</option>
+                  <option value="Reportes ACIS">Reportes ACIS</option>
+            </select>
+
                 <select id="filtroEstado">
                     <option value="TODOS">Estado: Todos</option>
                     <option value="Pendiente">🔴 Pendiente</option>
@@ -105,27 +116,75 @@
     </div>
 
     <div id="modalGestion" class="modal" style="display: none;">
-        <div class="modal-content">
-            <header class="modal-header"><h3>⚙️ Gestionar Reporte</h3></header>
-            <div class="original-desc" style="background: #1a1a1a; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                <label style="color: #f2c200; font-size: 0.8em;">📋 DESCRIPCIÓN ORIGINAL:</label>
-                <p id="detalleTextoOriginal"></p>
-            </div>
-            <div class="form-group">
-                <label>📝 Comentario de Gestión</label>
-                <textarea id="comentarioGestion" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-                <label>📌 Cambiar Estado</label>
-                <select id="nuevoEstado">
-                    <option value="Pendiente">🔴 Pendiente</option>
-                    <option value="Realizado">🟢 Realizado</option>
-                    <option value="No ejecutado">🟡 No ejecutado</option>
-                </select>
-            </div>
-            <div class="modal-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-                <button onclick="guardarGestion()" class="btn-save">💾 Guardar Cambios</button>
-                <button onclick="cerrarModal()" class="btn-cancel">Cancelar</button>
+        <div class="modal-content card-rta-modal">
+            <header class="modal-header">
+                <div class="header-title">
+                    <h3>⚙️ Gestionar Reporte</h3>
+                    <span id="modalIdBadge" class="badge-id"></span>
+                </div>
+                <button onclick="cerrarModal()" class="btn-close-x">&times;</button>
+            </header>
+            
+            <div class="modal-body">
+                <div class="info-grid-premium">
+                    <div class="info-item">
+                        <label>FECHA</label>
+                        <span id="detFecha"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>CD</label>
+                        <span id="detCD"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>INDICADOR</label>
+                        <span id="detIndicador"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>PLACA / ID</label>
+                        <span id="detPlaca"></span>
+                    </div>
+                </div>
+
+                <div class="original-desc">
+                    <label>📋 DESCRIPCIÓN ORIGINAL:</label>
+                    <p id="detalleTextoOriginal"></p>
+                </div>
+
+                <div class="detail-section">
+                    <h4 class="section-title">HISTORIAL DE GESTIÓN</h4>
+                    <div id="contenedorHistorial" class="historial-scroll"></div>
+                </div>
+
+                <div class="action-box">
+                    <h4 class="section-title">ACTUALIZAR ESTADO</h4>
+                    <div id="modalFeedback" class="modal-feedback-box" style="display:none;"></div>
+                    
+                    <div class="form-row grid-2">
+                        <div class="form-group">
+                         <label>NUEVO ESTADO</label>
+                            <select id="nuevoEstado" class="select-field">
+                             <option value="Pendiente">🔴 Pendiente</option>
+                             <option value="En Proceso">🟡 En Proceso</option>
+                             <option value="Realizado">🟢 Realizado</option>
+                             <option value="Cerrado">🔵 Cerrado</option>
+                             <option value="No ejecutado">⚪ No ejecutado</option>
+                         </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ESTADO ACTUAL</label>
+                            <span id="detEstadoBadge" class="badge-status"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-10">
+                        <label>📝 Comentario de Gestión *</label>
+                        <textarea id="comentarioGestion" class="textarea-field" rows="4" placeholder="Describa el avance..."></textarea>
+                    </div>
+
+                    <div class="modal-actions" style="margin-top: 20px; display: flex; gap: 10px;">
+                        <button id="btnGuardarGestion" onclick="guardarGestion()" class="btn-cta full-width">💾 Guardar Cambios</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

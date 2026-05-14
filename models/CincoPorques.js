@@ -1,37 +1,60 @@
 const mongoose = require('mongoose');
 
-const CincoPorquesSchema = new mongoose.Schema({
-    cd: String,
-    transporte: String,
-    placa: String,
-    indicador: String,
-    descripcion_novedad: String,
-    p1: String,
-    p2: String,
-    p3: String,
-    p4: String,
-    p5: String,
-    causa_raiz: String,
-    plan_accion: String,
-    responsable: String,
-    fecha_compromiso: Date,
-    // CORRECCIÓN: Agregamos 'Realizado' para que coincida con el Dashboard
-    estado: { 
-        type: String, 
-        enum: ['Pendiente', 'En Proceso', 'Realizado', 'Cerrado'], 
-        default: 'Pendiente' 
-    },
-    // CAMPOS PARA GESTIÓN DESDE DASHBOARD
-    comentarioGestion: { type: String, default: "" },
-    fechaGestion: { type: Date },
-    
-    fecha_creacion: { 
-        type: Date, 
-        default: Date.now 
-    }
-}, { 
-    strict: false,
-    collection: 'cinco_porques' 
+/**
+ * ESQUEMA DE DATOS: 5 PORQUÉS (GERENCIA VALLE)
+ * Modelo Mongoose para análisis de causa raíz y trazabilidad de gestión.
+ */
+
+const gestionSchema = new mongoose.Schema({
+    fecha: { type: Date, default: Date.now },
+    estadoAnterior: { type: String },
+    estadoNuevo: { type: String },
+    comentario: { type: String },
+    usuarioGestion: { type: String, default: 'Sistema/Gestor' }
 });
 
-module.exports = mongoose.model('CincoPorques', CincoPorquesSchema);
+const cincoPorquesSchema = new mongoose.Schema({
+    // Campos de Identificación y Contexto
+    cd: { type: String, required: true },
+    transporte: { type: String, required: true },
+    placa: { type: String, required: true },
+    indicador: { type: String, required: true },
+    descripcion_novedad: { type: String },
+
+    // Metodología de los 5 Porqués
+    p1: { type: String },
+    p2: { type: String },
+    p3: { type: String },
+    p4: { type: String },
+    p5: { type: String },
+    causa_raiz: { type: String },
+
+    // Plan de Acción
+    plan_accion: { type: String },
+    responsable: { type: String },
+    fecha_compromiso: { type: Date },
+
+    // Control de Estado
+    estado: { 
+        type: String, 
+        enum: ['Pendiente', 'En Proceso', 'Realizado', 'Cerrado', 'No ejecutado'],
+        default: 'Pendiente'
+    },
+    
+    // Historial Acumulativo para Dashboard Ejecutivo 2.3
+    historialGestion: [gestionSchema],
+
+    // Campos de compatibilidad legacy
+    comentarioGestion: { type: String },
+    fechaGestion: { type: Date },
+
+    fecha_creacion: { type: Date, default: Date.now }
+}, {
+    timestamps: true 
+});
+
+// Índices optimizados para auditoría y filtros de Dashboard
+cincoPorquesSchema.index({ cd: 1, estado: 1 });
+cincoPorquesSchema.index({ placa: 1 });
+
+module.exports = mongoose.model('CincoPorques', cincoPorquesSchema);

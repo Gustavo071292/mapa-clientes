@@ -4,48 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mapa de Clientes • Gerencia Valle</title>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link rel="stylesheet" href="/pilares/delivery/clientes/styles.css" />
 </head>
 <body>
-  <button id="togglePanel" class="togglePanel" type="button">CONTROLES</button>
+
+  <button id="togglePanel" class="togglePanel" type="button">
+    CONTROLES
+  </button>
 
   <div class="panel" id="panel">
+
     <div class="header-panel">
-      <h2 style="margin:0; font-size:16px; color:#c8102e;">LOCALIZADOR DPO</h2>
-      <p style="font-size:11px; color:#aaa; margin:5px 0 15px 0;">GERENCIA VALLE</p>
+      <h2 class="panel-title">LOCALIZADOR DPO</h2>
+      <p class="panel-subtitle">GERENCIA VALLE</p>
     </div>
 
+    <!-- BÚSQUEDA INDIVIDUAL -->
     <div class="fila">
       <select id="cd" title="Selecciona CD">
         <option value="">Cargando CDs...</option>
       </select>
-      <input type="text" id="codigo" placeholder="Código Cliente" />
-      <button id="buscar" class="btn-main">BUSCAR</button>
+
+      <input
+        type="text"
+        id="codigo"
+        placeholder="Código Cliente"
+      />
+
+      <button id="buscar" class="btn-main">
+        BUSCAR
+      </button>
+
       <div id="estado" class="badge-estado"></div>
     </div>
 
-    <hr style="border:0; border-top:1px solid rgba(255,255,255,0.1); margin:15px 0;" />
+    <hr class="divider" />
 
-    <div class="fila">
-      <label style="font-size:11px; color:#ccc; display:block; margin-bottom:5px;">CARGA MASIVA (.txt / .csv)</label>
-      <input type="file" id="archivoCodigos" accept=".txt,.csv" />
-      <button id="btnCargarArchivo">CARGAR Y MOSTRAR</button>
+    <!-- BÚSQUEDA MÚLTIPLE -->
+    <div class="fila multi-search-block">
+
+      <label class="section-label">
+        BÚSQUEDA MÚLTIPLE
+      </label>
+
+      <textarea
+        id="codigosManual"
+        rows="4"
+        placeholder="Ejemplo:
+100234
+100567
+100890"
+      ></textarea>
+
+      <button id="btnMostrarManual">
+        VISUALIZAR CLIENTES
+      </button>
+
     </div>
 
-    <div class="fila" style="margin-top:10px;">
-      <textarea id="codigosManual" rows="3" placeholder="O pega códigos aquí..."></textarea>
-      <button id="btnMostrarManual">MOSTRAR PEGADOS</button>
+    <!-- LIMPIAR -->
+    <div class="fila action-block">
+      <button id="btnLimpiar" class="btn-outline">
+        LIMPIAR MAPA
+      </button>
     </div>
 
-    <div class="fila" style="margin-top:10px;">
-      <button id="btnLimpiar" class="btn-outline">LIMPIAR MAPA</button>
-    </div>
   </div>
 
-  <div id="map" style="height: 100vh; width: 100%;"></div>
+  <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/pilares/delivery/clientes/app.js"></script>
+
 </body>
 </html>

@@ -158,3 +158,72 @@ button:hover {
   .panel { width: calc(100% - 40px); top: 80px; left: 20px; transition: 0.4s ease; }
   .panel.is-collapsed { transform: translateY(-150%); opacity: 0; pointer-events: none; }
 }
+
+/* ==========================================================================
+   REFINAMIENTO UI — MAPA CLIENTES
+   ========================================================================== */
+
+.header-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #c8102e;
+  letter-spacing: 0.5px;
+}
+
+.panel-subtitle {
+  margin: 5px 0 10px 0;
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 1px;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 5px 0;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.8px;
+}
+
+.multi-search-block textarea {
+  resize: none;
+  line-height: 1.5;
+  font-family: inherit;
+}
+
+.multi-search-block textarea::placeholder {
+  color: rgba(255,255,255,0.35);
+  line-height: 1.6;
+}
+
+#estado {
+  min-height: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  padding-left: 4px;
+  transition: all 0.3s ease;
+}
+
+button {
+  letter-spacing: 0.4px;
+}
+
+#btnMostrarManual {
+  margin-top: 2px;
+}
+
+#btnLimpiar {
+  margin-top: 4px;
+}
