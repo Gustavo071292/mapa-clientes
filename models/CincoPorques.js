@@ -50,6 +50,7 @@ const cincoPorquesSchema = new mongoose.Schema({
 
     fecha_creacion: { type: Date, default: Date.now }
 }, {
+    collection: 'cinco_porques',
     timestamps: true 
 });
 
