@@ -52,8 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <th>Indicador PI</th>
             <th>UM</th>
             <th>Meta</th>
-            <th>Disparador</th>
-            <th>Gestión</th>`;
+            <th>Disparador</th>`;
         data.dias.forEach(d => { headHtml += `<th class="day-cell">${d.label}</th>`; });
         headHtml += `</tr>`;
         tableHead.innerHTML = headHtml;
@@ -62,12 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
         data.tabla_desempeno.forEach(kpi => {
             const tr = document.createElement('tr');
             let rowHtml = `
-                <td><strong>${kpi.kpi_impactado}</strong></td>
-                <td>${kpi.indicador_pi}</td>
-                <td class="text-dim">${kpi.unidad}</td>
-                <td class="text-dim">${kpi.meta}</td>
-                <td class="text-dim">${kpi.disparador}</td>
-                <td class="herramienta-text">${kpi.herramienta}</td>`;
+                 <td><strong>${kpi.kpi_impactado}</strong></td>
+                 <td>${kpi.indicador_pi}</td>
+                 <td class="text-dim">${kpi.unidad}</td>
+                 <td class="text-dim">${kpi.meta}</td>
+                 <td class="text-dim">${kpi.disparador}</td>`;
 
             kpi.resultados.forEach(res => {
                 const eval = res.evaluacion || { estado: 'neutral', gestion_activa: false };
@@ -86,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetUI = () => {
         execHeader.style.display = 'none';
         tableHead.innerHTML = '';
-        tableBody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:40px;">Sin datos.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:40px;">Sin datos.</td></tr>';
     };
 
     btnConsultar.addEventListener('click', fetchWeekly);
