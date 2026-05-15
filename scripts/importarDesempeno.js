@@ -136,7 +136,7 @@ async function ejecutarImportacion() {
                 cashless_incumplidos: cleanNumeric(fila['Cashless Incumplidos']),
                 modulacion_por_placa: cleanNumeric(fila['Modulacion por placa'] || fila['Modulación']),
                 sac_atribuibles_uc: cleanNumeric(fila['SAC Atribuibles UC']),
-                tiempo_de_atencion_en_pdv: processTime(fila['Tiempo de atencion en PDV']),
+                tiempo_de_atencion_en_pdv: cleanNumeric(fila['Tiempo de atencion en PDV']),
                 paradas_no_planeadas: cleanNumeric(fila['Paradas no planeadas']),
                 adherencia_al_check_list: cleanNumeric(fila['Adherencia al check-list']),
                 // KPI Corregido: Ya NO usa processTime, se guarda como porcentaje numérico
