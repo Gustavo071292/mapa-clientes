@@ -1,32 +1,28 @@
 /**
  * SCRIPT: seedKpiConfig.js
- * Descripción: Configuración maestra de metas, formatos y lógica de KPIs 2026.
- * Auditoría QA:
- * - direccion_logica: MAYOR_ES_MEJOR / MENOR_ES_MEJOR.
- * - aplicabilidad: Array de CDs ['CALI', 'POPAYAN', 'TULUA', 'YUMBO'].
- * - herramienta_gestion: "Gestión del Día Anterior".
- * - display_format: Ajustado para Tiempo PDV (NUMBER).
+ * Ruta: scripts/seedKpiConfig.js
+ * Descripción: Inicialización limpia de metas y operadores de control operacional 2026.
+ * Corrección QA: Se reemplaza de forma definitiva HERHERRAMIENTA por HERRAMIENTA.
  */
 
 require('dotenv').config();
 const mongoose = require('mongoose');
 const KpiConfig = require('../models/KpiConfig');
 
-// Uso estricto de la variable de entorno de la arquitectura original
 const MONGO_URI = process.env.MONGO_URI;
-
-// Configuración de alcance global para los CDs
-const ALL_CDS = ['CALI', 'POPAYAN', 'TULUA', 'YUMBO'];
+const ALL_CDS = ['CALI', 'POPAYAN', 'TULUA'];
 const HERRAMIENTA = "Gestión del Día Anterior";
 
-const configuraciones = [
+const configuracionesOFICIALES = [
     {
         kpi_impactado: "TRI",
         indicador_pi: "Cashless Incumplidos",
         mongo_field: "cashless_incumplidos",
         unidad: "#",
-        meta: 1,
+        meta: 0,
+        meta_operador: "<",
         disparador: 2,
+        disparador_operador: "<=",
         direccion_logica: "MENOR_ES_MEJOR",
         display_format: "NUMBER",
         aplicabilidad: ALL_CDS,
@@ -34,11 +30,13 @@ const configuraciones = [
     },
     {
         kpi_impactado: "OTIF",
-        indicador_pi: "Modulacion por placa",
+        indicador_pi: "Modulaciones",
         mongo_field: "modulacion_por_placa",
         unidad: "%",
         meta: 90,
+        meta_operador: ">=",
         disparador: 80,
+        disparador_operador: "<=",
         direccion_logica: "MAYOR_ES_MEJOR",
         display_format: "PERCENT",
         aplicabilidad: ALL_CDS,
@@ -50,7 +48,9 @@ const configuraciones = [
         mongo_field: "salidas_primeros_viajes",
         unidad: "%",
         meta: 70,
+        meta_operador: ">=",
         disparador: 60,
+        disparador_operador: "<=",
         direccion_logica: "MAYOR_ES_MEJOR",
         display_format: "PERCENT",
         aplicabilidad: ALL_CDS,
@@ -62,7 +62,9 @@ const configuraciones = [
         mongo_field: "sac_atribuibles_uc",
         unidad: "#",
         meta: 1,
+        meta_operador: "<=",
         disparador: 2,
+        disparador_operador: ">=",
         direccion_logica: "MENOR_ES_MEJOR",
         display_format: "NUMBER",
         aplicabilidad: ALL_CDS,
@@ -74,10 +76,11 @@ const configuraciones = [
         mongo_field: "tiempo_de_atencion_en_pdv",
         unidad: "Minutos",
         meta: 18,
-        disparador: 25,
+        meta_operador: "<=",
+        disparador: 28,
+        disparador_operador: ">=",
         direccion_logica: "MENOR_ES_MEJOR",
-        // Ajustado a NUMBER según auditoría (unidad es Minutos)
-        display_format: "NUMBER", 
+        display_format: "NUMBER",
         aplicabilidad: ALL_CDS,
         herramienta_gestion: HERRAMIENTA
     },
@@ -87,7 +90,9 @@ const configuraciones = [
         mongo_field: "paradas_no_planeadas",
         unidad: "#",
         meta: 3,
+        meta_operador: "<=",
         disparador: 6,
+        disparador_operador: ">=",
         direccion_logica: "MENOR_ES_MEJOR",
         display_format: "NUMBER",
         aplicabilidad: ALL_CDS,
@@ -99,7 +104,9 @@ const configuraciones = [
         mongo_field: "adherencia_al_check_list",
         unidad: "%",
         meta: 99,
+        meta_operador: ">",
         disparador: 95,
+        disparador_operador: "<",
         direccion_logica: "MAYOR_ES_MEJOR",
         display_format: "PERCENT",
         aplicabilidad: ALL_CDS,
@@ -111,7 +118,9 @@ const configuraciones = [
         mongo_field: "entrega_en_rangos",
         unidad: "%",
         meta: 90,
+        meta_operador: ">=",
         disparador: 85,
+        disparador_operador: "<=",
         direccion_logica: "MAYOR_ES_MEJOR",
         display_format: "PERCENT",
         aplicabilidad: ALL_CDS,
@@ -121,9 +130,11 @@ const configuraciones = [
         kpi_impactado: "INFULL",
         indicador_pi: "Rechazos TAT Logisticos",
         mongo_field: "rechazos_tat_logistico",
-        unidad: "Cajas",
+        unidad: "# cajas",
         meta: 30,
+        meta_operador: "<=",
         disparador: 50,
+        disparador_operador: ">=",
         direccion_logica: "MENOR_ES_MEJOR",
         display_format: "NUMBER",
         aplicabilidad: ALL_CDS,
@@ -131,11 +142,41 @@ const configuraciones = [
     },
     {
         kpi_impactado: "TRI",
-        indicador_pi: "Cantidad de rutas mayor a 10Hrs",
-        mongo_field: "cantidad_de_rutas_mayor_a_10_hr",
+        indicador_pi: "Descanso efectivo",
+        mongo_field: "descanso_efectivo",
         unidad: "#",
-        meta: 2,
-        disparador: 4,
+        meta: 1,
+        meta_operador: "<=",
+        disparador: 3,
+        disparador_operador: ">=",
+        direccion_logica: "MENOR_ES_MEJOR",
+        display_format: "NUMBER",
+        aplicabilidad: ALL_CDS,
+        herramienta_gestion: HERRAMIENTA
+    },
+    {
+        kpi_impactado: "Total Productivity",
+        indicador_pi: "Recargues",
+        mongo_field: "recargues",
+        unidad: "#",
+        meta: 3,
+        meta_operador: ">=",
+        disparador: 1,
+        disparador_operador: "<=",
+        direccion_logica: "MAYOR_ES_MEJOR",
+        display_format: "NUMBER",
+        aplicabilidad: ALL_CDS,
+        herramienta_gestion: HERRAMIENTA
+    },
+    {
+        kpi_impactado: "TURNOVER",
+        indicador_pi: "Ausentismo",
+        mongo_field: "ausentismo",
+        unidad: "#",
+        meta: 1,
+        meta_operador: "<=",
+        disparador: 3,
+        disparador_operador: ">",
         direccion_logica: "MENOR_ES_MEJOR",
         display_format: "NUMBER",
         aplicabilidad: ALL_CDS,
@@ -144,29 +185,22 @@ const configuraciones = [
 ];
 
 async function seedConfig() {
-    console.log('--- INICIANDO ACTUALIZACIÓN DE CONFIGURACIÓN ---');
+    console.log('--- INICIANDO ACTUALIZACIÓN DE OPERADORES MAESTROS ---');
     try {
         if (!MONGO_URI) throw new Error("La variable MONGO_URI no está definida.");
-        
         await mongoose.connect(MONGO_URI);
-        console.log('✅ Conexión establecida para Seed');
 
-        for (const config of configuraciones) {
-            await KpiConfig.updateOne(
-                { mongo_field: config.mongo_field },
-                { $set: config },
-                { upsert: true }
-            );
-            console.log(`- Sincronizado: ${config.indicador_pi}`);
+        await KpiConfig.deleteMany({});
+        console.log('🧹 Catálogo maestro vaciado de forma correcta.');
+        
+        for (const config of configuracionesOFICIALES) {
+            await KpiConfig.create(config);
         }
-
-        console.log('🚀 Configuración de KPIs actualizada exitosamente.');
-
-    } catch (error) {
-        console.error('❌ ERROR EN SEED:', error.message);
+        console.log('🚀 Configuración maestra limpia y mapeada de forma exitosa.');
+    } catch (e) {
+        console.error('❌ ERROR CRÍTICO EN SEED:', e.message);
     } finally {
         await mongoose.disconnect();
-        console.log('--- PROCESO FINALIZADO ---');
     }
 }
 

@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const semana = document.getElementById('filter-semana').value;
         const cedula = document.getElementById('filter-cedula').value.trim();
 
-        if (!semana || !cedula) return showMsg("Ingrese semana y cédula.", "error");
+        if (!semana || !cedula) {
+            return showMsg("Ingrese semana y cédula.", "error");
+        }
 
         btnConsultar.disabled = true;
         btnConsultar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
@@ -34,59 +36,138 @@ document.addEventListener('DOMContentLoaded', () => {
                 showMsg(data.message || "No hay datos.", "error");
                 resetUI();
             }
-        } catch (e) { showMsg("Error de servidor.", "error"); }
-        finally {
+
+        } catch (e) {
+            console.error(e);
+            showMsg("Error de servidor.", "error");
+        } finally {
             btnConsultar.disabled = false;
             btnConsultar.innerHTML = '<i class="fas fa-table"></i> Ver Tablero';
         }
     };
 
     const renderTablero = (data) => {
-        execHeader.style.display = 'grid';
-        document.getElementById('display-nombre').innerText = data.header.nombre;
-        document.getElementById('display-info-ruta').innerText = `${data.header.placa} | ${data.header.transporte || 'PROPIO'}`;
 
-        // QA: Header con UM y Disparador
-        let headHtml = `<tr>
-            <th>KPI</th>
-            <th>Indicador PI</th>
-            <th>UM</th>
-            <th>Meta</th>
-            <th>Disparador</th>`;
-        data.dias.forEach(d => { headHtml += `<th class="day-cell">${d.label}</th>`; });
+        execHeader.style.display = 'grid';
+
+        document.getElementById('display-nombre').innerText =
+            data.header.nombre;
+
+        document.getElementById('display-info-ruta').innerText =
+            `${data.header.placa} | ${data.header.transporte || 'PROPIO'}`;
+
+        // =====================================================
+        // HEADER MATRIZ
+        // =====================================================
+
+        let headHtml = `
+            <tr>
+                <th>KPI</th>
+                <th>Indicador PI</th>
+                <th>UM</th>
+                <th>Meta</th>
+                <th>Disparador</th>
+        `;
+
+        data.dias.forEach(d => {
+            headHtml += `<th class="day-cell">${d.label}</th>`;
+        });
+
         headHtml += `</tr>`;
+
         tableHead.innerHTML = headHtml;
 
+        // =====================================================
+        // BODY MATRIZ
+        // =====================================================
+
         tableBody.innerHTML = '';
+
         data.tabla_desempeno.forEach(kpi => {
+
             const tr = document.createElement('tr');
+
             let rowHtml = `
-                 <td><strong>${kpi.kpi_impactado}</strong></td>
-                 <td>${kpi.indicador_pi}</td>
-                 <td class="text-dim">${kpi.unidad}</td>
-                 <td class="text-dim">${kpi.meta}</td>
-                 <td class="text-dim">${kpi.disparador}</td>`;
+                <td>
+                    <strong>${kpi.kpi_impactado}</strong>
+                </td>
+
+                <td>
+                    ${kpi.indicador_pi}
+                </td>
+
+                <td class="text-dim">
+                    ${kpi.unidad}
+                </td>
+
+                <td class="text-dim">
+                    ${kpi.meta}
+                </td>
+
+                <td class="text-dim">
+                    ${kpi.disparador}
+                </td>
+            `;
+
+            // =================================================
+            // RESULTADOS POR DÍA
+            // =================================================
 
             kpi.resultados.forEach(res => {
-                const eval = res.evaluacion || { estado: 'neutral', gestion_activa: false };
-                const click = eval.gestion_activa ? `onclick="location.href='${eval.url}'"` : '';
-                rowHtml += `<td class="day-cell">
-                    <span class="result-box status-${eval.estado}" ${click} ${eval.gestion_activa ? 'style="cursor:pointer"':''}>
-                        ${res.resultado_display}
-                    </span>
-                </td>`;
+
+                const evalData = res.evaluacion || {
+                    estado: 'neutral',
+                    gestion_activa: false
+                };
+
+                const click =
+                    evalData.gestion_activa
+                        ? `onclick="location.href='${evalData.url}'"`
+                        : '';
+
+                rowHtml += `
+                    <td class="day-cell">
+                        <span 
+                            class="result-box status-${evalData.estado}" 
+                            ${click}
+                            ${evalData.gestion_activa ? 'style="cursor:pointer"' : ''}
+                        >
+                            ${res.resultado_display}
+                        </span>
+                    </td>
+                `;
             });
+
             tr.innerHTML = rowHtml;
+
             tableBody.appendChild(tr);
         });
     };
 
+    // =========================================================
+    // RESET UI
+    // =========================================================
+
     const resetUI = () => {
+
         execHeader.style.display = 'none';
+
         tableHead.innerHTML = '';
-        tableBody.innerHTML = '<tr><td colspan="11" style="text-align:center; padding:40px;">Sin datos.</td></tr>';
+
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="11" style="text-align:center; padding:40px;">
+                    Sin datos.
+                </td>
+            </tr>
+        `;
     };
 
+    // =========================================================
+    // EVENTOS
+    // =========================================================
+
     btnConsultar.addEventListener('click', fetchWeekly);
+
     btnLimpiar.addEventListener('click', resetUI);
 });
