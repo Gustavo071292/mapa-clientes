@@ -148,7 +148,7 @@ async function ejecutarImportacion() {
                 // Nuevos campos operacionales
                 recargues: cleanNumeric(fila['Recargues']),
                 descanso_efectivo: cleanNumeric(fila['Descanso Efectivo']),
-                ausentismo: null // No presente en archivo actual, inicializado como null
+                ausentismo: cleanNumeric(fila['Ausentismo']),
             };
 
             operaciones.push({
