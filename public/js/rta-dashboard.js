@@ -33,9 +33,7 @@ const RTADashboard = {
         const labels = Object.keys(conteoPorCD);
         const valores = Object.values(conteoPorCD);
 
-        if (this.chartInstance) {
-            this.chartInstance.destroy();
-        }
+        if (this.chartInstance) this.chartInstance.destroy();
 
         this.chartInstance = new Chart(ctx, {
             type: 'bar',
@@ -57,7 +55,7 @@ const RTADashboard = {
                     y: {
                         beginAtZero: true,
                         ticks: { color: '#9ca3af', stepSize: 1 },
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        grid: { color: 'rgba(255,255,255,0.05)' }
                     },
                     x: {
                         ticks: { color: '#9ca3af' },
@@ -95,9 +93,7 @@ const RTADashboard = {
 
         const backgroundColors = labels.map(label => colorMap[label] || '#2d3139');
 
-        if (this.statusChartInstance) {
-            this.statusChartInstance.destroy();
-        }
+        if (this.statusChartInstance) this.statusChartInstance.destroy();
 
         this.statusChartInstance = new Chart(ctx, {
             type: 'doughnut',
@@ -167,9 +163,7 @@ const RTADashboard = {
         const labels = sortedKeys.map(key => grouping[key].label);
         const valores = sortedKeys.map(key => grouping[key].count);
 
-        if (this.trendChartInstance) {
-            this.trendChartInstance.destroy();
-        }
+        if (this.trendChartInstance) this.trendChartInstance.destroy();
 
         this.trendChartInstance = new Chart(ctx, {
             type: 'line',
@@ -195,7 +189,7 @@ const RTADashboard = {
                     y: {
                         beginAtZero: true,
                         ticks: { color: '#9ca3af', stepSize: 1 },
-                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        grid: { color: 'rgba(255,255,255,0.05)' }
                     },
                     x: {
                         ticks: { color: '#9ca3af' },
@@ -239,6 +233,7 @@ const RTADashboard = {
         const mobileContainer = document.getElementById('rta-mobile-container');
         const formGestion = document.getElementById('form-gestion-preview');
         const btnClose = document.getElementById('btn-close-modal');
+        const toggleResumen = document.getElementById('toggle-resumen');
 
         if (formGestion) {
             formGestion.addEventListener('submit', (e) => {
@@ -258,14 +253,25 @@ const RTADashboard = {
         if (mobileContainer) {
             mobileContainer.addEventListener('click', (e) => {
                 const button = e.target.closest('[data-id]');
-                if (button) {
-                    this.openModal(button.dataset.id);
-                }
+                if (button) this.openModal(button.dataset.id);
             });
         }
 
         if (btnClose) {
             btnClose.onclick = () => this.closeModal();
+        }
+
+        if (toggleResumen) {
+            toggleResumen.addEventListener('click', () => {
+                const detalle = document.getElementById('detalle-expandido');
+                if (!detalle) return;
+
+                detalle.classList.toggle('hidden');
+
+                toggleResumen.textContent = detalle.classList.contains('hidden')
+                    ? 'VER RESUMEN EJECUTIVO'
+                    : 'OCULTAR RESUMEN';
+            });
         }
 
         const applyFilters = () => {
@@ -400,6 +406,76 @@ const RTADashboard = {
         document.getElementById('det-anomalia').textContent = rta.tipoAnomalia || 'Sin especificar';
         document.getElementById('det-desc').textContent = rta.descripcionAnomalia || 'Sin descripción detallada';
 
+        const detalleExpandido = document.getElementById('detalle-expandido');
+        const toggleResumen = document.getElementById('toggle-resumen');
+
+        if (detalleExpandido) {
+            detalleExpandido.classList.add('hidden');
+
+            detalleExpandido.innerHTML = `
+                <div class="detalle-grid">
+
+                    <div class="detalle-card"><span class="detalle-label">NEGOCIO</span><p>${rta.negocio || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">CD</span><p>${rta.cd || rta.centroDistribucion || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">EQUIPO</span><p>${rta.equipo || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">KPI</span><p>${rta.kpi || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">TIPO ANOMALÍA</span><p>${rta.tipoAnomalia || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">TIPO EVENTO</span><p>${rta.tipoEvento || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">DESCRIPCIÓN ANOMALÍA</span><p>${rta.descripcionAnomalia || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">DESCRIPCIÓN PROBLEMA</span><p>${rta.descripcionProblema || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">¿QUÉ SE DETECTÓ?</span><p>${rta.queDetecto || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">¿CUÁNDO SE DETECTÓ?</span><p>${this.formatDate(rta.cuandoDetecto)}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">¿DÓNDE SE DETECTÓ?</span><p>${rta.dondeDetecto || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">¿QUIÉN DETECTÓ?</span><p>${rta.quienDetecto || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">¿QUIÉN INTERVINO?</span><p>${rta.quienIntervino || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">PUNTO #1</span><p>${rta.punto1 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">RESULTADO #1</span><p>${rta.resultado1 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">ACCIÓN #1</span><p>${rta.accion1 || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">PUNTO #2</span><p>${rta.punto2 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">RESULTADO #2</span><p>${rta.resultado2 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">ACCIÓN #2</span><p>${rta.accion2 || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">PUNTO #3</span><p>${rta.punto3 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">RESULTADO #3</span><p>${rta.resultado3 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">ACCIÓN #3</span><p>${rta.accion3 || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">SOP DISPONIBLE</span><p>${rta.sopDisponible || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">SOP APLICABLE</span><p>${rta.sopAplicable || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">SOP REVISAR</span><p>${rta.sopRevisar || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">CAPACITACIÓN</span><p>${rta.sopCapacitacion || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">SOP IMPLEMENTADO</span><p>${rta.sopImplementado || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">REINCIDENCIA</span><p>${rta.reincidencia || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">POR QUÉ #1</span><p>${rta.porQue1 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">POR QUÉ #2</span><p>${rta.porQue2 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">POR QUÉ #3</span><p>${rta.porQue3 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">POR QUÉ #4</span><p>${rta.porQue4 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">POR QUÉ #5</span><p>${rta.porQue5 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">CAUSA RAÍZ</span><p>${rta.causaRaiz || '-'}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">PLAN ACCIÓN #1</span><p>${rta.planAccion1 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">RESPONSABLE #1</span><p>${rta.responsable1 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">FECHA CIERRE #1</span><p>${this.formatDate(rta.fechaCierre1)}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">PLAN ACCIÓN #2</span><p>${rta.planAccion2 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">RESPONSABLE #2</span><p>${rta.responsable2 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">FECHA CIERRE #2</span><p>${this.formatDate(rta.fechaCierre2)}</p></div>
+
+                    <div class="detalle-card"><span class="detalle-label">PLAN ACCIÓN #3</span><p>${rta.planAccion3 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">RESPONSABLE #3</span><p>${rta.responsable3 || '-'}</p></div>
+                    <div class="detalle-card"><span class="detalle-label">FECHA CIERRE #3</span><p>${this.formatDate(rta.fechaCierre3)}</p></div>
+
+                </div>
+            `;
+        }
+
+        if (toggleResumen) {
+            toggleResumen.textContent = 'VER RESUMEN EJECUTIVO';
+        }
+
         const estadoBadge = document.getElementById('det-estado-badge');
         if (estadoBadge) {
             estadoBadge.textContent = rta.estado || 'Pendiente';
@@ -413,9 +489,7 @@ const RTADashboard = {
                 histContainer.innerHTML = rta.comentarios.map(comment => `
                     <div class="historial-item">
                         <div class="hist-meta">
-                            <span class="hist-date">${
-                                comment.fecha ? new Date(comment.fecha).toLocaleString() : '-'
-                            }</span>
+                            <span class="hist-date">${comment.fecha ? new Date(comment.fecha).toLocaleString() : '-'}</span>
                             <span class="hist-flow">${comment.estadoAnterior || '---'} ➜ ${comment.estadoNuevo || '---'}</span>
                         </div>
                         <p class="hist-text">${comment.texto || '-'}</p>
