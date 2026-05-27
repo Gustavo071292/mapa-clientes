@@ -7,3 +7,7 @@ data/*.xlsx
 data/*.csv
 data/*.tsv
 data/*.txt
+# Python
+src_python/venv/
+src_python/__pycache__/
+*.pyc
