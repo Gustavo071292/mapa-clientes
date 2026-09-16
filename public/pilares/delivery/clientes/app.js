@@ -3,9 +3,9 @@
 // ======================
 const map = L.map("map").setView([3.4516, -76.5320], 12); // Cali por defecto
 
-// Estilo de mapa claro (más rápido y legible)
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 20
 }).addTo(map);
 
 // Marcadores actuales en el mapa (para poder limpiar)

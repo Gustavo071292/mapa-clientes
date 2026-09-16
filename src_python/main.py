@@ -1,10 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from config.db import db
+from routers.audit_routes import router as audit_router
 import uvicorn
 
-app = FastAPI(title="Microservicio Canario - Zona Valle")
+app = FastAPI(title="Portal Zona Valle - Motor Analítico e IA")
 
-# Endpoint 1 - Estado del servicio
+# Router de auditoría
+app.include_router(audit_router)
+
 @app.get("/health")
 def health_check():
     return {
@@ -13,10 +16,8 @@ def health_check():
         "message": "Convivencia técnica inicial exitosa"
     }
 
-# Endpoint 2 - Verificar conexión MongoDB
 @app.get("/test-mongo")
 def test_mongo_connection():
-
     if db is None:
         raise HTTPException(
             status_code=500,
@@ -25,22 +26,18 @@ def test_mongo_connection():
 
     try:
         colecciones = db.list_collection_names()
-
         return {
             "database_status": "connected",
             "collections_found": colecciones
         }
-
     except Exception as e:
         raise HTTPException(
             status_code=500,
             detail=f"Error al listar colecciones: {str(e)}"
         )
 
-# Endpoint 3 - Lectura segura colección clientes
 @app.get("/test-clientes")
 def test_clientes_collection():
-
     if db is None:
         raise HTTPException(
             status_code=500,
@@ -49,7 +46,6 @@ def test_clientes_collection():
 
     try:
         clientes_collection = db["clientes"]
-
         total_documentos = clientes_collection.count_documents({})
 
         muestra_cliente = clientes_collection.find_one(
