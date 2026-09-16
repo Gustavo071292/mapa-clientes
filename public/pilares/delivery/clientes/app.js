@@ -1,9 +1,11 @@
 // ======================
-// MAPA (Leaflet)
+// MAPA (Leaflet con Stadia Maps Autenticado)
 // ======================
 const map = L.map("map").setView([3.4516, -76.5320], 12); // Cali por defecto
 
-L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+const STADIA_API_KEY = "97e717d9-105c-4bc5-a4b5-12ed14b8423d";
+
+L.tileLayer(`https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=${STADIA_API_KEY}`, {
     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 20
 }).addTo(map);
