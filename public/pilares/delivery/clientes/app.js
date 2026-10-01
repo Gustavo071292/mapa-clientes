@@ -154,9 +154,25 @@ function buildPopup(d) {
 
   html += line;
 
-  // Ubicación
+  // Ubicación e Información Comercial Requerida
   html += `<b>Zona Venta:</b> ${val(d.ZonaVenta)}<br/>`;
-  html += `<b>COM:</b> ${val(d.COM)}<br/>`;
+  html += `<b>Jefe Comercial:</b> ${val(d.JefeComercial)}<br/>`;
+  html += `<b>Tel. Jefe Comercial:</b> ${val(d.TeleJefeComercial)}<br/>`;
+
+  // Formato limpio para COM + TelefonoCOM
+  const comVal = String(d.COM || "").trim();
+  const telComVal = String(d.TelefonoCOM || "").trim();
+  let comDisplay = "—";
+
+  if (comVal && telComVal) {
+    comDisplay = `${comVal} - ${telComVal}`;
+  } else if (comVal) {
+    comDisplay = comVal;
+  } else if (telComVal) {
+    comDisplay = telComVal;
+  }
+  html += `<b>COM:</b> ${comDisplay}<br/>`;
+
   html += `<b>Distrito:</b> ${val(d.Distrito)}<br/>`;
   html += `<b>Barrio:</b> ${val(d.Barrio)}<br/>`;
   html += `<b>Calle:</b> ${val(d.Direccion)}<br/>`; 

@@ -92,9 +92,8 @@ async function run() {
       Cliente,
       Nombre,
       
-      // ✅ NUEVOS CAMPOS AGREGADOS
       Propietario: toStr(r["Propietario"]), 
-      Direccion: toStr(r["Calle"]), // Este campo se muestra como "Calle" en el mapa
+      Direccion: toStr(r["Calle"]), 
       ETA: toStr(r["ETA"]),
 
       Barrio: toStr(r["Barrio"]),
@@ -103,6 +102,12 @@ async function run() {
       Latitud: lat,
       Longitud: lng,
       COM: toStr(r["COM"]),
+      
+      // Nuevos campos comerciales agregados estrictamente con sus encabezados
+      TelefonoCOM: toStr(r["Telefono COM"]),
+      JefeComercial: toStr(r["Jefe comercial"]),
+      TeleJefeComercial: toStr(r["Tele jefe comercial"]),
+
       ZonaVenta: toStr(r["ZonaVenta"]),
       Distrito: toStr(r["Distrito"]),
       EntregaFREE: toStr(r["EntregaFREE"]),
@@ -126,7 +131,7 @@ async function run() {
     ops.push({
       updateOne: {
         filter: { CD, Cliente },
-        update: { $set: doc, $setOnInsert: { createdAt: new Date() } },
+        update: { $set: doc,$setOnInsert: { createdAt: new Date() } },
         upsert: true,
       },
     });
