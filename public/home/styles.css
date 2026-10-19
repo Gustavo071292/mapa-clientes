@@ -297,13 +297,13 @@ body {
     }
     
     .modulo-item:hover {
-        padding-left: 20px; /* Efecto de desplazamiento al hover */
+        padding-left: 20px;
     }
 
     .modulo-title { font-size: 16px; }
 }
 
-/* Ajustes para Móvil */
+/* Ajustes para Móvil (768px o menos) */
 @media (max-width: 768px) {
     .wrap { margin: 16px auto; gap: 16px; }
     
@@ -316,17 +316,17 @@ body {
     }
     
     .banner { 
-        min-height: 140px;
+        min-height: 150px;
         padding: 16px; 
     }
     .brand-badge {
-        width: 65px;
+        width: 63px;
         top: 14px;
         right: 14px;
         opacity: 0.9;
     }
     .banner__content {
-        max-width: calc(100% - 70px);
+        max-width: calc(100% - 68px);
     }
     .banner__title {
         font-size: 1.15rem;
@@ -341,6 +341,10 @@ body {
     .search-hero__body { flex-direction: column; padding: 16px; gap: 12px; }
     .search-hero__info { width: 100%; text-align: left; }
     .btn-cta { width: 100%; justify-content: center; padding: 12px 20px; }
+
+    .modulos-list {
+        gap: 10px;
+    }
 
     .modulo-item {
         padding: 16px 14px;
@@ -366,42 +370,71 @@ body {
     }
 }
 
-/* Ajuste específico para teléfonos estrechos (<= 480px) con estrategia de dos filas/zonas */
+/* Ajuste específico para teléfonos estrechos (<= 480px) */
 @media (max-width: 480px) {
     .main-header h1 {
-        font-size: 18px;
+        font-size: 17px;
     }
-    .system-status {
-        font-size: 10px;
-        padding: 4px 8px;
+
+    .banner__badge,
+    .banner__title,
+    .banner__subtitle {
+        display: none;
     }
     
-    /* Reorganizamos la tarjeta en 2 zonas compactas para priorizar legibilidad y área táctil sin comprimir horizontalmente */
+    .main-header__content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    
+    .system-status {
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 99px;
+    }
+
+    .banner {
+        min-height: 152px;
+    }
+
+    .search-hero__body {
+        padding: 14px;
+    }
+
+    .pilar-header .subtext {
+        display: none;
+    }
+
+    .modulos-list {
+        gap: 10px;
+    }
+
     .modulo-item {
         flex-direction: column;
         align-items: stretch;
         padding: 14px;
         gap: 12px;
     }
-    
+
     .modulo-info {
         width: 100%;
         gap: 12px;
     }
-    
+
     .modulo-icon {
         font-size: 24px;
     }
-    
+
     .modulo-title {
         font-size: 15px;
         font-weight: 700;
     }
-    
+
     .modulo-desc-mobile {
         font-size: 12px;
     }
-    
+
     .modulo-actions {
         width: 100%;
         display: flex;
@@ -411,7 +444,7 @@ body {
         padding-top: 10px;
         margin-top: 2px;
     }
-    
+
     .modulo-action-btn {
         padding: 9px 18px;
         font-size: 11.5px;
