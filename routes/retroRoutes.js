@@ -21,6 +21,9 @@ router.get('/consolidado-valle', reporteController.obtenerConsolidadoNovedades);
 // 4. ASISTENCIA DE IA (Gemini)
 router.post('/ia-sugerencia', iaController.generarSugerencia);
 
+// 4.1 MOTOR IA REAL - CANARIO
+router.post('/ia-analizar', iaController.analizarConCanario);
+
 // 5. ACTUALIZAR ESTADO DE GESTIÓN (Botón "Guardar Cambios" del Dashboard)
 // 🚨 ESTA ERA LA QUE FALTABA PARA QUE EL MODAL FUNCIONARA
 router.post('/gestionar-reporte', reporteController.gestionarReporte);

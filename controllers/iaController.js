@@ -167,3 +167,62 @@ exports.generarSugerencia = async (req, res) => {
         });
     }
 };
+
+exports.analizarConCanario = async (req, res) => {
+    const CANARIO_BASE_URL =
+        process.env.CANARIO_BASE_URL || "http://127.0.0.1:8000";
+
+    const endpoint = `${CANARIO_BASE_URL}/ai/cinco-porques/analizar`;
+
+    try {
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(req.body),
+            signal: AbortSignal.timeout(20000)
+        });
+
+        if (!response.ok) {
+            console.error(
+                `[Canario] Error HTTP ${response.status}`
+            );
+
+            return res.status(502).json({
+                ia_disponible: false,
+                estado: null,
+                evaluacion: null,
+                pregunta_siguiente: null,
+                opciones: [],
+                historicos_utilizados: 0,
+                requiere_aclaracion: false,
+                mensaje:
+                    "El asistente de IA se encuentra temporalmente indisponible. " +
+                    "El análisis puede continuar de forma manual."
+            });
+        }
+
+        const data = await response.json();
+
+        return res.status(200).json(data);
+
+    } catch (error) {
+        console.error(
+            `[Canario] Error de comunicación: ${error.name}`
+        );
+
+        return res.status(502).json({
+            ia_disponible: false,
+            estado: null,
+            evaluacion: null,
+            pregunta_siguiente: null,
+            opciones: [],
+            historicos_utilizados: 0,
+            requiere_aclaracion: false,
+            mensaje:
+                "El asistente de IA se encuentra temporalmente indisponible. " +
+                "El análisis puede continuar de forma manual."
+        });
+    }
+};
