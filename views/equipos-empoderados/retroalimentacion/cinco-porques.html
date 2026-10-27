@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Herramienta 5 Porqués - IA DPO</title>
-    <link rel="stylesheet" href="/css/cinco-porques.css?v=2">
+    <link rel="stylesheet" href="/css/cinco-porques.css?v=5">
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
 </head>
 <body>
@@ -12,20 +12,21 @@
         <header>
             <div class="header-content">
                 <h2>2.2.1 Herramienta de Gestión (5 Porqués)</h2>
-                <p style="color: #aaa;">Análisis de Causa Raíz asistido por IA - Gerencia Valle</p>
+                <p style="color: #aaa;">Análisis de Causa Raíz Guiado por IA - Gerencia Valle</p>
             </div>
         </header>
 
         <form id="formCincoPorques">
+            <!-- Contexto Operativo -->
             <div class="paso-box" style="border-left: 5px solid #c8102e; background: #252525;">
-                <label style="color: white; font-weight: bold;">🚩 Descripción de la Novedad / Incidente</label>
-                <textarea id="novedad_principal" rows="2" placeholder="Ej: Cliente de tienda la mejor, demora mucho la tripulacion..." required></textarea>
+                <label style="color: white; font-weight: bold;">🚩 Descripción de la Novedad / Incidente *</label>
+                <textarea id="novedad_principal" rows="2" placeholder="Ej: Cliente de tienda La Mejor, demora mucho la tripulación..." required></textarea>
             </div>
 
             <div class="paso-box">
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
-                        <label>📍 Centro de Distribución (CD)</label>
+                <div class="grid-row">
+                    <div class="grid-col">
+                        <label>📍 Centro de Distribución (CD) *</label>
                         <select id="cd" name="cd" required onchange="actualizarPlacas()" style="width: 100%;">
                             <option value="">Seleccione CD...</option>
                             <option value="Cali">Cali</option>
@@ -34,21 +35,21 @@
                             <option value="Yumbo">Yumbo</option>
                         </select>
                     </div>
-                    <div style="flex: 1;">
+                    <div class="grid-col">
                         <label>🚚 Número de Transporte (SAP)</label>
-                        <input type="text" id="transporte" placeholder="Ej: 8008577311" required style="width: 100%;">
+                        <input type="text" id="transporte" placeholder="Ej: 8008577311" style="width: 100%;">
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                    <div style="flex: 1;">
+                <div class="grid-row" style="margin-top: 15px;">
+                    <div class="grid-col">
                         <label>🚛 Placa del Vehículo</label>
-                        <select id="placa" name="placa" required style="width: 100%;">
+                        <select id="placa" name="placa" style="width: 100%;">
                             <option value="">Primero seleccione un CD...</option>
                         </select>
                     </div>
-                    <div style="flex: 1;">
-                        <label>📊 Indicador a Analizar</label>
+                    <div class="grid-col">
+                        <label>📊 Indicador a Analizar *</label>
                         <select id="indicador" onchange="verificarOtroIndicador()" required style="width: 100%;">
                             <option value="">Seleccione indicador...</option>
                             <option value="Rechazos">Rechazos</option>
@@ -71,67 +72,90 @@
                         </select>
                     </div>
                 </div>
-            </div>
-
-            <div id="niveles-container">
-                <div class="paso-box" id="nivel-1">
-                    <label>1. ¿Por qué ocurrió la novedad?</label>
-                    <input type="text" id="p1" required placeholder="Escriba o use la IA" oninput="mostrarSiguienteNivel(1)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(1)">✨ Sugerencias IA</button>
-                    <div id="ia-res-1" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box" id="nivel-2" style="display: none;">
-                    <label>2. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p2" oninput="mostrarSiguienteNivel(2)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(2)">✨ Sugerencias IA</button>
-                    <div id="ia-res-2" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box" id="nivel-3" style="display: none;">
-                    <label>3. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p3" oninput="mostrarSiguienteNivel(3)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(3)">✨ Sugerencias IA</button>
-                    <div id="ia-res-3" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box" id="nivel-4" style="display: none;">
-                    <label>4. ¿Por qué ocurrió lo anterior?</label>
-                    <input type="text" id="p4" oninput="mostrarSiguienteNivel(4)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(4)">✨ Sugerencias IA</button>
-                    <div id="ia-res-4" class="ia-assistant" style="display:none;"></div>
-                </div>
-
-                <div class="paso-box" id="nivel-5" style="display: none; border-bottom: 3px solid #f2c200;">
-                    <label>5. Causa Raíz (Conclusión final)</label>
-                    <input type="text" id="p5" oninput="mostrarSiguienteNivel(5)">
-                    <button type="button" class="btn-ia" onclick="consultarIA(5)">✨ Sugerencias IA Final</button>
-                    <div id="ia-res-5" class="ia-assistant" style="display:none;"></div>
+                <div id="campo_otro_indicador" style="display: none; margin-top: 15px;">
+                    <label>Especifique otro indicador *</label>
+                    <input type="text" id="otro_indicador_texto" placeholder="Nombre del indicador">
                 </div>
             </div>
 
-            <div class="plan-accion-section" style="margin-top: 20px; padding: 20px; background: #1a1a1a; border-radius: 8px;">
-                <label style="color: #f2c200; font-weight: bold;">📌 Plan de Acción Definido</label>
-                <textarea id="plan_accion" rows="3" required placeholder="Describa las acciones correctivas..."></textarea>
-                <div style="display: flex; gap: 15px; margin-top: 15px;">
-                    <div style="flex: 1;">
-                        <label>👤 Responsable</label>
-                        <input type="text" id="responsable" placeholder="Nombre del responsable" required style="width: 100%;">
-                    </div>
-                    <div style="flex: 1;">
-                        <label>📅 Fecha Compromiso</label>
-                        <input type="date" id="fecha_compromiso" required style="width: 100%;">
+            <!-- Sección de Historial de Pasos Anteriores -->
+            <div id="historial-preguntas-container" style="display: none;">
+                <h3 style="color: var(--dpo-gold); font-size: 1rem; margin-bottom: 10px;">📋 Pasos Anteriores Registrados</h3>
+                <div id="lista-historial-pasos"></div>
+            </div>
+
+            <!-- Interfaz de Pregunta Activa (Entrevista Guiada) -->
+            <div class="paso-box active-question-box" id="pregunta-activa-box" style="border-left: 5px solid var(--dpo-gold); background: #222;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <label id="etiqueta-pregunta-activa" style="color: var(--dpo-gold); font-weight: bold; margin:0;">Pregunta de análisis: ¿Por qué ocurrió la novedad?</label>
+                    <span id="badge-estado-ia" class="badge-estado" style="display: none;"></span>
+                </div>
+                
+                <!-- Feedback / Mensajes Inline (Sin alert) -->
+                <div id="inline-msg-box" class="inline-msg" style="display: none; margin-bottom: 10px;"></div>
+
+                <!-- Feedback / Evaluación de la IA -->
+                <div id="ia-evaluacion-box" class="ia-assistant" style="display: none; margin-bottom: 12px;"></div>
+
+                <!-- Input del Operador -->
+                <textarea id="respuesta_actual_input" rows="3" placeholder="Escriba su respuesta aquí..." style="width: 100%;"></textarea>
+
+                <!-- Opciones / Líneas de Investigación consultivas (No autocompletan directamente) -->
+                <div id="ia-opciones-container" style="display: none; margin-top: 10px;">
+                    <label style="font-size: 0.85em; color: #bbb; margin-bottom: 5px;">✨ Posibles líneas de investigación sugeridas por el copiloto (Toque para usar como referencia):</label>
+                    <div id="lista-opciones-ia"></div>
+                </div>
+
+                <!-- Tarjeta de Posible Causa Raíz -->
+                <div id="card-posible-causa" class="card-causa-raiz" style="display: none;">
+                    <div style="font-weight: bold; color: var(--dpo-gold); margin-bottom: 5px;">🎯 Posible Causa Raíz Detectada</div>
+                    <p id="texto-candidata-raiz" style="font-size: 0.95em; margin-bottom: 15px; color: #fff;"></p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button type="button" class="btn-confirmar-raiz" onclick="confirmarCausaRaiz()">✅ Confirmar Causa Raíz</button>
+                        <button type="button" class="btn-seguir-investigando" onclick="seguirInvestigandoDesdeCausaRaiz()">🔍 Seguir Investigando</button>
                     </div>
                 </div>
+
+                <!-- Botones de Acción de la Entrevista -->
+                <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;" id="botones-accion-entrevista">
+                    <button type="button" id="btn-analizar-ia" class="btn-ia" onclick="ejecutarAnalisisIA()" style="flex: 1; padding: 12px; font-weight: bold;">
+                        ✨ Analizar con IA
+                    </button>
+                    <button type="button" id="btn-siguiente-nivel" class="btn-siguiente" onclick="avanzarSiguienteNivel()" style="flex: 1; padding: 12px; font-weight: bold; display: none;">
+                        Siguiente Paso ➔
+                    </button>
+                </div>
             </div>
 
-            <button type="submit" class="btn-save" style="margin-top: 25px; width: 100%; padding: 15px; background: #c8102e; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                💾 Guardar Análisis en MongoDB Atlas
-            </button>
+            <!-- Sección de Causa Raíz Confirmada y Plan de Acción (Bloqueada hasta confirmación) -->
+            <div id="seccion-plan-accion" class="plan-accion-section" style="margin-top: 20px; opacity: 0.5; pointer-events: none;">
+                <div style="background: rgba(200, 16, 46, 0.15); padding: 12px; border-radius: 6px; border: 1px solid var(--bavaria-red); margin-bottom: 15px;">
+                    <span style="color: #f2c200; font-weight: bold;">🎯 Causa Raíz Confirmada:</span>
+                    <p id="display-causa-confirmada" style="margin: 5px 0 0 0; font-style: italic; color: #fff;"></p>
+                </div>
+
+                <label style="color: #f2c200; font-weight: bold;">📌 Plan de Acción Definido *</label>
+                <textarea id="plan_accion" rows="3" placeholder="Describa las acciones correctivas..."></textarea>
+                
+                <div class="grid-row" style="margin-top: 15px;">
+                    <div class="grid-col">
+                        <label>👤 Responsable *</label>
+                        <input type="text" id="responsable" placeholder="Nombre del responsable" style="width: 100%;">
+                    </div>
+                    <div class="grid-col">
+                        <label>📅 Fecha Compromiso *</label>
+                        <input type="date" id="fecha_compromiso" style="width: 100%;">
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-guardar-atlas" class="btn-save" disabled style="margin-top: 25px; width: 100%; padding: 15px; background: #555; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: not-allowed;">
+                    💾 Guardar Análisis en MongoDB Atlas
+                </button>
+            </div>
         </form>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-    <script src="/js/cinco-porques.js"></script>
+    <script src="/js/cinco-porques.js?v=5"></script>
 </body>
 </html>

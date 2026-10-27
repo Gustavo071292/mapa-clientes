@@ -1,187 +1,252 @@
 /* ==========================================================================
-   Estilos Herramienta 5 Porqués - Gerencia Valle (Versión Final)
+   Estilos Herramienta 5 Porqués - Gerencia Valle (Mobile-First / UX Guiada)
    ========================================================================== */
 :root { 
     --bavaria-red: #c8102e; 
     --dpo-gold: #f2c200; 
+    --bg-dark: #0f0f0f;
+    --box-dark: #1a1a1a;
+    --input-dark: #2a2a2a;
 }
 
 body { 
-    background-color: #0f0f0f; 
+    background-color: var(--bg-dark); 
     color: white; 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 0;
+    padding: 0;
 }
 
 .container { 
     max-width: 800px; 
-    margin: 20px auto; 
-    padding: 20px; 
-    background: #1a1a1a; 
-    border-radius: 15px; 
+    margin: 10px auto; 
+    padding: 15px; 
+    background: var(--box-dark); 
+    border-radius: 12px; 
     border-top: 5px solid var(--bavaria-red); 
 }
 
-/* --- BLOQUES DE NIVELES --- */
-.paso-box { 
-    margin-bottom: 25px; 
-    padding: 15px; 
-    border-bottom: 1px solid #333; 
+@media(min-width: 768px) {
+    .container {
+        margin: 20px auto;
+        padding: 25px;
+    }
 }
 
-/* Ocultar niveles superiores inicialmente para el efecto cascada */
-#nivel-2, #nivel-3, #nivel-4, #nivel-5 {
-    display: none;
+.grid-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+@media(min-width: 600px) {
+    .grid-row {
+        flex-direction: row;
+    }
+}
+
+.grid-col {
+    flex: 1;
+}
+
+.paso-box { 
+    margin-bottom: 20px; 
+    padding: 15px; 
+    background: #252525;
+    border-radius: 8px;
+    border-bottom: 1px solid #333; 
 }
 
 label { 
     display: block; 
     font-weight: bold; 
     color: var(--dpo-gold); 
-    margin-bottom: 10px; 
+    margin-bottom: 8px; 
+    font-size: 0.95em;
 }
 
 input[type="text"], select, textarea, input[type="date"] { 
     width: 100%; 
-    padding: 12px; 
-    background: #2a2a2a; 
+    padding: 14px; 
+    background: var(--input-dark); 
     border: 1px solid #444; 
     color: white; 
     border-radius: 8px; 
-    margin-bottom: 10px; 
+    box-sizing: border-box;
+    font-size: 1em;
     transition: border 0.3s;
 }
 
-input:focus {
+input:focus, textarea:focus, select:focus {
     border: 1px solid var(--dpo-gold);
     outline: none;
 }
 
-/* --- ASISTENTE DE IA --- */
+/* Mensajes Inline de UI */
+.inline-msg {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+.inline-msg.error { background: rgba(220, 38, 38, 0.2); border: 1px solid #dc2626; color: #fca5a5; }
+.inline-msg.info { background: rgba(37, 99, 235, 0.2); border: 1px solid #2563eb; color: #93c5fd; }
+.inline-msg.warning { background: rgba(217, 119, 6, 0.2); border: 1px solid #d97706; color: #fde68a; }
+.inline-msg.success { background: rgba(22, 163, 74, 0.2); border: 1px solid #16a34a; color: #86efac; }
+
+/* --- ASISTENTE DE IA Y TARJETAS --- */
 .ia-assistant { 
-    background: #252525; 
+    background: #1f1f1f; 
     border-left: 4px solid var(--dpo-gold); 
-    padding: 15px; 
-    margin-top: 10px; 
+    padding: 12px; 
     border-radius: 0 8px 8px 0; 
+    font-size: 0.9em;
+    color: #ddd;
 }
 
 .sugerencia-item { 
     background: #2d333b; 
     border: 1px solid #444;
-    padding: 10px; 
-    margin: 5px 0; 
+    padding: 10px 12px; 
+    margin: 6px 0; 
     border-radius: 6px; 
     cursor: pointer; 
-    transition: background 0.2s; 
+    transition: background 0.2s, border-color 0.2s; 
     font-size: 0.9em; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .sugerencia-item:hover { 
-    background: var(--bavaria-red); 
+    background: rgba(200, 16, 46, 0.4); 
     color: white;
     border: 1px solid var(--dpo-gold); 
+}
+
+.badge-estado {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-warning { background: #d97706; color: #fff; }
+.badge-info { background: #2563eb; color: #fff; }
+.badge-success { background: #16a34a; color: #fff; }
+.badge-danger { background: #dc2626; color: #fff; }
+
+/* Tarjeta de Posible Causa Raíz */
+.card-causa-raiz {
+    background: linear-gradient(135deg, #2c1a1d, #1a1a1a);
+    border: 2px solid var(--bavaria-red);
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.btn-confirmar-raiz {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-seguir-investigando {
+    background: #333;
+    color: var(--dpo-gold);
+    border: 1px solid var(--dpo-gold);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9em;
 }
 
 .btn-ia { 
     background: transparent; 
     color: var(--dpo-gold); 
     border: 1px solid var(--dpo-gold); 
-    padding: 5px 15px; 
-    border-radius: 20px; 
+    border-radius: 8px; 
     cursor: pointer; 
-    font-size: 0.8em; 
 }
 
-.btn-ia:hover { 
+.btn-ia:hover:not(:disabled) { 
     background: var(--dpo-gold); 
     color: black; 
 }
 
-/* --- PLAN DE ACCIÓN Y BOTONES --- */
-.plan-accion-section { 
-    background: #2a2a2a; 
-    padding: 20px; 
-    border-radius: 10px; 
-    border: 1px dashed var(--dpo-gold); 
+.btn-siguiente {
+    background: var(--bavaria-red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.btn-save { 
-    background: var(--bavaria-red); 
-    color: white; 
-    border: none; 
-    padding: 15px 30px; 
-    border-radius: 10px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    width: 100%; 
-    font-size: 1.1em; 
-    margin-top: 20px; 
-    transition: 0.3s;
-}
-
-.btn-save:hover {
+.btn-siguiente:hover:not(:disabled) {
     background: #a00d25;
 }
 
-/* --- ANIMACIONES --- */
-.animate__fadeIn {
-    animation: fadeIn 0.6s ease-in-out;
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
+
+/* Historial de pasos previos (Seguro con nodos DOM) */
+.historial-item {
+    background: #1f1f1f;
+    border-left: 3px solid #555;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.85em;
+    color: #ddd;
+}
+
+.plan-accion-section { 
+    background: #1a1a1a; 
+    padding: 20px; 
+    border-radius: 10px; 
+    border: 1px dashed var(--dpo-gold); 
+    transition: opacity 0.3s;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================
    TOM SELECT - DARK MODE
 ========================= */
-
 .ts-control {
     background: #2b2b2b !important;
     border: 1px solid #555 !important;
     color: #fff !important;
-    min-height: 45px;
+    min-height: 48px;
     border-radius: 8px;
     box-shadow: none !important;
 }
-
-.ts-control input {
-    color: #fff !important;
-}
-
-.ts-control input::placeholder {
-    color: #aaa !important;
-}
-
+.ts-control input { color: #fff !important; }
 .ts-dropdown {
     background: #1f1f1f !important;
     border: 1px solid #444 !important;
     color: #fff !important;
     border-radius: 8px;
-    overflow: hidden;
 }
-
-.ts-dropdown .option {
-    background: transparent !important;
-    color: #fff !important;
-    padding: 10px;
-}
-
-.ts-dropdown .option:hover {
+.ts-dropdown .option { color: #fff !important; padding: 12px; }
+.ts-dropdown .option:hover, .ts-dropdown .active {
     background: #c8102e !important;
     color: #fff !important;
 }
-
-.ts-dropdown .active {
-    background: #c8102e !important;
-    color: #fff !important;
-}
-
-.ts-wrapper.single .ts-control {
-    background: #2b2b2b !important;
-}
-
 .ts-wrapper.focus .ts-control {
     border-color: #f2c200 !important;
     box-shadow: 0 0 0 2px rgba(242, 194, 0, 0.2) !important;

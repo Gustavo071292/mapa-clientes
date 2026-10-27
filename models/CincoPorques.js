@@ -16,8 +16,8 @@ const gestionSchema = new mongoose.Schema({
 const cincoPorquesSchema = new mongoose.Schema({
     // Campos de Identificación y Contexto
     cd: { type: String, required: true },
-    transporte: { type: String, required: true },
-    placa: { type: String, required: true },
+    transporte: { type: String },
+    placa: { type: String },
     indicador: { type: String, required: true },
     descripcion_novedad: { type: String },
 

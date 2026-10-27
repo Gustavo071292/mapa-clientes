@@ -36,9 +36,9 @@ exports.guardarNovedad = async (req, res) => {
 exports.guardarCincoPorques = async (req, res) => {
     try {
         const {
-            cd, transporte, placa, indicador, descripcion_novedad,
-            p1, p2, p3, p4, p5, plan_accion, responsable, fecha_compromiso
-        } = req.body;
+             cd, transporte, placa, indicador, descripcion_novedad,
+             p1, p2, p3, p4, p5, causa_raiz, plan_accion, responsable, fecha_compromiso
+            } = req.body;
 
         const nuevoAnalisis = new CincoPorques({
             cd, 
@@ -47,7 +47,7 @@ exports.guardarCincoPorques = async (req, res) => {
             indicador, 
             descripcion_novedad,
             p1, p2, p3, p4, p5,
-            causa_raiz: p5, // Mapeo solicitado: causa raíz es el quinto porqué
+            causa_raiz, // Mapeo solicitado: causa raíz es el quinto porqué
             plan_accion, 
             responsable,
             fecha_compromiso: fecha_compromiso || new Date(),
