@@ -1,12 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from config.db import db
 from routers.audit_routes import router as audit_router
+from routers.cinco_porques_routes import router as cinco_porques_router
 import uvicorn
 
 app = FastAPI(title="Portal Zona Valle - Motor Analítico e IA")
 
 # Router de auditoría
 app.include_router(audit_router)
+
+# Router IA - 5 Porqués
+app.include_router(cinco_porques_router)
 
 @app.get("/health")
 def health_check():

@@ -8,6 +8,7 @@ data/*.csv
 data/*.tsv
 data/*.txt
 # Python
+.venv/
 src_python/venv/
 src_python/__pycache__/
 *.pyc
